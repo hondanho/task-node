@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Lập trình hướng đối tượng C# (OOP) | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Lập trình hướng đối tượng C# (OOP)" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Ôn lại lịch sử phương thức lập trình Lập trình được chia làm 3 giai đoạn: giai đoạn đầu tiên là lập trình tuyến tính, kế tiếp là lập trình cấu trúc, sau đó là lập trình hướng đối tượng. Lập trình tuyến tính: là phương pháp lập trình tư duy theo hướng tuần tự đơn giản, đơn luồng. Ưu điểm là đơn giản nhưng khó áp dụng cho các chương trình phức tạp. Lập trình hướng cấu trúc là lập trình hướng thủ tục, trong đó chương trình được chia thành các hàm. Chương trình được chia thành các hàm con, và được gọi trong hàm chính, , ví dụ: C, Pascal,.. Phần lớn dữ liệu được sử dụng chung chuyển từ hàm này sang hàm khác., tư duy giải thuật rõ ràng tuy nhiên không hỗ trợ sử dụng lại mã nguồn(cấu trúc dữ liệu thay đổi thì phải thay đổi code), chủ yếu là phát triển hàm ko quan tâm nhiều đến dữ liệu. Lập trình hướng đối tượng: là phương pháp lập trình hỗ trợ hướng đối tượng giúp chương trình có tính bảo mật cao, tái sử dụng code, tiết kiệm tài nguyên, mở rộng bảo trì,.." />
+<meta property="og:description" content="Ôn lại lịch sử phương thức lập trình Lập trình được chia làm 3 giai đoạn: giai đoạn đầu tiên là lập trình tuyến tính, kế tiếp là lập trình cấu trúc, sau đó là lập trình hướng đối tượng. Lập trình tuyến tính: là phương pháp lập trình tư duy theo hướng tuần tự đơn giản, đơn luồng. Ưu điểm là đơn giản nhưng khó áp dụng cho các chương trình phức tạp. Lập trình hướng cấu trúc là lập trình hướng thủ tục, trong đó chương trình được chia thành các hàm. Chương trình được chia thành các hàm con, và được gọi trong hàm chính, , ví dụ: C, Pascal,.. Phần lớn dữ liệu được sử dụng chung chuyển từ hàm này sang hàm khác., tư duy giải thuật rõ ràng tuy nhiên không hỗ trợ sử dụng lại mã nguồn(cấu trúc dữ liệu thay đổi thì phải thay đổi code), chủ yếu là phát triển hàm ko quan tâm nhiều đến dữ liệu. Lập trình hướng đối tượng: là phương pháp lập trình hỗ trợ hướng đối tượng giúp chương trình có tính bảo mật cao, tái sử dụng code, tiết kiệm tài nguyên, mở rộng bảo trì,.." />
+<link rel="canonical" href="http://localhost:4000/basic-knowledge/lap-trinh-huong-doi-tuong-oop-trong-c-sharp" />
+<meta property="og:url" content="http://localhost:4000/basic-knowledge/lap-trinh-huong-doi-tuong-oop-trong-c-sharp" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-03-13T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Lập trình hướng đối tượng C# (OOP)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-03-13T00:00:00+07:00","datePublished":"2024-03-13T00:00:00+07:00","description":"Ôn lại lịch sử phương thức lập trình Lập trình được chia làm 3 giai đoạn: giai đoạn đầu tiên là lập trình tuyến tính, kế tiếp là lập trình cấu trúc, sau đó là lập trình hướng đối tượng. Lập trình tuyến tính: là phương pháp lập trình tư duy theo hướng tuần tự đơn giản, đơn luồng. Ưu điểm là đơn giản nhưng khó áp dụng cho các chương trình phức tạp. Lập trình hướng cấu trúc là lập trình hướng thủ tục, trong đó chương trình được chia thành các hàm. Chương trình được chia thành các hàm con, và được gọi trong hàm chính, , ví dụ: C, Pascal,.. Phần lớn dữ liệu được sử dụng chung chuyển từ hàm này sang hàm khác., tư duy giải thuật rõ ràng tuy nhiên không hỗ trợ sử dụng lại mã nguồn(cấu trúc dữ liệu thay đổi thì phải thay đổi code), chủ yếu là phát triển hàm ko quan tâm nhiều đến dữ liệu. Lập trình hướng đối tượng: là phương pháp lập trình hỗ trợ hướng đối tượng giúp chương trình có tính bảo mật cao, tái sử dụng code, tiết kiệm tài nguyên, mở rộng bảo trì,..","headline":"Lập trình hướng đối tượng C# (OOP)","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/basic-knowledge/lap-trinh-huong-doi-tuong-oop-trong-c-sharp"},"url":"http://localhost:4000/basic-knowledge/lap-trinh-huong-doi-tuong-oop-trong-c-sharp"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Lập trình hướng đối tượng C# (OOP)</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-03-13T00:00:00+07:00" itemprop="datePublished">Mar 13, 2024
+      </time>• posted on  <a class="category-name" href="/category/basic-knowledge">basic-knowledge</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Ôn lại lịch sử phương thức lập trình
+Lập trình được chia làm 3 giai đoạn: giai đoạn đầu tiên là lập trình tuyến tính, kế tiếp là lập trình cấu trúc, sau đó là lập trình hướng đối tượng.</p>
+<ul>
+  <li>Lập trình tuyến tính: là phương pháp lập trình tư duy theo hướng tuần tự đơn giản, đơn luồng. Ưu điểm là đơn giản nhưng khó áp dụng cho các chương trình phức tạp.</li>
+  <li>Lập trình hướng cấu trúc là lập trình hướng thủ tục, trong đó chương trình được chia thành các hàm. Chương trình được chia thành các hàm con, và được gọi trong hàm chính, , ví dụ: C, Pascal,.. Phần lớn dữ liệu được sử dụng chung chuyển từ hàm này sang hàm khác., tư duy giải thuật rõ ràng tuy nhiên không hỗ trợ sử dụng lại mã nguồn(cấu trúc dữ liệu thay đổi thì phải thay đổi code), chủ yếu là phát triển hàm ko quan tâm nhiều đến dữ liệu.</li>
+  <li>Lập trình hướng đối tượng: là phương pháp lập trình hỗ trợ hướng đối tượng giúp chương trình có tính bảo mật cao, tái sử dụng code, tiết kiệm tài nguyên, mở rộng bảo trì,..
+<img src="/assets/image/image-27.png" alt="Image" /></li>
+</ul>
+
+<p>Khái niệm chính trong lập trình hướng đối tượng:</p>
+<ul>
+  <li>Class: là đại diện cho tập hợp các đối tượng có cùng đặc điểm, hành vi, phương thức hoạt động. Thực chất là 1 kiểu dữ liệu do người dùng định nghĩa.</li>
+  <li>Properties(thuộc tính): là những thông tin đặc điểm của đối tượng</li>
+  <li>Method: contructor(có thể có nhiều), hàm thường, hàm destructor (1 class có 1 hàm này duy nhất), là các action của đối tượng</li>
+  <li>Object: là 1 thực thể ngoài đời thực(ví dụ: con chó, con chim, xe máy, ..) có đặc tính, hành vi. Class là 1 tập hợp các đối tượng có cùng đặc tính hành vi(ví du: động vật, xe cộ)git
+Note:</li>
+  <li>Từ khóa sealed(niêm phong): dùng cho method(không thể ghi đè) và class(không thể kế thừa)</li>
+  <li>Từ khóa static: đánh dấu là thành phần tĩnh không thể được khởi tạo, sử dụng cho variable, method, class
+<script src="https://gist.github.com/hondanho/c2f65e2743db51540b6e5e88e546cff7.js"></script></li>
+  <li>Từ khóa partial: chia class thành nhiều file
+<script src="https://gist.github.com/hondanho/e6a8ab87900baeeb3ca2091f5669e241.js"></script></li>
+</ul>
+
+<p>4 tính chất cơ bản trong lập trình hướng đối tượng
+<img src="/assets/image/image-26.png" alt="Image" /></p>
+
+<p><strong>Tính đóng gói (Encapsulation)</strong>: là tiến trình đóng gói một hoặc nhiều mục bên trong một gói logic hoặc vật lý nhằm đảm bảo toàn vẹn dữ liệu, kiểm soát việc truy cập chỉnh sửa dữ liệu từ các lớp bên ngoài, được thể hiện qua access modifier:</p>
+<ul>
+  <li>private: phạm vi trong class</li>
+  <li>protected: phạm vi trong class kế thừa</li>
+  <li>public: không có giới hạn</li>
+  <li>internal: phạm vi Assembly dự án</li>
+  <li>protected internal: phạm vi Assembly hiện tại
+<script src="https://gist.github.com/hondanho/274812adfc267ccbb1aa559443203c21.js"></script></li>
+</ul>
+
+<p><strong>Tính kế thừa (Inheritance)</strong>: cho phép xây dựng 1 lớp con kết thừa các properties, method của lớp cha, có khả năng kết thừa và mở rộng
+<script src="https://gist.github.com/hondanho/61cbeb0ce9381c81343c9c6d398a9456.js"></script>
+Trong C#, không hỗ trợ đa kế thừa class(1 lớp kế thừa từ nhiều lớp) mà chỉ có thể đa kế thừa interface. Constructor và destructor không thể kế thừa, các thuộc tính và phương thức kế thừa dựa theo access modifier
+Về contructor, khi kế thừa lớp cha mà có thì lớp con cũng phải khởi tạo thông qua từ khóa base
+<script src="https://gist.github.com/hondanho/c6eeff81f2d6ec65812e125ae20040a6.js"></script></p>
+
+<p><strong>Tính đa hình (polymorphism)</strong>: Là một đối tượng thuộc các lớp khác nhau có thể hiểu cùng một thông điệp theo cách khác nhau.</p>
+<ul>
+  <li>Các lớp phải có quan hệ kế thừa với cùng 1 lớp cha nào đó, Phương thức đa hình phải được ghi đè (override) ở các lớp con</li>
+  <li>1 Class có method cùng tên khác paramter
+Virtual là từ khoá dùng để khai báo 1 phương thức ảo (phương thức ảo là phương thức có thể ghi đè được).
+Override là từ khoá dùng để đánh dấu phương thức ghi đè lên phương thức của lớp cha.
+<script src="https://gist.github.com/hondanho/206a3c1b9d08c9ff0d96bf962cfdb9cd.js"></script></li>
+</ul>
+
+<p><strong>Tính trừu tượng (Abstraction)</strong>:  là một tiến trình ẩn chi tiết triển khai, chỉ cung cấp thông tin tính năng tới người dùng, được thể hiện qua abstract và interface.
+Là 1 class, không thể tạo instance</p>
+
+<h3 id="abstract-class">abstract class</h3>
+<ul>
+  <li>1 class abstract có thể chứa method thông thường(trường là có body), method virtual, method abstract(trống, khi kế thừa phải được override)</li>
+  <li>Không thể sử dụng từ khóa sealed</li>
+  <li>1 class chỉ được kế thừa 1 abstract class, không hỗ trợ đa kế thừa</li>
+  <li>access modifier phải là public hoặc protected</li>
+  <li>chỉ khai báo abstract vào class, method, không khai báo vào properties
+<script src="https://gist.github.com/hondanho/f0a03d50b0677f013731ad48aa06a0da.js"></script></li>
+</ul>
+
+<h3 id="interface-class">interface class</h3>
+<p>là 1 tập các thành phần chỉ khai báo, không có định nghĩa. Mục đích chính là giải quyết vấn đề đa kế thừa và cụ thể hóa hành vi của 1 loại dữ liệu cụ thể(đưa ra quy tắc code chung).</p>
+<ul>
+  <li>Các thành phần trong interface gồm: properties, method, event, indexers</li>
+  <li>Chỉ khai báo, ko được định nghĩa</li>
+  <li>Ghi đè trong interface không cần từ khóa override</li>
+  <li>access modifier bắt buộc là public</li>
+  <li>Không chứa biến(properties)</li>
+  <li>Không có contructor, destructor</li>
+  <li>Hỗ trợ đa kế thừa
+<script src="https://gist.github.com/hondanho/c321a0b1e9fe49eb3d7e006ee8625aa8.js"></script></li>
+</ul>
+
+<h3 id="sự-khác-nhau-giữa-abstract-class-và-interface">Sự khác nhau giữa Abstract class và Interface</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>interface</th>
+      <th>abstract</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Có thế kế thừa từ các interface khác</td>
+      <td>Có thể kế thừa 1 class và nhiều interface khác</td>
+    </tr>
+    <tr>
+      <td>Chỉ khai báo method không có body, không chứa biến</td>
+      <td>Có thể khai báo biến và method thường và method abstract</td>
+    </tr>
+    <tr>
+      <td>Không có constructor và destructor</td>
+      <td>Có constructor và destructor</td>
+    </tr>
+    <tr>
+      <td>access modifier phải là public</td>
+      <td>access modifie có thể khai báo tùy ý</td>
+    </tr>
+    <tr>
+      <td>Dùng định nghĩa 1 khuân mẫu chung</td>
+      <td>Định nghĩa các thành phần chung của lớp(biến, method), sử dụng cho nhiều đối tượng cùng kiểu</td>
+    </tr>
+    <tr>
+      <td>Class kế thừa bắt buộc phải implement tât cả các method trong interface</td>
+      <td>Có thể định nghĩa method phải implement(method abstract), hoặc không cần implement(method thường)</td>
+    </tr>
+    <tr>
+      <td>Hỗ trợ đa kế thừa</td>
+      <td>Không hỗ trợ đa kế thừa</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="khi-nào-nên-dùng-abstract-interface">Khi nào nên dùng abstract, interface?</h3>
+<ul>
+  <li>Khi 1 nhóm đối tượng có cùng bản chất kế thừa từ 1 class thì dùng abstract</li>
+  <li>Khi 1 nhóm đối tượng không cùng bản chất nhưng hành động giống nhau thì dùng interface</li>
+</ul>
+
+
+  </div><a class="u-url" href="/basic-knowledge/lap-trinh-huong-doi-tuong-oop-trong-c-sharp" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/basic-knowledge/hieu-ve-ddd-trong-microservices-cqrs-va-event-sourcing" class="prev-post">← Hiểu về DDD trong Microservices, CQRS và Event Sourcing</a>
+      
+      
+        <a href="/basic-knowledge/method-and-class-generic-trong-c-sharp" class="next-post">Sử dụng method Generic, class Generic trong C# →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Proxy Pattern | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Proxy Pattern" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Khái Niệm" />
+<meta property="og:description" content="Khái Niệm" />
+<link rel="canonical" href="http://localhost:4000/design-pattern/structural-patterns/proxy" />
+<meta property="og:url" content="http://localhost:4000/design-pattern/structural-patterns/proxy" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Proxy Pattern" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"Khái Niệm","headline":"Proxy Pattern","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/design-pattern/structural-patterns/proxy"},"url":"http://localhost:4000/design-pattern/structural-patterns/proxy"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Proxy Pattern</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/design-pattern/structural-patterns">design-pattern/structural-patterns</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="khái-niệm">Khái Niệm</h2>
+
+<p>Trong lĩnh vực phần mềm, một trong những thách thức là làm thế nào để quản lý truy cập đến các nguồn lực và dịch vụ một cách hiệu quả. Đây là nơi mà Proxy Pattern, một phương pháp thiết kế phổ biến, trở nên rất hữu ích. Nó không chỉ giúp điều chỉnh quyền truy cập mà còn cung cấp các tính năng bổ sung như khởi tạo khi cần (lazy initialization), bảo mật, và ghi nhật ký, mà không cần thay đổi đối tượng ban đầu.</p>
+
+<h3 id="tổng-quan">Tổng quan</h3>
+
+<ul>
+  <li>
+    <p><strong>Định Nghĩa của Pattern:</strong> Proxy Pattern tạo ra một đại diện, hay còn gọi là ‘proxy’, để quản lý việc truy cập vào một đối tượng khác. Điều này giúp kiểm soát cách đối tượng này được dùng và truy cập trong hệ thống.</p>
+  </li>
+  <li>
+    <p><strong>Mục Đích:</strong> Mẫu thiết kế này rất hữu ích để kiểm soát hoặc mở rộng chức năng của một đối tượng mà không cần phải sửa đổi mã nguồn gốc của nó. Nó thường được dùng trong việc quản lý tài nguyên, cải thiện bảo mật và tăng hiệu suất.</p>
+  </li>
+  <li>
+    <p><strong>Ý Tưởng Cốt Lõi:</strong> Proxy Pattern chủ yếu là việc tạo ra một lớp trung gian, hay ‘proxy’, giúp quản lý truy cập một cách chặt chẽ đến đối tượng gốc. Nó không chỉ kiểm soát quyền truy cập mà còn cung cấp cơ hội để cải thiện hiệu suất và bảo mật thông qua các phương pháp như khởi tạo khi cần và kiểm soát truy cập.</p>
+  </li>
+</ul>
+
+<h2 id="đặt-vấn-đề">Đặt Vấn Đề</h2>
+
+<p>Tưởng tượng bạn đang xây dựng một hệ thống thư viện số cho việc lưu trữ và truy cập các tài liệu quan trọng. Ban đầu, hệ thống này chỉ đơn giản gồm các chức năng cơ bản như tìm kiếm tài liệu (<code class="language-plaintext highlighter-rouge">DocumentSearch</code>) và xem tài liệu (<code class="language-plaintext highlighter-rouge">DocumentViewer</code>).</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class DigitalLibrarySystem {
+        +searchDocument()
+        +viewDocument()
+    }
+
+    class DocumentSearch {
+        +search()
+    }
+
+    class DocumentViewer {
+        +view()
+    }
+
+    DigitalLibrarySystem --&gt; DocumentSearch : uses
+    DigitalLibrarySystem --&gt; DocumentViewer : uses
+</code></pre>
+
+<p>Khi hệ thống phát triển, bạn muốn thêm vào các tính năng như kiểm soát quyền truy cập dựa trên vai trò người dùng, tải tài liệu từ các nguồn ngoại tuyến, và giám sát việc sử dụng tài liệu. Điều này dẫn đến việc phải phát triển thêm nhiều lớp và dịch vụ mới, làm tăng độ phức tạp của hệ thống.</p>
+
+<h3 id="khó-khăn-và-vấn-đề">Khó Khăn và Vấn Đề</h3>
+<ul>
+  <li><strong>Hiệu Suất</strong>: Tải tài liệu lớn hoặc từ nguồn ngoại tuyến có thể làm chậm hệ thống, đặc biệt khi nhiều người dùng cùng truy cập.</li>
+  <li><strong>Bảo Mật</strong>: Kiểm soát quyền truy cập và bảo vệ thông tin nhạy cảm trở nên khó khăn và phức tạp.</li>
+  <li><strong>Quản Lý Tài Nguyên</strong>: Theo dõi và giám sát việc sử dụng tài liệu đòi hỏi cơ chế phức tạp và tốn kém tài nguyên hệ thống.</li>
+</ul>
+
+<pre><code class="language-mermaid">classDiagram
+    class DigitalLibrarySystem {
+        +searchDocument()
+        +viewDocument()
+        +loadDocument()
+        +checkAccess()
+        +monitorUsage()
+    }
+
+    class DocumentSearch {
+        +search()
+    }
+
+    class DocumentViewer {
+        +view()
+    }
+
+    class DocumentLoader {
+        +load()
+    }
+
+    class AccessControl {
+        +checkPermission()
+    }
+
+    class UsageMonitor {
+        +monitor()
+    }
+
+    DigitalLibrarySystem --&gt; DocumentSearch : uses
+    DigitalLibrarySystem --&gt; DocumentViewer : uses
+    DigitalLibrarySystem --&gt; DocumentLoader : uses
+    DigitalLibrarySystem --&gt; AccessControl : uses
+    DigitalLibrarySystem --&gt; UsageMonitor : uses
+</code></pre>
+
+<p>Khi không sử dụng Proxy Pattern, mỗi tương tác với hệ thống - từ tìm kiếm đến xem và tải tài liệu - có thể trở nên chậm chạp và không an toàn. Việc xử lý trực tiếp mọi yêu cầu cũng làm tăng khả năng quá tải hệ thống và gặp phải các vấn đề bảo mật.</p>
+
+<h2 id="giải-pháp">Giải pháp</h2>
+
+<p>Để tối ưu hóa hệ thống thư viện số đang ngày càng phức tạp và đa năng, việc áp dụng Proxy Pattern là một giải pháp hữu hiệu. Proxy Pattern giúp kiểm soát tương tác với hệ thống, nâng cao hiệu suất, và tăng cường bảo mật. Dưới đây là cách thức triển khai Proxy Pattern:</p>
+
+<ol>
+  <li>
+    <p><strong>Tạo Proxy Classes</strong>: Các lớp proxy như <code class="language-plaintext highlighter-rouge">DocumentLoaderProxy</code>, <code class="language-plaintext highlighter-rouge">AccessControlProxy</code>, và <code class="language-plaintext highlighter-rouge">UsageMonitorProxy</code> được thiết kế để kiểm soát và quản lý quyền truy cập đến các tài nguyên. Các lớp này hoạt động như trung gian, xử lý các tác vụ phức tạp và nhạy cảm.</p>
+  </li>
+  <li>
+    <p><strong>Cải Thiện Hiệu Suất và Bảo Mật</strong>: Các lớp Proxy có thể cache dữ liệu, thực hiện xác thực, và giám sát quyền truy cập. Điều này giúp giảm thiểu tải không cần thiết và tăng tốc độ xử lý, đồng thời bảo vệ thông tin nhạy cảm.</p>
+  </li>
+  <li>
+    <p><strong>Đơn Giản Hóa Quy Trình</strong>: Việc sử dụng Proxy giúp giảm độ phức tạp trong việc quản lý các chức năng của hệ thống, tạo điều kiện thuận lợi cho việc mở rộng và bảo trì.</p>
+  </li>
+</ol>
+
+<p>Sơ đồ sau đây minh họa cách thức các Proxy được tích hợp và hoạt động trong hệ thống:</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class DigitalLibrarySystem {
+        +searchDocument()
+        +viewDocument()
+    }
+
+    class DocumentSearch {
+        +search()
+    }
+
+    class DocumentViewer {
+        +view()
+    }
+
+    class DocumentLoaderProxy {
+        +load()
+    }
+
+    class AccessControlProxy {
+        +checkPermission()
+    }
+
+    class UsageMonitorProxy {
+        +monitor()
+    }
+
+    DigitalLibrarySystem --&gt; DocumentSearch : uses
+    DigitalLibrarySystem --&gt; DocumentViewer : uses
+    DocumentViewer --&gt; DocumentLoaderProxy : uses
+    DocumentLoaderProxy --&gt; AccessControlProxy : uses
+    AccessControlProxy --&gt; UsageMonitorProxy : uses
+</code></pre>
+
+<p>Trong sơ đồ này, <code class="language-plaintext highlighter-rouge">DigitalLibrarySystem</code> tương tác trực tiếp với <code class="language-plaintext highlighter-rouge">DocumentSearch</code> và <code class="language-plaintext highlighter-rouge">DocumentViewer</code>. Khi cần tải và xem tài liệu, <code class="language-plaintext highlighter-rouge">DocumentViewer</code> sẽ thông qua <code class="language-plaintext highlighter-rouge">DocumentLoaderProxy</code>. Proxy này tiếp tục giao tiếp với <code class="language-plaintext highlighter-rouge">AccessControlProxy</code> để kiểm tra quyền truy cập và <code class="language-plaintext highlighter-rouge">UsageMonitorProxy</code> để theo dõi sử dụng, đảm bảo quá trình này được thực hiện một cách an toàn và hiệu quả.</p>
+
+<h2 id="cấu-trúc">Cấu Trúc</h2>
+
+<pre><code class="language-mermaid">classDiagram
+    class Subject {
+        &lt;&lt;interface&gt;&gt;
+        +Request()
+    }
+
+    class RealSubject {
+        +Request()
+    }
+
+    class Proxy {
+        -realSubject RealSubject
+        +Request()
+    }
+
+    class Client {
+    }
+
+    Subject &lt;|.. RealSubject : implements
+    Subject &lt;|.. Proxy : implements
+    Proxy --&gt; RealSubject : references
+    Client --&gt; Subject : accesses
+</code></pre>
+
+<p><strong>Sơ đồ</strong>:</p>
+<ul>
+  <li><strong>Subject</strong>: Đây là interface mà cả RealSubject và Proxy đều triển khai. Nó định nghĩa phương thức <code class="language-plaintext highlighter-rouge">Request()</code> cần được thực thi.</li>
+  <li><strong>RealSubject</strong>: Lớp thực sự thực hiện logic của phương thức <code class="language-plaintext highlighter-rouge">Request()</code>. Đây là lớp mà Proxy sẽ đại diện hoặc “ủy quyền”.</li>
+  <li><strong>Proxy</strong>: Lớp này duy trì một tham chiếu đến đối tượng RealSubject và cũng triển khai interface Subject. Nó có thể kiểm soát hoặc bổ sung hành vi trước hoặc sau khi chuyển yêu cầu đến RealSubject.</li>
+  <li><strong>Client</strong>: Lớp này sử dụng đối tượng Subject, không biết rằng nó thực sự đang tương tác với Proxy của RealSubject.</li>
+</ul>
+
+<p><strong>Tổ chức và Tương tác</strong>:</p>
+<ul>
+  <li>Trong Proxy Pattern, Client tương tác với đối tượng thông qua interface Subject, cho phép sử dụng Proxy thay thế cho RealSubject.</li>
+  <li>Proxy nhận yêu cầu từ Client và có thể thực hiện một số tác vụ như truy cập kiểm soát, caching, hoặc lazy initialization trước hoặc sau khi chuyển yêu cầu đến RealSubject.</li>
+  <li>Nếu Proxy quyết định chuyển tiếp yêu cầu, nó gọi phương thức <code class="language-plaintext highlighter-rouge">Request()</code> của đối tượng RealSubject.</li>
+  <li>Sự sắp xếp này cho phép thêm lớp trung gian giữa Client và RealSubject mà không làm thay đổi hợp đồng interface, đảm bảo sự linh hoạt và khả năng mở rộng của code.</li>
+</ul>
+
+<h2 id="ví-dụ-áp-dụng-decorator-pattern">Ví dụ áp dụng Decorator Pattern</h2>
+
+<p>Proxy Pattern là một pattern thuộc nhóm Structural Design Patterns, giúp cung cấp một đại lý hoặc người đại diện để kiểm soát việc truy cập vào đối tượng gốc. Trong ví dụ này, chúng ta sẽ xem xét một tình huống trong đó Proxy Pattern được sử dụng để quản lý việc tải và hiển thị video. <code class="language-plaintext highlighter-rouge">ProxyVideo</code> đóng vai trò là proxy cho <code class="language-plaintext highlighter-rouge">RealVideo</code>. Khi một client yêu cầu xem video thông qua <code class="language-plaintext highlighter-rouge">ProxyVideo</code>, nó sẽ kiểm tra xem video đã được tải hay chưa và quyết định có cần tải video đó không. Điều này giúp tiết kiệm tài nguyên bằng cách tránh tải lại video đã có sẵn.</p>
+
+<h3 id="sơ-đồ">Sơ đồ</h3>
+
+<pre><code class="language-mermaid">  classDiagram
+      class Video {
+          &lt;&lt;interface&gt;&gt;
+          +showVideo()
+      }
+      class RealVideo {
+          +url String
+          +showVideo()
+      }
+      class ProxyVideo {
+          -realVideo RealVideo
+          +url String
+          +showVideo()
+      }
+      Video &lt;|.. RealVideo
+      Video &lt;|.. ProxyVideo
+</code></pre>
+
+<h3 id="ví-dụ-code">Ví dụ Code</h3>
+
+<p>Video.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">interface</span> <span class="nc">Video</span> <span class="p">{</span>
+    <span class="k">fun</span> <span class="nf">showVideo</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>RealVideo.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">RealVideo</span> <span class="p">:</span> <span class="nc">Video</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="py">url</span> <span class="p">:</span> <span class="nc">String</span>
+
+    <span class="k">constructor</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nc">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">url</span> <span class="p">=</span> <span class="n">url</span>
+        <span class="nf">println</span><span class="p">(</span><span class="s">"Video loaded: ${this.url}"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">showVideo</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">println</span><span class="p">(</span><span class="s">"Video Showed: ${this.url}"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>ProxyVideo.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">ProxyVideo</span> <span class="p">:</span> <span class="nc">Video</span> <span class="p">{</span>
+
+
+
+    <span class="k">private</span> <span class="kd">var</span> <span class="py">realVideo</span> <span class="p">:</span> <span class="nc">RealVideo</span> <span class="p">?</span> <span class="p">=</span> <span class="k">null</span>
+    <span class="k">private</span> <span class="kd">var</span> <span class="py">url</span><span class="p">:</span> <span class="nc">String</span>
+
+    <span class="k">constructor</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nc">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">url</span> <span class="p">=</span> <span class="n">url</span>
+    <span class="p">}</span>
+
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">showVideo</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">realVideo</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">realVideo</span> <span class="p">=</span> <span class="nc">RealVideo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nf">println</span><span class="p">(</span><span class="s">"Video already exits:${this.url}"</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">realVideo</span><span class="o">?.</span><span class="nf">showVideo</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>main.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fun</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="nc">Array</span><span class="p">&lt;</span><span class="nc">String</span><span class="p">&gt;)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="py">proxyVideo</span> <span class="p">:</span> <span class="nc">ProxyVideo</span>
+    <span class="n">proxyVideo</span> <span class="p">=</span> <span class="nc">ProxyVideo</span><span class="p">(</span><span class="s">"hoclaptrinh.mp4"</span><span class="p">)</span>
+    <span class="n">proxyVideo</span><span class="p">.</span><span class="nf">showVideo</span><span class="p">()</span>
+    <span class="nf">println</span><span class="p">()</span>
+    <span class="n">proxyVideo</span><span class="p">.</span><span class="nf">showVideo</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Kết quả</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Video loaded: hoclaptrinh.mp4
+Video Showed: hoclaptrinh.mp4
+
+Video already exits:hoclaptrinh.mp4
+Video Showed: hoclaptrinh.mp4
+
+Process finished with exit code 0
+</code></pre></div></div>
+
+<p>Dựa trên cấu trúc của phần viết về Flyweight Pattern, dưới đây là cách áp dụng tương tự cho Proxy Pattern:</p>
+
+<h2 id="khi-nào-áp-dụng-mẫu-proxy">Khi nào áp dụng mẫu Proxy</h2>
+
+<p>Mẫu Proxy phù hợp trong các tình huống mà việc truy cập trực tiếp vào một đối tượng không phải là lựa chọn tối ưu, hoặc cần có thêm các lớp trung gian để quản lý hoặc bổ sung chức năng cho đối tượng đó. Dưới đây là một số tình huống cụ thể:</p>
+
+<ol>
+  <li>
+    <p><strong>Kiểm Soát Truy cập</strong>: Khi bạn muốn kiểm soát hoặc hạn chế quyền truy cập vào một đối tượng, Proxy Pattern có thể đóng vai trò như một bức tường lửa. Điều này thường thấy trong việc quản lý quyền truy cập đối với đối tượng nhạy cảm hoặc quan trọng.</p>
+  </li>
+  <li>
+    <p><strong>Lười Biếng Tải Đối tượng (Lazy Loading)</strong>: Đối với việc tải các đối tượng lớn hoặc tốn kém về tài nguyên, việc sử dụng Proxy Pattern giúp trì hoãn quá trình này cho đến khi thực sự cần thiết. Điều này giúp tăng hiệu suất và tiết kiệm tài nguyên.</p>
+  </li>
+  <li>
+    <p><strong>Tạo Log và Điều khiển Quyền truy cập</strong>: Khi cần theo dõi hoặc ghi lại các hoạt động truy cập đối với một đối tượng, sử dụng Proxy giúp bạn dễ dàng thêm chức năng này mà không làm thay đổi đối tượng gốc.</p>
+  </li>
+  <li>
+    <p><strong>Tối ưu Hóa Hiệu suất và Bộ nhớ</strong>: Trong các ứng dụng đòi hỏi tối ưu hóa về hiệu suất và bộ nhớ, như trong trường hợp các đối tượng cần tải dữ liệu từ mạng, Proxy Pattern có thể giúp giảm bớt tải trọng bằng cách cache hoặc trì hoãn việc tải dữ liệu.</p>
+  </li>
+  <li>
+    <p><strong>Chức năng Bổ sung hoặc Sửa đổi</strong>: Khi muốn thêm hoặc sửa đổi chức năng của một đối tượng mà không làm thay đổi mã nguồn của đối tượng đó, Proxy Pattern cung cấp một cách hiệu quả để thực hiện điều này.</p>
+  </li>
+</ol>
+
+<p>Proxy Pattern không nên sử dụng khi không cần quản lý, kiểm soát hoặc bổ sung chức năng cho đối tượng, hoặc khi việc thêm một lớp trung gian làm tăng độ phức tạp không cần thiết cho ứng dụng. Trong những trường hợp này, việc sử dụng trực tiếp đối tượng gốc có thể là lựa chọn tốt hơn.</p>
+
+  </div><a class="u-url" href="/design-pattern/structural-patterns/proxy" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/design-pattern/structural-patterns/intro" class="prev-post">← Structural Patterns Intro</a>
+      
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

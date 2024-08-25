@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Chain of Responsibility Pattern | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Chain of Responsibility Pattern" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Khái niệm" />
+<meta property="og:description" content="Khái niệm" />
+<link rel="canonical" href="http://localhost:4000/design-pattern/behavioral-patterns/chain-of-responsibility" />
+<meta property="og:url" content="http://localhost:4000/design-pattern/behavioral-patterns/chain-of-responsibility" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Chain of Responsibility Pattern" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"Khái niệm","headline":"Chain of Responsibility Pattern","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/design-pattern/behavioral-patterns/chain-of-responsibility"},"url":"http://localhost:4000/design-pattern/behavioral-patterns/chain-of-responsibility"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Chain of Responsibility Pattern</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/design-pattern/behavioral-patterns">design-pattern/behavioral-patterns</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="khái-niệm">Khái niệm</h2>
+
+<p><strong>Chain of Responsibility</strong> là Pattern thuộc nhóm hành vi (behavioral). Nó cho phép bản chuyển các yêu câu dọc theo chuỗi xử lý. Khi nhận được yêu cầu, mỗi trình xử lý sẽ quyết định xử lý yêu cầu hoặc chuyển cho trình xử lý khác.</p>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p>Bây giờ hãy tưởng tượng, bạn là một dev đang làm một hệ thống đặt hàng online. Bạn muốn hạn chế quyền truy cập vào hệ thống, chỉ những người đã xác thực mới có thể tạo đơn hàng. Đối với admin thì có toàn quền truy cập đơn của mọi người.</p>
+
+<p><img src="Images/problem.png" alt="" /></p>
+
+<p>Sau một thời gian lên ý tưởng, bạn nhận các thao tác xác thực phải thực hiện tuần tự. Hệ thống sẽ xác thực người dùng khi người dùng đăng nhập, Tuy nhiên, nếu thông tin xác thực đó không thành công, thì không có lí do gì để thưc hiện các bước tiếp theo.</p>
+
+<p>Vài tháng sau, chức năng xác thực cần thêm vài case kiểm tra tuần tự nữa.</p>
+
+<ul>
+  <li>Có một anh đông nghiệp dể thương nào đấy nói với bạn rằng: “Em ơi, em chuyển dữ liệu thổ thẳng database hơi nguy hiểm nha em”. Thế là bạn tiến một bước kiểm tra và lộc lại dữ liệu.</li>
+  <li>Vài tháng yên ắn sau đó, Có anh hacker mũ trắng nào đó bảo hệ thống của bạn quá yếu dể dàng bẻ khóa mật khẩu bằng brute force. Bạn nhận ra đó là sự thật, bạn vội thệm một lớp kiểm tra, lộc các yêu cầu lặp đi lặp lại không thành công nhưng có IP giống nhau và chặn nó.</li>
+</ul>
+
+<p><img src="Images/problem2.png" alt="" /></p>
+
+<p>Theo thời gian, cái lớp xác thực của bạn càng ngày càng bự, nó trở thành mớ hỗn độn khó kiểm soát và mở rộng. Đặc biệt hơn, nếu ở những thành phần khác của hệ thống muốn dùng lại lớp xác thực, đây là điều không thể. Vì nhiều khi ở các thành phần khác chỉ cần sử một vài hàm nhỏ trong cái lớp xác thực bự đó.</p>
+
+<h2 id="giải-pháp">Giải pháp</h2>
+
+<p>Chain of Responsibility dựa vào việc chuyển đổi các hành vi cụ thể thành các đối tượng hoạt động lập gọi là handlers. Trong vấn đề trên, với hoạt động kiểm thử bạn nên đổi chúng thành một lớp đối tượng cụ thể với một phương thức duy nhất là kiểm tra.</p>
+
+<p><img src="Images/solution.png" alt="" /></p>
+
+<p>Mô hình gợi ý bạn liên kết các handlers lại thành một chuỗi. Như vậy, mỗi handlers phải lưu trữ tham chiếu đến handler tiếp theo, ngoài việc xử lý yêu cầu handlers còn có nhiệm vụ chuyện đến các handers tiếp theo. Yêu cầu sẽ chuyển theo hết chuỗi hoặc có thể kết thúc bật kì handlers nào.</p>
+
+<h2 id="cấu-trúc">Cấu Trúc</h2>
+
+<p><img src="Images/struct.png" alt="" /></p>
+
+<ul>
+  <li>Handler: Định nghĩa 1 interface để xử lý các yêu cầu.</li>
+  <li>ConcreteHandler: Implement phương thức từ handler.</li>
+  <li>Client: Tạo ra các yêu cầu và yêu cầu đó sẽ được gửi đến các đối tượng tiếp nhận.</li>
+</ul>
+
+<h2 id="ví-dụ-áp-dụng-chain-of-responsibility">Ví dụ áp dụng Chain of Responsibility</h2>
+
+<p><img src="Images/vidu.png" alt="" /></p>
+
+<p>Test.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Test</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">Test</span> <span class="n">next</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nc">Test</span> <span class="nf">linkWith</span><span class="o">(</span><span class="nc">Test</span> <span class="n">next</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">next</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">next</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">boolean</span> <span class="nf">check</span><span class="o">(</span><span class="nc">String</span> <span class="n">email</span><span class="o">,</span> <span class="nc">String</span> <span class="n">password</span><span class="o">);</span>
+
+    
+    <span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">checkNext</span><span class="o">(</span><span class="nc">String</span> <span class="n">email</span><span class="o">,</span> <span class="nc">String</span> <span class="n">password</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">next</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">next</span><span class="o">.</span><span class="na">check</span><span class="o">(</span><span class="n">email</span><span class="o">,</span> <span class="n">password</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>RawDataTest.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RawDataTest</span> <span class="kd">extends</span> <span class="nc">Test</span><span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">check</span><span class="o">(</span><span class="nc">String</span> <span class="n">email</span><span class="o">,</span> <span class="nc">String</span> <span class="n">password</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Raw Data"</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">email</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s">"@"</span><span class="o">))</span> <span class="o">{</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Email Valid"</span><span class="o">);</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">checkNext</span><span class="o">(</span><span class="n">email</span><span class="o">,</span><span class="n">password</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>RoleTest.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RoleTest</span> <span class="kd">extends</span> <span class="nc">Test</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">check</span><span class="o">(</span><span class="nc">String</span> <span class="n">email</span><span class="o">,</span> <span class="nc">String</span> <span class="n">password</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Role Data"</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">email</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">"admin@example.com"</span><span class="o">))</span> <span class="o">{</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Hello, admin!"</span><span class="o">);</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Hello, user!"</span><span class="o">);</span>
+        <span class="k">return</span> <span class="nf">checkNext</span><span class="o">(</span><span class="n">email</span><span class="o">,</span> <span class="n">password</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>UserExistsTest.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserExistsTest</span> <span class="kd">extends</span> <span class="nc">Test</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">Server</span> <span class="n">server</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">UserExistsTest</span><span class="o">(</span><span class="nc">Server</span> <span class="n">server</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">server</span> <span class="o">=</span> <span class="n">server</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">check</span><span class="o">(</span><span class="nc">String</span> <span class="n">email</span><span class="o">,</span> <span class="nc">String</span> <span class="n">password</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"User Exist"</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">server</span><span class="o">.</span><span class="na">hasEmail</span><span class="o">(</span><span class="n">email</span><span class="o">))</span> <span class="o">{</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"This email is not registered!"</span><span class="o">);</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="nf">checkNext</span><span class="o">(</span><span class="n">email</span><span class="o">,</span> <span class="n">password</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Server.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Server</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">String</span><span class="o">&gt;</span> <span class="n">users</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">private</span> <span class="nc">Test</span> <span class="n">test</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setTest</span><span class="o">(</span><span class="nc">Test</span> <span class="n">test</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">test</span> <span class="o">=</span> <span class="n">test</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasEmail</span><span class="o">(</span><span class="nc">String</span> <span class="n">email</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">users</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">email</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">register</span><span class="o">(</span><span class="nc">String</span> <span class="n">email</span><span class="o">,</span> <span class="nc">String</span> <span class="n">password</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">users</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">email</span><span class="o">,</span> <span class="n">password</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">logIn</span><span class="o">(</span><span class="nc">String</span> <span class="n">email</span><span class="o">,</span> <span class="nc">String</span> <span class="n">password</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">test</span><span class="o">.</span><span class="na">check</span><span class="o">(</span><span class="n">email</span><span class="o">,</span> <span class="n">password</span><span class="o">))</span> <span class="o">{</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Authorization have been successful!"</span><span class="o">);</span>
+
+            <span class="c1">// Do something useful here for authorized users.</span>
+
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Authorization have been fail!"</span><span class="o">);</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Demo.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Demo</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Server</span> <span class="n">server</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Server</span><span class="o">();</span>
+        <span class="n">server</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="s">"admin@example.com"</span><span class="o">,</span> <span class="s">"admin_pass"</span><span class="o">);</span>
+        <span class="n">server</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="s">"phuc@xample.com"</span><span class="o">,</span> <span class="s">"user_pass"</span><span class="o">);</span>
+
+        <span class="nc">Test</span> <span class="n">test</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">RawDataTest</span><span class="o">();</span>
+        <span class="n">test</span><span class="o">.</span><span class="na">linkWith</span><span class="o">(</span><span class="k">new</span> <span class="nc">UserExistsTest</span><span class="o">(</span><span class="n">server</span><span class="o">)).</span><span class="na">linkWith</span><span class="o">(</span><span class="k">new</span> <span class="nc">RoleTest</span><span class="o">());</span>
+
+        <span class="n">server</span><span class="o">.</span><span class="na">setTest</span><span class="o">(</span><span class="n">test</span><span class="o">);</span>
+
+        <span class="n">server</span><span class="o">.</span><span class="na">logIn</span><span class="o">(</span><span class="s">"phuc@xample.com"</span><span class="o">,</span><span class="s">"user_pass"</span><span class="o">);</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+        <span class="n">server</span><span class="o">.</span><span class="na">logIn</span><span class="o">(</span><span class="s">"phucxample.com"</span><span class="o">,</span><span class="s">"user_pass"</span><span class="o">);</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+        <span class="n">server</span><span class="o">.</span><span class="na">logIn</span><span class="o">(</span><span class="s">"admin@example.com"</span><span class="o">,</span> <span class="s">"admin_pass"</span><span class="o">);</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="khi-nào-áp-dụng">Khi nào áp dụng</h2>
+
+<p>Sử dụng khi chương trình của bạn cần sử nhiều loại yêu cầu khác nhau, nhưng bạn chưa chưa xác định được loại yêu cầu và cách sắp xếp tuần tự của nó.</p>
+
+<p>Áp dụng khi một tác vụ nào đó cần sử lý tuần tự.</p>
+
+
+  </div><a class="u-url" href="/design-pattern/behavioral-patterns/chain-of-responsibility" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/design-pattern/intro" class="prev-post">← Giới thiệu Design Pattern</a>
+      
+      
+        <a href="/design-pattern/behavioral-patterns/command" class="next-post">Command Pattern →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

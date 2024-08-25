@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Flyweight Pattern | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Flyweight Pattern" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Khái Niệm" />
+<meta property="og:description" content="Khái Niệm" />
+<link rel="canonical" href="http://localhost:4000/design-pattern/structural-patterns/flyweight" />
+<meta property="og:url" content="http://localhost:4000/design-pattern/structural-patterns/flyweight" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Flyweight Pattern" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"Khái Niệm","headline":"Flyweight Pattern","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/design-pattern/structural-patterns/flyweight"},"url":"http://localhost:4000/design-pattern/structural-patterns/flyweight"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Flyweight Pattern</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/design-pattern/structural-patterns">design-pattern/structural-patterns</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="khái-niệm">Khái Niệm</h2>
+
+<p>Khi làm việc với các hệ thống phần mềm lớn và phức tạp, việc quản lý hiệu quả bộ nhớ và tài nguyên là vô cùng quan trọng. Đây là nơi mà mẫu thiết kế Flyweight, một mẫu thiết kế cấu trúc, thể hiện vai trò của mình. Flyweight Pattern giúp giảm bớt lượng bộ nhớ cần thiết cho ứng dụng bằng cách chia sẻ những đối tượng tương tự nhau đến mức tối đa.</p>
+
+<h3 id="tổng-quan">Tổng quan</h3>
+
+<ul>
+  <li>
+    <p><strong>Định Nghĩa của Pattern:</strong> Flyweight Pattern là một mẫu thiết kế sử dụng chia sẻ để hỗ trợ một lượng lớn đối tượng nhỏ mà không làm giảm hiệu suất. Mẫu này giúp giảm thiểu việc sử dụng bộ nhớ bằng cách chia sẻ càng nhiều trạng thái giữa các đối tượng càng tốt.</p>
+  </li>
+  <li>
+    <p><strong>Mục Đích:</strong> Mẫu thiết kế này hữu ích khi cần tạo ra một số lượng lớn đối tượng nhỏ trong một hệ thống, nơi mà việc sử dụng bộ nhớ và tài nguyên là một vấn đề cần được xem xét kỹ lưỡng.</p>
+  </li>
+  <li>
+    <p><strong>Ý Tưởng Cốt Lõi:</strong> Flyweight Pattern tập trung vào việc tạo ra các đối tượng “flyweight” mà chia sẻ trạng thái chung để giảm thiểu việc sử dụng bộ nhớ. Trong mô hình này, mỗi đối tượng flyweight đều có thể đại diện cho nhiều đối tượng khác, giúp tiết kiệm tài nguyên mà không ảnh hưởng đến tính toàn vẹn và hiệu suất của ứng dụng.</p>
+  </li>
+</ul>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p>Hãy tưởng tượng bạn đang phát triển một trò chơi trực tuyến đa người chơi (MMO) với một thế giới rộng lớn, nơi người chơi có thể tương tác với nhau và môi trường xung quanh. Trong trò chơi này, có hàng ngàn đối tượng khác nhau như nhân vật, vật phẩm, quái vật, và các yếu tố môi trường (cây, đá, nhà cửa).</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class GameWorld {
+        +renderCharacters()
+        +renderItems()
+        +renderMonsters()
+        +renderEnvironment()
+    }
+
+    class Character {
+        +render()
+    }
+
+    class Item {
+        +render()
+    }
+
+    class Monster {
+        +render()
+    }
+
+    class EnvironmentObject {
+        +render()
+    }
+
+    GameWorld --&gt; Character : contains
+    GameWorld --&gt; Item : contains
+    GameWorld --&gt; Monster : contains
+    GameWorld --&gt; EnvironmentObject : contains
+</code></pre>
+
+<p>Ban đầu, mỗi đối tượng trong trò chơi này được xử lý như một thực thể riêng biệt. Mỗi nhân vật, vật phẩm, quái vật, và yếu tố môi trường đều có bộ dữ liệu riêng, bao gồm hình ảnh, vị trí, và trạng thái. Điều này làm cho hệ thống yêu cầu một lượng lớn bộ nhớ và tài nguyên xử lý để duy trì trạng thái và hiển thị của hàng ngàn đối tượng cùng một lúc.</p>
+
+<ul>
+  <li>Các nhân vật có thể chia sẻ nhiều thuộc tính chung như hình dáng cơ bản, bộ kỹ năng, và trang bị.</li>
+  <li>Vật phẩm và quái vật cũng tương tự, với nhiều đặc điểm chung nhưng lại được biểu diễn như các đối tượng độc lập.</li>
+  <li>Các yếu tố môi trường như cây cối, đá, và nhà cửa có thể xuất hiện nhiều lần trong trò chơi, nhưng mỗi lần lại được tải như một đối tượng riêng.</li>
+</ul>
+
+<p>Vấn đề này gây ra sự chậm trễ trong quá trình tải trò chơi và cả trong lúc chơi, ảnh hưởng đến trải nghiệm người chơi. Đặc biệt trong môi trường MMO, nơi sự mượt mà và phản hồi nhanh là yếu tố quan trọng, việc tối ưu hóa hiệu suất và bộ nhớ trở thành một yêu cầu cấp thiết.</p>
+
+<p>Đây chính là lúc Flyweight Pattern có thể được áp dụng. Mẫu thiết kế này giúp tối ưu hóa việc sử dụng bộ nhớ bằng cách chia sẻ các đối tượng có thuộc tính chung, giảm bớt số lượng đối tượng cần tải và quản lý. Điều này không chỉ giúp tăng cường hiệu suất mà còn cải thiện trải nghiệm người chơi, đặc biệt trong một môi trường trực tuyến đa người chơi.</p>
+
+<h2 id="giải-pháp">Giải pháp</h2>
+
+<p>Để giải quyết những thách thức trong quản lý trò chơi trực tuyến đa người chơi, việc sử dụng Flyweight Pattern là một lựa chọn hợp lý. Mô hình này tập trung vào việc tối ưu hóa bộ nhớ và hiệu suất bằng cách chia sẻ các đối tượng chung giữa nhiều thực thể. Cách thức áp dụng Flyweight Pattern như sau:</p>
+
+<ol>
+  <li>
+    <p><strong>Xác định Đối tượng Flyweight</strong>: Phân tích và xác định những phần thông tin có thể được chia sẻ giữa các đối tượng. Trong trò chơi MMO, điều này có thể bao gồm dữ liệu về hình ảnh, animations, bản đồ, đặc điểm của nhân vật, vật phẩm, và yếu tố môi trường.</p>
+  </li>
+  <li>
+    <p><strong>Tạo Flyweight Factory</strong>: Xây dựng một <code class="language-plaintext highlighter-rouge">GameFlyweightFactory</code> để quản lý việc tạo và tái sử dụng các đối tượng Flyweight. Factory này sẽ cung cấp một cách để lấy hoặc tạo đối tượng Flyweight dựa trên các thông tin cần thiết.</p>
+  </li>
+  <li>
+    <p><strong>Áp dụng Flyweight trong Game World</strong>: Trong lớp <code class="language-plaintext highlighter-rouge">GameWorld</code>, thay vì tạo ra hàng ngàn thực thể riêng lẻ, sử dụng <code class="language-plaintext highlighter-rouge">GameFlyweightFactory</code> để tạo hoặc lấy các đối tượng Flyweight. Điều này giúp giảm lượng bộ nhớ cần thiết và tối ưu hóa hiệu suất khi hiển thị và quản lý các đối tượng trong trò chơi.</p>
+  </li>
+</ol>
+
+<pre><code class="language-mermaid">classDiagram
+    class GameWorld {
+        +renderWorld()
+    }
+
+    class GameFlyweightFactory {
+        +getCharacterFlyweight()
+        +getItemFlyweight()
+        +getMonsterFlyweight()
+        +getEnvironmentObjectFlyweight()
+    }
+
+    class CharacterFlyweight {
+        +render()
+    }
+
+    class ItemFlyweight {
+        +render()
+    }
+
+    class MonsterFlyweight {
+        +render()
+    }
+
+    class EnvironmentObjectFlyweight {
+        +render()
+    }
+
+    GameWorld --&gt; GameFlyweightFactory : uses
+    GameFlyweightFactory --&gt; CharacterFlyweight : creates
+    GameFlyweightFactory --&gt; ItemFlyweight : creates
+    GameFlyweightFactory --&gt; MonsterFlyweight : creates
+    GameFlyweightFactory --&gt; EnvironmentObjectFlyweight : creates
+</code></pre>
+
+<p>Sơ đồ trên minh họa cách <code class="language-plaintext highlighter-rouge">GameFlyweightFactory</code> được tích hợp vào <code class="language-plaintext highlighter-rouge">GameWorld</code>, giúp giảm bớt việc tạo và quản lý đối tượng riêng biệt cho mỗi thực thể trong trò chơi. Mô hình này không chỉ giúp giảm thiểu lượng bộ nhớ cần thiết mà còn tối ưu hóa quá trình xử lý, mang lại trải nghiệm mượt mà và hiệu quả hơn cho người chơi.</p>
+
+<h2 id="cấu-trúc">Cấu trúc</h2>
+
+<pre><code class="language-mermaid">classDiagram
+    class Flyweight {
+      &lt;&lt;interface&gt;&gt;
+      -IntrinsicState
+      +Operation(extrinsicState)
+    }
+
+    class ConcreteFlyweight {
+      -IntrinsicState
+      +Operation(extrinsicState)
+    }
+
+    class UnsharedConcreteFlyweight {
+      -AllState
+      +Operation(extrinsicState)
+    }
+
+    class FlyweightFactory {
+      -Flyweights
+      +GetFlyweight(key)
+    }
+
+    class Client {
+      -FlyweightFactory
+    }
+
+    Flyweight &lt;|-- ConcreteFlyweight : implements
+    Flyweight &lt;|-- UnsharedConcreteFlyweight : implements
+    FlyweightFactory o-- Flyweight : creates/manages
+    Client --&gt; FlyweightFactory : uses
+</code></pre>
+
+<p><strong>Sơ đồ</strong>:</p>
+<ul>
+  <li><strong>Flyweight</strong>: Lớp này chứa trạng thái bên trong (intrinsic) không đổi.</li>
+  <li><strong>ConcreteFlyweight</strong>: Lớp con của Flyweight, cài đặt trạng thái bên trong.</li>
+  <li><strong>UnsharedConcreteFlyweight</strong>: Không phải lúc nào cũng cần thiết, dùng cho trạng thái bên ngoài (extrinsic) có thể thay đổi.</li>
+  <li><strong>FlyweightFactory</strong>: Tạo và quản lý các đối tượng Flyweight, đảm bảo rằng flyweights được chia sẻ một cách hiệu quả.</li>
+  <li><strong>Client</strong>: Sử dụng các đối tượng Flyweight thông qua FlyweightFactory.</li>
+</ul>
+
+<p><strong>Tổ chức và Tương tác</strong>:</p>
+<ul>
+  <li>Trong Flyweight Pattern, các đối tượng Flyweight được tạo và quản lý bởi FlyweightFactory. Factory đảm bảo rằng các đối tượng được tái sử dụng thay vì tạo mới mỗi lần cần thiết, qua đó giảm bộ nhớ và chi phí tạo đối tượng.</li>
+  <li>Client tương tác với Flyweight thông qua FlyweightFactory. Khi một Client yêu cầu một Flyweight, Factory kiểm tra xem đối tượng đó đã tồn tại hay chưa. Nếu có, nó sẽ trả về đối tượng hiện có; nếu không, nó sẽ tạo một đối tượng mới.</li>
+  <li>Trong khi Flyweight chứa trạng thái bên trong không đổi, Client có thể truyền trạng thái bên ngoài vào Flyweight trong thời gian thực thi. Điều này cho phép cùng một đối tượng Flyweight được sử dụng trong các bối cảnh khác nhau với trạng thái bên ngoài khác nhau.</li>
+</ul>
+
+<h2 id="ví-dụ-áp-dụng-flyweight-pattern">Ví dụ áp dụng Flyweight Pattern</h2>
+
+<p>Flyweight Pattern giúp giảm bớt lượng bộ nhớ sử dụng bằng cách chia sẻ càng nhiều dữ liệu càng tốt giữa các đối tượng tương tự. Trong ví dụ về việc thiết kế một trò chơi với nhiều cây cối, thay vì tạo một đối tượng riêng biệt cho mỗi cây, chúng ta sẽ tạo ra một số lượng nhỏ các đối tượng Flyweight chứa trạng thái chung (như loại cây, kích thước, màu sắc) và sử dụng chúng để biểu diễn nhiều cây khác nhau trong trò chơi bằng cách thay đổi vị trí và một số thuộc tính riêng biệt không chia sẻ.</p>
+
+<pre><code class="language-mermaid">        classDiagram
+class TreeFactory {
+        -treeTypes Map
+        +getTreeType(name, color, texture) TreeType
+}
+class TreeType {
+        +draw(canvas, x, y)
+}
+class Tree {
+        -x int
+        -y int
+        -treeType TreeType
+        +draw(canvas)
+}
+class Client {
+        -treeFactory TreeFactory
+        +operation()
+}
+
+    TreeFactory --&gt; TreeType : creates and manages
+            Client --&gt; TreeFactory : uses
+            Tree --&gt; TreeType : uses
+</code></pre>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+
+<span class="c1">// Flyweight Factory</span>
+<span class="kd">class</span> <span class="nc">TreeFactory</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">TreeType</span><span class="o">&gt;</span> <span class="n">treeTypes</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;&gt;();</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="nc">TreeType</span> <span class="nf">getTreeType</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="nc">String</span> <span class="n">color</span><span class="o">,</span> <span class="nc">String</span> <span class="n">texture</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">TreeType</span> <span class="n">result</span> <span class="o">=</span> <span class="n">treeTypes</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">result</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TreeType</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">color</span><span class="o">,</span> <span class="n">texture</span><span class="o">);</span>
+            <span class="n">treeTypes</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Flyweight</span>
+<span class="kd">class</span> <span class="nc">TreeType</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">color</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">texture</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">TreeType</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="nc">String</span> <span class="n">color</span><span class="o">,</span> <span class="nc">String</span> <span class="n">texture</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">color</span> <span class="o">=</span> <span class="n">color</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">texture</span> <span class="o">=</span> <span class="n">texture</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">(</span><span class="nc">String</span> <span class="n">canvas</span><span class="o">,</span> <span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Drawing %s tree at (%d, %d) on %s%n"</span><span class="o">,</span> <span class="n">name</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">canvas</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Client code</span>
+<span class="kd">class</span> <span class="nc">Tree</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">x</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">y</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">TreeType</span> <span class="n">treeType</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Tree</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">,</span> <span class="nc">TreeType</span> <span class="n">treeType</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">treeType</span> <span class="o">=</span> <span class="n">treeType</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">(</span><span class="nc">String</span> <span class="n">canvas</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">treeType</span><span class="o">.</span><span class="na">draw</span><span class="o">(</span><span class="n">canvas</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Forest</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">TreeType</span> <span class="n">mapleTreeType</span> <span class="o">=</span> <span class="nc">TreeFactory</span><span class="o">.</span><span class="na">getTreeType</span><span class="o">(</span><span class="s">"Maple"</span><span class="o">,</span> <span class="s">"Green"</span><span class="o">,</span> <span class="s">"Smooth"</span><span class="o">);</span>
+
+        <span class="nc">Tree</span> <span class="n">tree1</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Tree</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="n">mapleTreeType</span><span class="o">);</span>
+        <span class="nc">Tree</span> <span class="n">tree2</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Tree</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="n">mapleTreeType</span><span class="o">);</span>
+        <span class="c1">// ... more trees</span>
+
+        <span class="n">tree1</span><span class="o">.</span><span class="na">draw</span><span class="o">(</span><span class="s">"Canvas1"</span><span class="o">);</span>
+        <span class="n">tree2</span><span class="o">.</span><span class="na">draw</span><span class="o">(</span><span class="s">"Canvas2"</span><span class="o">);</span>
+        <span class="c1">// ... draw more trees</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Trong ví dụ này, TreeFactory tạo và quản lý các đối tượng TreeType (Flyweight). Các đối tượng Tree sẽ sử dụng các TreeType này để vẽ chúng lên “canvas”, nhưng mỗi đối tượng Tree vẫn có thể có vị trí riêng (x, y).</p>
+
+<h2 id="khi-nào-áp-dụng-mẫu-flyweight">Khi nào áp dụng mẫu Flyweight</h2>
+
+<p>Mẫu Flyweight được sử dụng hiệu quả nhất trong các tình huống mà một ứng dụng cần tạo ra một lượng lớn đối tượng với các trạng thái tương tự nhau. Điều này thường xảy ra trong các ứng dụng có các đối tượng đồ họa hoặc môi trường mạng, nơi việc tái sử dụng đối tượng có thể giảm đáng kể chi phí về bộ nhớ và cải thiện hiệu suất.</p>
+
+<ol>
+  <li>
+    <p><strong>Tối ưu hóa Bộ nhớ</strong>: Khi ứng dụng của bạn phải xử lý hàng ngàn hoặc hàng triệu đối tượng có trạng thái không thay đổi, dùng chung các thuộc tính có thể giúp tiết kiệm đáng kể bộ nhớ.</p>
+  </li>
+  <li>
+    <p><strong>Tái sử dụng Đối tượng</strong>: Trong trường hợp có nhu cầu tái sử dụng đối tượng thay vì tạo mới, Flyweight là lựa chọn lý tưởng. Điều này đặc biệt có ích trong các ứng dụng đòi hỏi hiệu suất cao và thời gian phản hồi nhanh.</p>
+  </li>
+  <li>
+    <p><strong>Phân tách Trạng thái Nội tại và Ngoại tại</strong>: Nếu bạn có thể phân biệt được trạng thái nội tại (không thay đổi) và trạng thái ngoại tại (thay đổi) của đối tượng, mẫu Flyweight cho phép bạn chia sẻ trạng thái nội tại giữa nhiều đối tượng, trong khi vẫn quản lý trạng thái ngoại tại một cách độc lập.</p>
+  </li>
+  <li>
+    <p><strong>Cải thiện Hiệu suất trong Môi trường Có Hạn chế về Tài nguyên</strong>: Trong các môi trường có hạn chế về tài nguyên như thiết bị di động hoặc hệ thống nhúng, việc sử dụng mẫu Flyweight có thể cải thiện hiệu suất bằng cách giảm bớt gánh nặng cho bộ nhớ và CPU.</p>
+  </li>
+</ol>
+
+<p>Flyweight ít phù hợp khi các đối tượng trong ứng dụng của bạn có trạng thái độc lập và khác biệt rõ ràng, hoặc khi việc tiết kiệm bộ nhớ không phải là mối quan tâm chính. Trong những tình huống như vậy, việc áp dụng Flyweight có thể không đem lại lợi ích đáng kể và thậm chí còn làm tăng độ phức tạp của mã nguồn.</p>
+
+  </div><a class="u-url" href="/design-pattern/structural-patterns/flyweight" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/design-pattern/structural-patterns/facade" class="prev-post">← Facade</a>
+      
+      
+        <a href="/design-pattern/structural-patterns/intro" class="next-post">Structural Patterns Intro →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

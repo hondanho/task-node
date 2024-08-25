@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Nguyên lý SOLID strong C# | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Nguyên lý SOLID strong C#" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="SOLID là nguyên tắc thiết kế, phát triển phần mềm giúp code dễ đọc, code tốt, code dễ bảo trì, ược ghép lại từ 5 chữ viết tắt đầu tiên của 5 nguyên tắc này: S is single responsibility principle (SRP): Một class chỉ nên giữ 1 trách nhiệm duy nhất O stands for open closed principle (OCP): Có thể thoải mái mở rộng 1 class, nhưng không được sửa đổi bên trong class đó L Liskov substitution principle (LSP): trong 1 chương trình, các object của class con có thể thay thế class cha mà không làm thay đổi tính đúng đắn của chương trình I interface segregation principle (ISP): thay vì dùng 1 interface lớn, ta nên tách thành nhiều interface nhỏ, với nhiều mục đích cụ thể D Dependency injection principle (DIP): các module cấp cao không nên phụ thuộc vào các module cấp thấp, cả 2 nên phụ thuộc vào abstract interface(abtraction) không nên phụ thuộc vào chi tiết mà ngược lại( các class giao tiếp với nhau qua interface, không phải qua implement)" />
+<meta property="og:description" content="SOLID là nguyên tắc thiết kế, phát triển phần mềm giúp code dễ đọc, code tốt, code dễ bảo trì, ược ghép lại từ 5 chữ viết tắt đầu tiên của 5 nguyên tắc này: S is single responsibility principle (SRP): Một class chỉ nên giữ 1 trách nhiệm duy nhất O stands for open closed principle (OCP): Có thể thoải mái mở rộng 1 class, nhưng không được sửa đổi bên trong class đó L Liskov substitution principle (LSP): trong 1 chương trình, các object của class con có thể thay thế class cha mà không làm thay đổi tính đúng đắn của chương trình I interface segregation principle (ISP): thay vì dùng 1 interface lớn, ta nên tách thành nhiều interface nhỏ, với nhiều mục đích cụ thể D Dependency injection principle (DIP): các module cấp cao không nên phụ thuộc vào các module cấp thấp, cả 2 nên phụ thuộc vào abstract interface(abtraction) không nên phụ thuộc vào chi tiết mà ngược lại( các class giao tiếp với nhau qua interface, không phải qua implement)" />
+<link rel="canonical" href="http://localhost:4000/basic-knowledge/nguyen-ly-solid-trong-c-sharp" />
+<meta property="og:url" content="http://localhost:4000/basic-knowledge/nguyen-ly-solid-trong-c-sharp" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-03-12T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Nguyên lý SOLID strong C#" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-03-12T00:00:00+07:00","datePublished":"2024-03-12T00:00:00+07:00","description":"SOLID là nguyên tắc thiết kế, phát triển phần mềm giúp code dễ đọc, code tốt, code dễ bảo trì, ược ghép lại từ 5 chữ viết tắt đầu tiên của 5 nguyên tắc này: S is single responsibility principle (SRP): Một class chỉ nên giữ 1 trách nhiệm duy nhất O stands for open closed principle (OCP): Có thể thoải mái mở rộng 1 class, nhưng không được sửa đổi bên trong class đó L Liskov substitution principle (LSP): trong 1 chương trình, các object của class con có thể thay thế class cha mà không làm thay đổi tính đúng đắn của chương trình I interface segregation principle (ISP): thay vì dùng 1 interface lớn, ta nên tách thành nhiều interface nhỏ, với nhiều mục đích cụ thể D Dependency injection principle (DIP): các module cấp cao không nên phụ thuộc vào các module cấp thấp, cả 2 nên phụ thuộc vào abstract interface(abtraction) không nên phụ thuộc vào chi tiết mà ngược lại( các class giao tiếp với nhau qua interface, không phải qua implement)","headline":"Nguyên lý SOLID strong C#","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/basic-knowledge/nguyen-ly-solid-trong-c-sharp"},"url":"http://localhost:4000/basic-knowledge/nguyen-ly-solid-trong-c-sharp"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Nguyên lý SOLID strong C#</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-03-12T00:00:00+07:00" itemprop="datePublished">Mar 12, 2024
+      </time>• posted on  <a class="category-name" href="/category/basic-knowledge">basic-knowledge</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>SOLID là nguyên tắc thiết kế, phát triển phần mềm giúp code dễ đọc, code tốt, code dễ bảo trì, ược ghép lại từ 5 chữ viết tắt đầu tiên của 5 nguyên tắc này:</p>
+<ul>
+  <li>S is single responsibility principle (SRP): Một class chỉ nên giữ 1 trách nhiệm duy nhất</li>
+  <li>O stands for open closed principle (OCP): Có thể thoải mái mở rộng 1 class, nhưng không được sửa đổi bên trong class đó</li>
+  <li>L Liskov substitution principle (LSP): trong 1 chương trình, các object của class con có thể thay thế class cha mà không làm thay đổi tính đúng đắn của chương trình</li>
+  <li>I interface segregation principle (ISP): thay vì dùng 1 interface lớn, ta nên tách thành nhiều interface nhỏ, với nhiều mục đích cụ thể</li>
+  <li>D Dependency injection principle (DIP): 
+các module cấp cao không nên phụ thuộc vào các module cấp thấp, cả 2 nên phụ thuộc vào abstract
+interface(abtraction) không nên phụ thuộc vào chi tiết mà ngược lại( các class giao tiếp với nhau qua interface, không phải qua implement)</li>
+</ul>
+
+<p>Example:</p>
+<h3 id="single-responsibility-principle">Single responsibility principle</h3>
+<script src="https://gist.github.com/hondanho/be5f3daae921af68260cd64a05b3ebf3.js"></script>
+
+<h3 id="stands-for-open-closed-principle">Stands for open closed principle</h3>
+<script src="https://gist.github.com/hondanho/3dc699f685008b6e605ed7db40a7140d.js"></script>
+
+<h3 id="liskov-substitution-principle">Liskov substitution principle</h3>
+<script src="https://gist.github.com/hondanho/43e07e170943182d21c8165e1717d137.js"></script>
+
+<h3 id="interface-segregation-principle">Interface segregation principle</h3>
+<p>Nên chia interface lớn thành các interface nhỏ khác nhau, việc gom quá nhiều method thì sẽ khó implement(các class kế thừa phải implement tất cả các method của interface đó)</p>
+
+<h3 id="dependency-inversion-principle">Dependency inversion principle</h3>
+<p><a href="/dependency-injection-di-trong-c-sharp.html">Xem tại đây</a></p>
+
+  </div><a class="u-url" href="/basic-knowledge/nguyen-ly-solid-trong-c-sharp" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/basic-knowledge/linq-toan-tap" class="prev-post">← Linq toàn tập</a>
+      
+      
+        <a href="/basic-knowledge/delegate-trong-c-sharp" class="next-post">Tất tần tật về delegate trong C# →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

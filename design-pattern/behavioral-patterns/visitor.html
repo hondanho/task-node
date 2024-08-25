@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Visitor Pattern | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Visitor Pattern" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Giới thiệu" />
+<meta property="og:description" content="Giới thiệu" />
+<link rel="canonical" href="http://localhost:4000/design-pattern/behavioral-patterns/visitor" />
+<meta property="og:url" content="http://localhost:4000/design-pattern/behavioral-patterns/visitor" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Visitor Pattern" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"Giới thiệu","headline":"Visitor Pattern","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/design-pattern/behavioral-patterns/visitor"},"url":"http://localhost:4000/design-pattern/behavioral-patterns/visitor"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Visitor Pattern</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/design-pattern/behavioral-patterns">design-pattern/behavioral-patterns</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="giới-thiệu">Giới thiệu</h2>
+
+<p>Visitor Pattern cho phép thêm các thao tác mới vào cấu trúc đối tượng hiện có mà không cần thay đổi code.</p>
+
+<h2 id="định-nghĩa">Định nghĩa</h2>
+
+<p>Visitor Pattern tách biệt các thao tác cần thực hiện lên các đối tượng khỏi các đối tượng đó, bằng cách đưa logic vào một lớp Visitor riêng biệt.</p>
+
+<h2 id="mục-đích">Mục đích</h2>
+
+<ul>
+  <li>
+    <p>Cho phép thêm các thao tác mới lên cấu trúc đối tượng hiện có mà không cần thay đổi code.</p>
+  </li>
+  <li>
+    <p>Tách biệt các thao tác khỏi các đối tượng thực hiện chúng.</p>
+  </li>
+</ul>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p>Giả sử bạn có một cấu trúc cây đối tượng phức tạp đại diện cho một tài liệu. Bây giờ cần thêm chức năng xuất tài liệu ra nhiều định dạng khác nhau (json, xml, pdf…).</p>
+
+<p>Làm thế nào để thêm chức năng mới mà không làm ảnh hưởng đến cấu trúc cây đối tượng hiện tại?</p>
+
+<h2 id="giải-quyết">Giải quyết</h2>
+
+<p>Visitor Pattern được áp dụng như sau:</p>
+
+<ul>
+  <li>
+    <p>Định nghĩa một interface Visitor với các phương thức visit tương ứng với từng lớp Element.</p>
+  </li>
+  <li>
+    <p>Các lớp Element sẽ có phương thức accept nhận vào một Visitor.</p>
+  </li>
+  <li>
+    <p>Tạo các ConcreteVisitor triển khai các phương thức visit để thực hiện các thao tác cụ thể lên Element.</p>
+  </li>
+</ul>
+
+<p><img src="https://refactoring.guru/images/patterns/diagrams/visitor/structure.png" alt="" /></p>
+
+<h2 id="cấu-trúc">Cấu trúc</h2>
+
+<p>Các thành phần chính trong Visitor Pattern:</p>
+
+<ul>
+  <li>
+    <p>Visitor: định nghĩa các phương thức thao tác trên các Element.</p>
+  </li>
+  <li>
+    <p>ConcreteVisitor: triển khai các phương thức trên.</p>
+  </li>
+  <li>
+    <p>Element: định nghĩa phương thức accept nhận vào một Visitor.</p>
+  </li>
+  <li>
+    <p>ConcreteElement: các lớp cụ thể cần áp dụng thao tác.</p>
+  </li>
+</ul>
+
+<h2 id="cách-triển-khai">Cách triển khai</h2>
+
+<p>Để triển khai Visitor trong Java, ta có thể:</p>
+
+<ul>
+  <li>
+    <p>Định nghĩa interface Visitor với các phương thức visit tương ứng với từng Element.</p>
+  </li>
+  <li>
+    <p>Các Element có phương thức accept nhận vào một Visitor.</p>
+  </li>
+  <li>
+    <p>Các ConcreteVisitor triển khai các phương thức visit.</p>
+  </li>
+</ul>
+
+<h2 id="ví-dụ">Ví dụ</h2>
+
+<p>// Ví dụ minh họa Visitor Pattern áp dụng cho việc xuất tài liệu</p>
+
+<h2 id="so-sánh-với-các-pattern">So sánh với các Pattern</h2>
+
+<p>So với Strategy, Visitor tách logic ra khỏi các đối tượng, trong khi Strategy nhóm các thuật toán lại với nhau.</p>
+
+<h2 id="kết-luận">Kết luận</h2>
+
+<p>Visitor Pattern giúp tách rời các thao tác khỏi các đối tượng thực thi, giúp dễ dàng bảo trì và mở rộng. Tuy nhiên cũng cần cân nhắc để tránh lạm dụng dẫn đến phức tạp code.</p>
+
+  </div><a class="u-url" href="/design-pattern/behavioral-patterns/visitor" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/design-pattern/behavioral-patterns/template-method" class="prev-post">← Template Method Pattern</a>
+      
+      
+        <a href="/design-pattern/creational-patterns/abstract-factory" class="next-post">Abstract Factory →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

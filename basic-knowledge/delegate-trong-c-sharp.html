@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Tất tần tật về delegate trong C# | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Tất tần tật về delegate trong C#" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Delegate là 1 biến tham chiếu(references) chứa tham chiếu tới một phương thức, tương tự như con trỏ hàm trong C, C++. Delegate giải quyết việc muốn hàm có parameter là 1 method Tham chiếu của delegate có thể thay đổi runtime Thường được dùng triển khai phương thức hoặc event call back Có thể gọi nhiều function delegate 1 lúc" />
+<meta property="og:description" content="Delegate là 1 biến tham chiếu(references) chứa tham chiếu tới một phương thức, tương tự như con trỏ hàm trong C, C++. Delegate giải quyết việc muốn hàm có parameter là 1 method Tham chiếu của delegate có thể thay đổi runtime Thường được dùng triển khai phương thức hoặc event call back Có thể gọi nhiều function delegate 1 lúc" />
+<link rel="canonical" href="http://localhost:4000/basic-knowledge/delegate-trong-c-sharp" />
+<meta property="og:url" content="http://localhost:4000/basic-knowledge/delegate-trong-c-sharp" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-03-13T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Tất tần tật về delegate trong C#" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-03-13T00:00:00+07:00","datePublished":"2024-03-13T00:00:00+07:00","description":"Delegate là 1 biến tham chiếu(references) chứa tham chiếu tới một phương thức, tương tự như con trỏ hàm trong C, C++. Delegate giải quyết việc muốn hàm có parameter là 1 method Tham chiếu của delegate có thể thay đổi runtime Thường được dùng triển khai phương thức hoặc event call back Có thể gọi nhiều function delegate 1 lúc","headline":"Tất tần tật về delegate trong C#","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/basic-knowledge/delegate-trong-c-sharp"},"url":"http://localhost:4000/basic-knowledge/delegate-trong-c-sharp"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Tất tần tật về delegate trong C#</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-03-13T00:00:00+07:00" itemprop="datePublished">Mar 13, 2024
+      </time>• posted on  <a class="category-name" href="/category/basic-knowledge">basic-knowledge</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><strong>Delegate</strong> là 1 biến tham chiếu(references) chứa tham chiếu tới một phương thức, tương tự như con trỏ hàm trong C, C++. Delegate giải quyết việc muốn hàm có parameter là 1 method</p>
+<ul>
+  <li>Tham chiếu của delegate có thể thay đổi runtime</li>
+  <li>Thường được dùng triển khai phương thức hoặc event call back</li>
+  <li>Có thể gọi nhiều function delegate 1 lúc
+<script src="https://gist.github.com/hondanho/b421ea298f3664fb4fccaa11b5ca1f37.js"></script></li>
+</ul>
+
+<p>Func, Action, Predicate là những delegate có sẵn trong C#
+<script src="https://gist.github.com/hondanho/f6ab7e7bbf310024411d7c1bfb4e81a8.js"></script></p>
+
+<p>Anonymous Method trong C#
+<script src="https://gist.github.com/hondanho/f26c1bff4ab256ffd201b8aae9131f6f.js"></script></p>
+
+  </div><a class="u-url" href="/basic-knowledge/delegate-trong-c-sharp" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/basic-knowledge/nguyen-ly-solid-trong-c-sharp" class="prev-post">← Nguyên lý SOLID strong C#</a>
+      
+      
+        <a href="/basic-knowledge/hieu-ve-ddd-trong-microservices-cqrs-va-event-sourcing" class="next-post">Hiểu về DDD trong Microservices, CQRS và Event Sourcing →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

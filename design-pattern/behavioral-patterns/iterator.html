@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Iterator | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Iterator" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Khái niệm" />
+<meta property="og:description" content="Khái niệm" />
+<link rel="canonical" href="http://localhost:4000/design-pattern/behavioral-patterns/iterator" />
+<meta property="og:url" content="http://localhost:4000/design-pattern/behavioral-patterns/iterator" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Iterator" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"Khái niệm","headline":"Iterator","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/design-pattern/behavioral-patterns/iterator"},"url":"http://localhost:4000/design-pattern/behavioral-patterns/iterator"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Iterator</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/design-pattern/behavioral-patterns">design-pattern/behavioral-patterns</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="khái-niệm">Khái niệm</h2>
+
+<p><code class="language-plaintext highlighter-rouge">Iterator</code> một mẫu pattern hành vi nó cho phép bạn duyệt qua các phần tử của bộ sưu tập ( collection ) mà không cần quan tâm tới cấu trúc của nó (list, stack, tree, etc….).</p>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p><code class="language-plaintext highlighter-rouge">Collections</code> là một kiểu dữ liệu được sử dụng nhiều nhất trong lập trình. Tuy nhiên, <code class="language-plaintext highlighter-rouge">Collection</code> chỉ là một mảng nhóm các đối tượng lại với nhau.</p>
+
+<p>Hầu hết <code class="language-plaintext highlighter-rouge">collections</code> sẽ lưu trữ các phần tử của chúng một cách rất đơn giản. Tuy nhiên lại, tồn tại một số <code class="language-plaintext highlighter-rouge">collection</code> có cách lưu trữ rất phức tạp như stacks, trees, graphs và một số cấu trúc dữ liệu phức tạp khác.</p>
+
+<p>Dù thế nào, <code class="language-plaintext highlighter-rouge">collections</code> phải cung cấp các phương thức để truy vấn đến các phần từ mà chúng lưu trữ. Cần có một cách nào đó để duyệt qua các phần tử mà không cần phải truy cập lại cấc phần tử giống nhau.</p>
+
+<p>Nghe thì có vẻ dể nếu <code class="language-plaintext highlighter-rouge">collection</code> đang dùng là dạng list. Việt duyệt qua các phần tử rất dể, chỉ đơn giản dùng một dòng for. Nhưng nếu đó là một <code class="language-plaintext highlighter-rouge">collection</code> dạng phức tạp hơn thì sao ? Ví dụ như dạng cây chẳng hạn. Ban đầu bạn phải duyệt theo chiều sâu (depth-first) nhưng một ngày đẹp trời khác bạn lại phải duyệt theo chiều rộng (breadth-first). Một tháng sau, bạn truy vấn đến phần tử ngẫu nhiên. Điều này nghe lại không hề dể tí nào.</p>
+
+<h2 id="giải-pháp">Giải pháp</h2>
+
+<p>Ý tưởng chính của <code class="language-plaintext highlighter-rouge">Iterator</code> pattern là lấy hành vi duyệt phần tự của <code class="language-plaintext highlighter-rouge">collection</code> tách no ra thành một object riêng gọi là một iterator.</p>
+
+<p><img src="Images/solution.PNG" alt="" /></p>
+
+<p>Ngoài việc implementing thuật toán, một đối tượng <code class="language-plaintext highlighter-rouge">iterator</code> có thể đống gói toàn  bộ những chi tiết về quá trình duyệt như: vị trí hiện tại và còn bao nhiêu phần tử nữa thì kết thúc.</p>
+
+<h2 id="cấu-trúc">Cấu Trúc</h2>
+
+<p><img src="Images/struct.PNG" alt="" /></p>
+
+<ul>
+  <li><strong>Iterator</strong> : là một interface hoặc abstract class khai báo các hoạt động cần thiết để duyệt qua các phần tử.</li>
+  <li><strong>Concrete Iterators</strong> : cài đặt các phương thức của Iterator, giữ index khi duyệt qua các phần tử.</li>
+  <li><strong>Iterable Collection</strong> : là một interface tạo ra một hoặc nhiều phương thức cho để lấy <code class="language-plaintext highlighter-rouge">interators</code> tương thích với <code class="language-plaintext highlighter-rouge">Collection</code>.</li>
+  <li><strong>Concrete Collections</strong> : cài đặt các phương thức Iterable Collection, nó cái đặt interface tạo Iterator trả về một Concrete Iterators thích hợp.</li>
+  <li><strong>Client</strong> : Đối tượng sử dụng Iterator Pattern.</li>
+</ul>
+
+<h2 id="ví-dụ-áp-dụng-iterator-collection">Ví dụ áp dụng Iterator Collection</h2>
+
+<p><img src="Images/Vidu.PNG" alt="" /></p>
+
+<p>Item.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Item</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Item</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">int</span> <span class="n">age</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="n">age</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">"Item{"</span> <span class="o">+</span>
+                <span class="s">"name='"</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="sc">'\''</span> <span class="o">+</span>
+                <span class="s">", age="</span> <span class="o">+</span> <span class="n">age</span> <span class="o">+</span>
+                <span class="sc">'}'</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>ItemIterator.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">ItemIterator</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="o">{</span>
+
+    <span class="kt">boolean</span> <span class="nf">hasNext</span><span class="o">();</span>
+
+    <span class="no">T</span> <span class="nf">next</span><span class="o">();</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>IterableCollection.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">IterableCollection</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="o">{</span>
+
+    <span class="kt">void</span> <span class="nf">addItem</span><span class="o">(</span><span class="no">T</span> <span class="n">temp</span><span class="o">);</span>
+
+    <span class="nc">ItemIterator</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="nf">iterator</span><span class="o">();</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>MenuCollection.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MenuCollection</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="nc">IterableCollection</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">menuItem</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+
+    <span class="kd">public</span> <span class="nf">MenuCollection</span><span class="o">(</span><span class="nc">List</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">menuItem</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">menuItem</span> <span class="o">=</span> <span class="n">menuItem</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addItem</span><span class="o">(</span><span class="nc">Object</span> <span class="n">temp</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">menuItem</span><span class="o">.</span><span class="na">add</span><span class="o">((</span><span class="no">T</span><span class="o">)</span> <span class="n">temp</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">ItemIterator</span> <span class="nf">iterator</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">MenuItemIterator</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">class</span> <span class="nc">MenuItemIterator</span> <span class="kd">implements</span> <span class="nc">ItemIterator</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">currentIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasNext</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">currentIndex</span> <span class="o">&lt;</span> <span class="n">menuItem</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
+        <span class="o">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="no">T</span> <span class="nf">next</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">menuItem</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">currentIndex</span><span class="o">++);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>demo.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">demo</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Item</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Item</span><span class="o">(</span><span class="s">"Phuc"</span><span class="o">,</span><span class="mi">18</span><span class="o">));</span>
+        <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Item</span><span class="o">(</span><span class="s">"An"</span><span class="o">,</span><span class="mi">19</span><span class="o">));</span>
+        <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Item</span><span class="o">(</span><span class="s">"Nam"</span><span class="o">,</span><span class="mi">20</span><span class="o">));</span>
+        <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Item</span><span class="o">(</span><span class="s">"Bang"</span><span class="o">,</span><span class="mi">21</span><span class="o">));</span>
+
+
+        <span class="nc">IterableCollection</span> <span class="n">collection</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MenuCollection</span><span class="o">(</span><span class="n">list</span><span class="o">);</span>
+        <span class="n">collection</span><span class="o">.</span><span class="na">addItem</span><span class="o">(</span><span class="k">new</span> <span class="nc">Item</span><span class="o">(</span><span class="s">"Nick"</span><span class="o">,</span><span class="mi">10</span><span class="o">));</span>
+        <span class="n">collection</span><span class="o">.</span><span class="na">addItem</span><span class="o">(</span><span class="k">new</span> <span class="nc">Item</span><span class="o">(</span><span class="s">"Tick"</span><span class="o">,</span> <span class="mi">20</span><span class="o">));</span>
+
+        <span class="nc">ItemIterator</span> <span class="n">itemIterator</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>
+
+        <span class="k">while</span> <span class="o">(</span><span class="n">itemIterator</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+            <span class="nc">Item</span> <span class="n">item</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Item</span><span class="o">)</span> <span class="n">itemIterator</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">item</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="khi-nào-nên-sử-dụng">Khi nào nên sử dụng</h2>
+
+<p>Sử dụng khi <code class="language-plaintext highlighter-rouge">collection</code> của bạn có cấu trúc phức tạp và bạn không muốn ẩn nó đi, không muốn cho clients của mình biết đến.</p>
+
+<p>Sử dụng để giảm thiểu các mã trung lập khi duyệt phần tử.</p>
+
+  </div><a class="u-url" href="/design-pattern/behavioral-patterns/iterator" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/design-pattern/behavioral-patterns/intro" class="prev-post">← Behavioral Patterns Intro</a>
+      
+      
+        <a href="/design-pattern/behavioral-patterns/mediator" class="next-post">Mediator Pattern →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

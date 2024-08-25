@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>System design for beginer | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="System design for beginer" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="- Thiết kế hệ thống cho người mới" />
+<meta property="og:description" content="- Thiết kế hệ thống cho người mới" />
+<link rel="canonical" href="http://localhost:4000/basic-knowledge/system-design-for-beginner" />
+<meta property="og:url" content="http://localhost:4000/basic-knowledge/system-design-for-beginner" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="System design for beginer" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"- Thiết kế hệ thống cho người mới","headline":"System design for beginer","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/basic-knowledge/system-design-for-beginner"},"url":"http://localhost:4000/basic-knowledge/system-design-for-beginner"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">System design for beginer</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/basic-knowledge">basic-knowledge</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><em>- Thiết kế hệ thống cho người mới</em></p>
+
+<h2 id="nguồn-dịch-thuật">Nguồn dịch thuật</h2>
+<ul>
+  <li><a href="https://github.com/donnemartin/system-design-primer">The System Design Primer</a></li>
+</ul>
+
+<p align="center">
+  <img src="http://i.imgur.com/jj3A5N8.png" />
+  <br />
+</p>
+
+<h2 id="động-lực-motivation">Động lực (Motivation)</h2>
+
+<blockquote>
+  <p>Học cách thiết kế các hệ thống có khả năng mở rộng cao.</p>
+
+  <p>Làm tài liệu chuẩn bị cho các buổi phỏng vấn về thiết kế.</p>
+</blockquote>
+
+<h3 id="học-cách-thiết-kế-các-hệ-thống-có-khả-năng-mở-rộng-cao">Học cách thiết kế các hệ thống có khả năng mở rộng cao</h3>
+
+<p>Học cách thiết kế hệ thống có khả năng mở rộng sẽ giúp bạn trở thành một kỹ sư tốt hơn.</p>
+
+<p>Thiết kế hệ thống là một chủ đề rất rộng. Có <strong>hằng hà sa số các tài nguyên rải rác trên web</strong> về các nguyên lý thiết kế hệ thống.</p>
+
+<p>Repo này là một <strong>bộ sưu tập đã được tổ chức</strong> các tài nguyên để giúp bạn học cách xây dựng các hệ thống có khả năng mở rộng.</p>
+
+<h2 id="anki-flashcards">Anki flashcards</h2>
+
+<p align="center">
+  <img src="images/zdCAkB3.png" />
+  <br />
+</p>
+
+<h2 id="mục-lục">Mục lục</h2>
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<ul>
+  <li><a href="#kh%E1%BB%9Fi-%C4%91%E1%BB%99ng">Khởi động</a>
+    <ul>
+      <li><a href="#b%C6%B0%E1%BB%9Bc-1-b%C3%A0i-gi%E1%BA%A3ng-v%E1%BB%81-kh%E1%BA%A3-n%C4%83ng-m%E1%BB%9F-r%E1%BB%99ng">Bước 1: Bài giảng về khả năng mở rộng</a></li>
+      <li><a href="#b%C6%B0%E1%BB%9Bc-2-b%C3%A0i-b%C3%A1o-v%E1%BB%81-kh%E1%BA%A3-n%C4%83ng-m%E1%BB%9F-r%E1%BB%99ng">Bước 2: Bài báo về khả năng mở rộng</a></li>
+    </ul>
+  </li>
+  <li><a href="#hi%E1%BB%87u-n%C4%83ng-v%C3%A0-kh%E1%BA%A3-n%C4%83ng-m%E1%BB%9F-r%E1%BB%99ng">Hiệu năng và Khả năng mở rộng</a></li>
+  <li><a href="#%C4%91%E1%BB%99-tr%E1%BB%85-v%C3%A0-th%C3%B4ng-l%C6%B0%E1%BB%A3ng">Độ trễ và Thông lượng</a></li>
+  <li><a href="#t%C3%ADnh-s%E1%BA%B5n-s%C3%A0ng-v%C3%A0-t%C3%ADnh-nh%E1%BA%A5t-qu%C3%A1n">Tính sẵn sàng và Tính nhất quán</a>
+    <ul>
+      <li><a href="#%C4%91%E1%BB%8Bnh-l%C3%BD-cap">Định lý CAP</a></li>
+    </ul>
+  </li>
+  <li><a href="#c%C3%A1c-m%E1%BA%ABu-nh%E1%BA%A5t-qu%C3%A1n-consistency-patterns">Các mẫu nhất quán (Consistency patterns)</a>
+    <ul>
+      <li><a href="#nh%E1%BA%A5t-qu%C3%A1n-y%E1%BA%BFu-weak-consistency">Nhất quán yếu (Weak consistency)</a></li>
+      <li><a href="#eventual-consistency-nh%E1%BA%A5t-qu%C3%A1n-%C4%91%E1%BA%BFn-cu%E1%BB%91i-c%C3%B9ng">Eventual consistency (Nhất quán đến cuối cùng)</a></li>
+      <li><a href="#nh%E1%BA%A5t-qu%C3%A1n-m%E1%BA%A1nh-strong-consistency">Nhất quán mạnh (Strong consistency)</a></li>
+    </ul>
+  </li>
+  <li><a href="#availability-patterns">Availability patterns</a>
+    <ul>
+      <li><a href="#failover">Failover</a></li>
+      <li><a href="#nh%C3%A2n-b%E1%BA%A3n">Nhân bản</a></li>
+    </ul>
+  </li>
+  <li><a href="#domain-name-system">Domain name system</a></li>
+  <li><a href="#content-delivery-network-cdn">Content delivery network (CDN)</a>
+    <ul>
+      <li><a href="#push-cdn">Push CDN</a></li>
+      <li><a href="#pull-cdn">Pull CDN</a></li>
+      <li><a href="#m%E1%BB%99t-s%E1%BB%91-t%C3%A0i-nguy%C3%AAn-cdn-mi%E1%BB%85n-ph%C3%AD">Một số tài nguyên CDN miễn phí</a></li>
+    </ul>
+  </li>
+  <li><a href="#b%E1%BB%99-c%C3%A2n-b%E1%BA%B1ng-t%E1%BA%A3i-load-balancer">Bộ cân bằng tải (Load Balancer)</a>
+    <ul>
+      <li><a href="#layer-4-load-balancing">Layer 4 load balancing</a></li>
+      <li><a href="#layer-7-load-balancing">Layer 7 load balancing</a></li>
+      <li><a href="#m%E1%BB%9F-r%E1%BB%99ng-theo-chi%E1%BB%81u-ngang-horizontal-scaling">Mở rộng theo chiều ngang (Horizontal scaling)</a></li>
+    </ul>
+  </li>
+  <li><a href="#reverse-proxy-web-server">Reverse proxy (web server)</a>
+    <ul>
+      <li><a href="#load-balancer-vs-reverse-proxy">Load balancer vs reverse proxy</a></li>
+    </ul>
+  </li>
+  <li><a href="#application-layer">Application layer</a>
+    <ul>
+      <li><a href="#microservices">Microservices</a></li>
+      <li><a href="#service-discovery">Service Discovery</a></li>
+    </ul>
+  </li>
+  <li><a href="#c%C6%A1-s%E1%BB%9F-d%E1%BB%AF-li%E1%BB%87u-database">Cơ sở dữ liệu (Database)</a>
+    <ul>
+      <li><a href="#relational-database-management-system-rdbms">Relational database management system (RDBMS)</a></li>
+      <li><a href="#c%C6%A1-s%E1%BB%9F-d%E1%BB%AF-li%E1%BB%87u-nosql">Cơ sở dữ liệu NoSQL</a></li>
+      <li><a href="#sql-hay-nosql">SQL hay NoSQL</a></li>
+    </ul>
+  </li>
+  <li><a href="#cache">Cache</a>
+    <ul>
+      <li><a href="#client-caching">Client caching</a></li>
+      <li><a href="#cdn-caching">CDN caching</a></li>
+      <li><a href="#web-server-caching">Web server caching</a></li>
+      <li><a href="#database-caching">Database caching</a></li>
+      <li><a href="#application-caching">Application caching</a></li>
+      <li><a href="#caching-at-the-database-query-level">Caching at the database query level</a></li>
+      <li><a href="#caching-at-the-object-level">Caching at the object level</a></li>
+      <li><a href="#khi-n%C3%A0o-n%C3%AAn-c%E1%BA%ADp-nh%E1%BA%ADt-cache">Khi nào nên cập nhật cache</a></li>
+    </ul>
+  </li>
+  <li><a href="#b%E1%BA%A5t-%C4%91%E1%BB%93ng-b%E1%BB%99-asynchronism">Bất đồng bộ (Asynchronism)</a>
+    <ul>
+      <li><a href="#message-queues">Message queues</a></li>
+      <li><a href="#task-queues">Task queues</a></li>
+      <li><a href="#back-pressure">Back pressure</a></li>
+    </ul>
+  </li>
+  <li><a href="#communication">Communication</a>
+    <ul>
+      <li><a href="#hypertext-transfer-protocol-http">Hypertext transfer protocol (HTTP)</a></li>
+      <li><a href="#transmission-control-protocol-tcp">Transmission control protocol (TCP)</a></li>
+      <li><a href="#user-datagram-protocol-udp">User datagram protocol (UDP)</a></li>
+      <li><a href="#remote-procedure-call-rpc">Remote procedure call (RPC)</a></li>
+      <li><a href="#representational-state-transfer-rest">Representational state transfer (REST)</a></li>
+      <li><a href="#so-s%C3%A1nh-rpc-and-rest">So sánh RPC and REST</a></li>
+    </ul>
+  </li>
+  <li><a href="#b%E1%BA%A3o-m%E1%BA%ADt-security">Bảo mật (Security)</a></li>
+</ul>
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+<h2 id="khởi-động">Khởi động</h2>
+<h3 id="bước-1-bài-giảng-về-khả-năng-mở-rộng">Bước 1: Bài giảng về khả năng mở rộng</h3>
+<p><a href="https://www.youtube.com/watch?v=-W9F__D3oY4">CS75 (Summer 2012) Lecture 9 Scalability Harvard Web Development David Malan</a></p>
+<ul>
+  <li>Các chủ đề được đề cập:
+    <ul>
+      <li>Mở rộng theo chiều dọc (Vertical scaling)</li>
+      <li>Mở rộng theo chiều ngang (Horizontal scaling)</li>
+      <li>Caching</li>
+      <li>Cân bằng tải (Load balancing)</li>
+      <li>Nhân bản cơ sở dữ liệu (Database replication)</li>
+      <li>Phân mảnh cơ sở dữ liệu (Database partitioning)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="bước-2-bài-báo-về-khả-năng-mở-rộng">Bước 2: Bài báo về khả năng mở rộng</h3>
+<p><a href="http://www.lecloud.net/tagged/scalability">Scalability for Dummies</a></p>
+<ul>
+  <li>Các chủ đề được đề cập:
+    <ul>
+      <li><a href="http://www.lecloud.net/post/7295452622/scalability-for-dummies-part-1-clones">Clones</a></li>
+      <li><a href="http://www.lecloud.net/post/7994751381/scalability-for-dummies-part-2-database">Cơ sở dữ liệu</a></li>
+      <li><a href="http://www.lecloud.net/post/9246290032/scalability-for-dummies-part-3-cache">Caches</a></li>
+      <li><a href="http://www.lecloud.net/post/9699762917/scalability-for-dummies-part-4-asynchronism">Bất đồng bộ (Asynchronism)</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="bước-tiếp-theo">Bước tiếp theo</h3>
+
+<p>Tiếp theo là một số khái niệm ở mức cao hơn</p>
+
+<ul>
+  <li><strong>Hiệu năng (Performance)</strong> và <strong>Khả năng mở rộng (Scalability)</strong></li>
+  <li><strong>Độ trễ (Latency)</strong> và <strong>Thông lượng (Throughput)</strong></li>
+  <li><strong>Tính sẵn sàng (Availability)</strong> và <strong>Tính nhất quán (Consistency)</strong></li>
+</ul>
+
+<h2 id="hiệu-năng-và-khả-năng-mở-rộng">Hiệu năng và Khả năng mở rộng</h2>
+
+<p>Một dịch vụ được coi là có tính <strong>mở rộng (scalable)</strong> nếu nó mang lại kết quả hoạt động tăng theo tỉ lệ thuận với các tài nguyên (resource) được thêm vào. Tăng hiệu năng có thể được hiểu là một lúc làm được nhiều việc hơn hay làm được một việc lớn hơn.<sup>&lt;a href=http://www.allthingsdistributed.com/2006/03/a_word_on_scalability.html&gt;1&lt;/a&gt;</sup></p>
+
+<p>Một cách nhìn khác về hiệu năng và khả năng mở rộng:</p>
+
+<ul>
+  <li>Nếu bạn có vấn đề về <strong>hiệu năng</strong>, hệ thống của bạn sẽ chậm khi phục vụ một người dùng đơn nhất.</li>
+  <li>Nếu bạn có vấn đề về <strong>khả năng mở rộng</strong>, hệ thống của bạn sẽ nhanh khi phục vụ người dùng đơn và sẽ chậm nếu phải chịu tải lớn.</li>
+</ul>
+
+<h3 id="nguồn-và-tài-liệu-đọc-thêm">Nguồn và tài liệu đọc thêm</h3>
+<ul>
+  <li><a href="http://www.allthingsdistributed.com/2006/03/a_word_on_scalability.html">A word on scalability</a></li>
+  <li><a href="http://www.slideshare.net/jboner/scalability-availability-stability-patterns/">Scalability, availability, stability, patterns</a></li>
+</ul>
+
+<h2 id="độ-trễ-và-thông-lượng">Độ trễ và Thông lượng</h2>
+<p><strong>Độ trễ</strong> là thời gian để thực hiện một số hành động hoặc để tạo ra một số kết quả.
+<strong>Thông lượng</strong> là số hành động được thực hiện hay số kết quả được đưa ra trong một đơn vị thời gian</p>
+
+<p>Thông thường, mục đích sẽ là cực đại thông lượng với độ trễ chấp nhận được.</p>
+
+<h3 id="nguồn-và-tài-liệu-đọc-thêm-1">Nguồn và tài liệu đọc thêm</h3>
+<ul>
+  <li><a href="https://community.cadence.com/cadence_blogs_8/b/sd/archive/2010/09/13/understanding-latency-vs-throughput">Understanding latency vs throughput</a></li>
+</ul>
+
+<h2 id="tính-sẵn-sàng-và-tính-nhất-quán">Tính sẵn sàng và Tính nhất quán</h2>
+
+<h3 id="định-lý-cap">Định lý CAP</h3>
+
+<p align="center">
+  <img src="http://i.imgur.com/bgLMI2u.png" />
+  <br />
+  <i>&lt;a href=http://robertgreiner.com/2014/08/cap-theorem-revisited&gt;Source: CAP theorem revisited&lt;/a&gt;</i>
+</p>
+
+<p>Ở một hệ thống tính toán phân tán (distributed) (bạn nên tìm hiểu thêm về decentralized), Bạn chỉ có thể cung cấp hai trong số các tính đúng đắn dưới đây:</p>
+
+<ul>
+  <li><strong>Tính nhất quán (Consistency)</strong> - Mọi sự kiện đọc (read) đều nhận được phiên bản mới nhất của sự kiện ghi (write) gần nhất hoặc lỗi.</li>
+  <li><strong>Tính sẵn sàng (Availability)</strong> - Mọi request đều nhận một response, không cần đảm bảo dữ liệu nhận được là phiên bản mới nhất.</li>
+  <li><strong>Tính chịu đựng phân mảnh (Partition Tolerance)</strong> - Hệ thống vẫn tiếp tục hoạt động mặc cho sự phân mảnh tùy ý (arbitrary partitioning) bị gây ra do lỗi mạng.</li>
+</ul>
+
+<p><em>Môi trường mạng là không đáng tin cậy, vì vậy bạn sẽ cần tính chịu đựng phân mảnh. Bạn sẽ cần cân nhắc giữa tính nhất quán và tính sẵn sàng.</em></p>
+
+<h4 id="cp---consistency-and-partition-tolerance">CP - consistency and partition tolerance</h4>
+
+<p>Đợi một response từ node được phân mảnh có thể gây ra timeout error.  CP là một lựa chọn tốt nếu bạn cần một ứng dụng đọc ghi nguyên tử.</p>
+
+<h4 id="ap---availability-and-partition-tolerance">AP - availability and partition tolerance</h4>
+
+<p>Responses trả về phiên bẻn gần nhất của dữ liệu có trên node đó, có thể không phải là mới nhất.  Việc ghi có thể tốn một lượng thời gian cho việc lan truyền.</p>
+
+<p>AP sẽ tốt đối với các ứng dụng cần <a href="#eventual-consistency">eventual consistency</a> hoặc các ứng dụng yêu cầu vẫn hoạt động mặc cho có lỗi từ bên ngoài.</p>
+
+<h2 id="các-mẫu-nhất-quán-consistency-patterns">Các mẫu nhất quán (Consistency patterns)</h2>
+<p>Với nhiều bản sao của cùng một dữ kiệu, Chúng ta phải đối mặt với các lựa chọn về cách đồng bộ chúng để client có một cái nhìn nhất quán về dữ liệu.</p>
+
+<h3 id="nhất-quán-yếu-weak-consistency">Nhất quán yếu (Weak consistency)</h3>
+
+<p>Sau khi ghi, việc đọc có thể nhìn thấy hoặc không. 
+Nhất quán yếu sẽ hoạt động tốt với ứng dụng VoIP, video chat, game online (Các ứng dụng cần phản hồi nhanh và có thể chấp nhận mất mát thông tin).</p>
+
+<h3 id="eventual-consistency-nhất-quán-đến-cuối-cùng">Eventual consistency (Nhất quán đến cuối cùng)</h3>
+
+<p>Sau khi ghi, việc đọc cuối cùng sẽ thấy nó (có thể sau một thời gian). Dữ liệu được nhân bản một cách bất đồng bộ. Loại này được recommmend cho các ứng dụng cần tính sẵn sàng cao (Mô hình BASE).</p>
+
+<h3 id="nhất-quán-mạnh-strong-consistency">Nhất quán mạnh (Strong consistency)</h3>
+
+<p>Sau việc ghi, việc đọc sẽ thấy nó. Dữ liệu được nhân bản một cách đồng bộ.
+Nó có thể được thấy ở các hệ thống file hay hệ cơ sở dữ liệu quan hệ. Nó sẽ hữu ích với các ứng dụng dùng giao tác (Mô hình ACID).</p>
+
+<h3 id="nguồn-và-tài-liệu-đọc-thêm-2">Nguồn và tài liệu đọc thêm</h3>
+<ul>
+  <li><a href="http://snarfed.org/transactions_across_datacenters_io.html">Transactions across data centers</a></li>
+</ul>
+
+<h2 id="availability-patterns">Availability patterns</h2>
+
+<p>Có hai mẫu chính để hỗ trợ tính sẵn sàng cao: <strong>fail-over</strong> và <strong>nhân bản (replication)</strong>.</p>
+
+<h3 id="failover">Failover</h3>
+
+<h4 id="active-passive">Active-passive</h4>
+
+<p>Với active-passive fail-over, heartbeats được gửi giữa các mấy chủ chủ động (active server) và mấy chủ bị động (passive server) sẽ ở trạng thái chờ (standby).  Nếu heartbeat bị ngắt quãng, Máy chủ thụ động lấy địa chỉ ip của máy chủ chủ động và tiếp tục dịch vụ, việc đổi ip này có nhiều cách giải quyết, bạn có thể xem <a href="https://zookeeper.apache.org/">Zookeeper</a>.</p>
+
+<h4 id="active-active">Active-active</h4>
+
+<p>Trong mô hình active-active, tất cả server đều quản lý trafic, chia sẽ tải cho nhau.</p>
+
+<p>Nếu các server đều ở trạng thái public-facing, DNS sẽ cần biết các địa chỉ IP công khai của các server này. Nếu các server ở trạng thái internal-facing, nghiệp vụ của chương trình sẽ phải biết về tất cả các server này.</p>
+
+<p>Active-active failover có thể được gọi với cái tên khác là master-master failover.</p>
+
+<h3 id="nhược-điểm-failover">Nhược điểm: failover</h3>
+
+<ul>
+  <li>Fail-over cần thêm phần cứng và phức tạp hơn.</li>
+  <li>Vẫn có khả năng mất mát dữ liệu nếu server active sập trước khi dữ liệu mới được ghi chưa được nhân bản ở server passive.</li>
+</ul>
+
+<h3 id="nhân-bản">Nhân bản</h3>
+
+<h4 id="master-slave-and-master-master">Master-slave and master-master</h4>
+
+<p>Chủ đề này sẽ được bàn luận sâu hơn ở phần <a href="#database">Database</a>:</p>
+
+<ul>
+  <li><a href="#master-slave-replication">Master-slave replication</a></li>
+  <li><a href="#master-master-replication">Master-master replication</a></li>
+</ul>
+
+<h2 id="domain-name-system">Domain name system</h2>
+
+<p align="center">
+  <img src="http://i.imgur.com/IOyLj4i.jpg" />
+  <br />
+  <i>&lt;a href=http://www.slideshare.net/srikrupa5/dns-security-presentation-issa&gt;Source: DNS security presentation&lt;/a&gt;</i>
+</p>
+
+<p>Một Domain Name System (DNS) dịch một tên miền như www.example.com thành địa chỉ IP (ngoài ra nó có thể sử dụng để cân bàng tải).</p>
+
+<p>DNS có tính thứ bậc (hierarchical), với một vài server chính chủ (authoritative server) ở mức cao nhất. Router hoặc ISP cung cấp thông tin về DNS server nào sẽ được liên lạc khi có việc tra cứu. Các server DNS ở mức thấp hơn được dùng cho cache mappings, chúng có thể không được cập nhật mới nhất do độ trễ từ việc lan truyền.  kết quả DNS có thể được cache bởi trình duyệt hoặc hệ điều hành trong một khoảng thời gian sống <a href="https://en.wikipedia.org/wiki/Time_to_live">time to live (TTL)</a>.</p>
+
+<ul>
+  <li><strong>NS record (name server)</strong> - chỉ định DNS servers cho tên miền/tên miền con.</li>
+  <li><strong>MX record (mail exchange)</strong> - chỉ định mail servers cho việc chấp nhận các tin nhắn.</li>
+  <li><strong>A record (address)</strong> - ánh xạ một tên đến một địa chỉ IP.</li>
+  <li><strong>CNAME (canonical)</strong> - ánh xạ một tên đến một tên khác hoặc <code class="language-plaintext highlighter-rouge">CNAME</code> (example.com to www.example.com) hoặc đến một bản ghi <code class="language-plaintext highlighter-rouge">A</code>.</li>
+</ul>
+
+<p>Dịch vụ như <a href="https://www.cloudflare.com/dns/">CloudFlare</a> và <a href="https://aws.amazon.com/route53/">Route 53</a> cung cấp các dịch vụ DNS được quản lý.  Một vài DNS service có thể định tuyến trafic với rất nhiều phương pháp:</p>
+
+<ul>
+  <li><a href="http://g33kinfo.com/info/archives/2657">Weighted round robin</a>
+    <ul>
+      <li>chặn các traffic đến server đang bảo trì</li>
+      <li>Cân bằng giữa các size cluster khác nhau</li>
+      <li>A/B testing</li>
+    </ul>
+  </li>
+  <li>(Dựa vào độ trễ) Latency-based</li>
+  <li>(Dựa vào vị trí địa lý) Geolocation-based</li>
+</ul>
+
+<h3 id="nhược-điểm-dns">Nhược điểm: DNS</h3>
+
+<ul>
+  <li>Truy cập DNS sẽ tạo ra một độ trễ nhỏ, mặc dù đã được giảm bớt từ việc cache.</li>
+  <li>quản lý DNS server có thể phức tạp, mặc dù chúng đã được quản lý bởi <a href="http://superuser.com/questions/472695/who-controls-the-dns-servers/472729">governments, ISPs, and large companies</a>.</li>
+  <li>DNS services có thể bị tấn công <a href="http://dyn.com/blog/dyn-analysis-summary-of-friday-october-21-attack/">DDoS attack</a>, làm cho người dùng không thể truy cập đúng địa chỉ IP.</li>
+</ul>
+
+<h3 id="nguồn-và-tài-liệu-đọc-thêm-3">Nguồn và tài liệu đọc thêm</h3>
+
+<ul>
+  <li><a href="https://technet.microsoft.com/en-us/library/dd197427(v=ws.10).aspx">DNS architecture</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Domain_Name_System">Wikipedia</a></li>
+  <li><a href="https://support.dnsimple.com/categories/dns/">DNS articles</a></li>
+</ul>
+
+<h2 id="content-delivery-network-cdn">Content delivery network (CDN)</h2>
+
+<p align="center">
+  <img src="http://i.imgur.com/h9TAuGI.jpg" />
+  <br />
+  <i>&lt;a href=https://www.creative-artworks.eu/why-use-a-content-delivery-network-cdn/&gt;Source: Why use a CDN&lt;/a&gt;</i>
+</p>
+
+<p>Một content delivery network (CDN) là một mạng phân tán toàn cầu các proxy server, phục vụ các nội dung từ các địa điểm gần hơn cho người dùng. Thông thường, các nội dung tĩnh như HTML/CSS/JS, ảnh, và video được phục vụ bởi CDN, mặc dù một vài CDN như Amazon’s CloudFront cung cấp các nội dung động. Một DNS resolution sẽ nói cho client biết lấy nội dung từ CDN nào.</p>
+
+<p>Việc cung cấp nội dung từ CDN có thể được tối ưu hiệu năng đáng kể nhờ hai yếu tố:</p>
+
+<ul>
+  <li>Người dùng nhận nội dung tại trung tâm dữ liệu gần họ</li>
+  <li>Server sẽ không phải phục vụ các request mà CDN đã xử lý</li>
+</ul>
+
+<h3 id="push-cdn">Push CDN</h3>
+
+<p align="center">
+  <img src="https://i.cdn.net/wp-content/uploads/2016/12/Picture1-1.png" />
+  <br />
+  <i>Source: cdn.net</i>
+</p>
+
+<p>Push CDNs nhận nội dung mới bất cứ khi nào có sự thay đổi từ server. Bạn chịu hoàn toàn trách nhiệm cho việc cung cấp nội dung, upload trực tiếp lên CDN và viết lại URL để trỏ tới CDN. Bạn có thể cấu hình khi nội dung hết hạn và khi nào được cập nhật. Nội dung chỉ được cập nhật khi nó là mới hoặc được cập nhật lại, tối thiểu hóa traffic, nhưng tối đa hóa storage.</p>
+
+<p>Site với một lượng traffic nhỏ hoặc site với nội dung ít phải cập nhật sẽ hoạt động tốt nhất với CDN này. Nội dung được đặt ở CDN một lần, thay vì được pull lại sau một khoảng thời gian nhất định.</p>
+
+<h3 id="pull-cdn">Pull CDN</h3>
+
+<p align="center">
+  <img src="https://i.cdn.net/wp-content/uploads/2016/12/Picture2-1.png" />
+  <br />
+  <i>Source: cdn.net</i>
+</p>
+
+<p>Pull CDN lấy nội dung mới từ server khi người dùng đầu tiên yêu cầu nội dung.  Bạn để nội dung ở server của bạn và viết lại URL để trỏ đến CDN. Kết quả là các request sẽ được phục vụ chậm hơn khi nội dung chưa kịp cache lại.</p>
+
+<p>Khoảng thời gian sống <a href="https://en.wikipedia.org/wiki/Time_to_live">time-to-live (TTL)</a> xác định khoảng thời gian nội dung được cache. Pull CDNs tối thiểu hóa lượng dữ liệu phải lưu trữ trên CDN, nhưng nó có thể tạo ra các traffic thừa nếu nội dung hết hạn và được pull lại trước khi nó thực sự được thay đổi.</p>
+
+<p>Các site với lượng traffic lớn sẽ hoạt động tốt với pull CDNs, vì traffic được phân đều ra do chỉ có các nội dung được yêu cầu gần đây được lưu ơ CDN.</p>
+
+<h3 id="một-số-tài-nguyên-cdn-miễn-phí">Một số tài nguyên CDN miễn phí</h3>
+<ul>
+  <li><a href="https://www.cloudflare.com/">CloudFlare</a></li>
+  <li><a href="https://jetpack.com/support/photon/">Photon</a></li>
+  <li><a href="https://www.jsdelivr.com/">jsDelivr</a></li>
+  <li><a href="https://developers.google.com/speed/libraries/">Google Hosted Library</a></li>
+</ul>
+
+<h3 id="nhược-điểm-cdn">Nhược điểm: CDN</h3>
+
+<ul>
+  <li>Chi phí cho CDN có thể đáng kể dựa vào lượng truy cập. Nhưng vẫn cần cân nhắc với những chi phí bạn phải gánh chịu nếu không sử dụng CDN.</li>
+  <li>Nội dung có thể cũ nếu nó vẫn trong thời gian sống tại CDN mà lại được cập nhật ở server.</li>
+  <li>CDN yêu cầu việc viết lại URL để trỏ tới nó.</li>
+</ul>
+
+<h3 id="nguồn-và-tài-liệu-đọc-thêm-4">Nguồn và tài liệu đọc thêm</h3>
+
+<ul>
+  <li><a href="http://repository.cmu.edu/cgi/viewcontent.cgi?article=2112&amp;context=compsci">Globally distributed content delivery</a></li>
+  <li><a href="http://www.travelblogadvice.com/technical/the-differences-between-push-and-pull-cdns/">The differences between push and pull CDNs</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Content_delivery_network">Wikipedia</a></li>
+</ul>
+
+<h2 id="bộ-cân-bằng-tải-load-balancer">Bộ cân bằng tải (Load Balancer)</h2>
+
+<p align="center">
+  <img src="http://i.imgur.com/h81n9iK.png" />
+  <br />
+  <i>&lt;a href=http://horicky.blogspot.com/2010/10/scalable-system-design-patterns.html&gt;Source: Scalable system design patterns&lt;/a&gt;</i>
+</p>
+
+<p>Load balancers phân tán các request đến các tài nguyên tính toán ví dụ như các server và database. Ở mỗi trường hợp, load balancer trả về một response từ tài nguyên tính toán đến một client thích hợp. Load balancers hiệu quả trong:</p>
+
+<ul>
+  <li>Ngăn các request đến các server đang có vấn đề</li>
+  <li>Ngăn chặn việc một tài nguyên bị quá tải</li>
+  <li>Giúp loại bỏ điểm chết (single points of failure)</li>
+</ul>
+
+<p>Load balancers có thể được cài đặt với phần cứng (đắt đỏ) hoặc bằng phần mềm như HAProxy.</p>
+
+<p>Một vài lợi ích khác:</p>
+
+<ul>
+  <li><strong>SSL termination</strong> - Giải mã các request đến và mã hóa các response trả về vì vậy backend không phải lo việc này nữa
+    <ul>
+      <li>Không cần cài đặt <a href="https://en.wikipedia.org/wiki/X.509">X.509 certificates</a> cho mỗi server một</li>
+    </ul>
+  </li>
+  <li><strong>Session persistence</strong> - cung cấp các cookie và định tuyến các request cụ thể đến cùng một instance nếu ứng dụng web không theo dõi session.</li>
+</ul>
+
+<p>Để bảo vệ trước lỗi, thường phải cài đặt nhiều load balancer, cả active-passive và active-active.</p>
+
+<p>Load balancer có thể định tuyến trafic dựa trên nhiều độ đo, bao gồm:</p>
+
+<ul>
+  <li>Ngẫu nhiên</li>
+  <li>Ít được load nhất</li>
+  <li>Session/cookies</li>
+  <li><a href="http://g33kinfo.com/info/archives/2657">Round robin or weighted round robin</a></li>
+  <li>Layer 4</li>
+  <li>Layer 7</li>
+</ul>
+
+<h3 id="layer-4-load-balancing">Layer 4 load balancing</h3>
+
+<p>Layer 4 load balancer nhìn vào thông tin ở lớp transport để quyết định phân tán request. Thông thường, nó bao gồm các địa chỉ IP của nguồn đích và port ở phần header, nhưng không có nội dung của package.  Layer 4 load balancer chuyển tiếp các gói tin đến và từ các upstream server, biểu diễn <a href="https://www.nginx.com/resources/glossary/layer-4-load-balancing/">Network Address Translation (NAT)</a>.</p>
+
+<h3 id="layer-7-load-balancing">Layer 7 load balancing</h3>
+
+<p>Layer 7 load balancer xem thông tin tại lớp [application layer] để phân tán request.  Nó có thể bao gồm thông tin của header, message, và cookies.  Layer 7 load balancer ngắt network traffic, đọc nội dung tin, đưa ra quyết định, sau đó mở một kết nối đến server được lựa chọn. Ví dụ, một layer 7 load balancer có thể chỉ đường video traffic tới các server chứa video trong khi chỉ đường cho các traffic nhạy cảm hơn tới những server có tính bảo mật cao (security-hardened server).</p>
+
+<p>Nói về chi phí cho sự linh hoạt, layer 4 load balancing yêu cầu ít thời gian và tài nguyên tính toán hơn Layer 7, mặc dù tác động của hiệu năng có thể là tối thiểu ở các hệ thống được trang bị hiện đại.</p>
+
+<h3 id="mở-rộng-theo-chiều-ngang-horizontal-scaling">Mở rộng theo chiều ngang (Horizontal scaling)</h3>
+
+<p>Load balancer có thể cũng giúp ích cho horizontal scaling, nâng cao hiệu năng và khả năng mở rộng. Mở rộng sử dụng thêm  các bộ máy là hiệu quả hơn và kết quả là tính sẵn sàng cao hơn là mở rộng bằng cách nâng cấp một server bằng các phần cứng đắt hơn, gọi là <strong>Mở rộng theo chiều dọc (Vertical Scaling)</strong>.  Cũng dễ dàng hơn để thuê các tài năng làm việc trên các hệ thống thương mại so với các hệ thống doanh nghiệp đặc biệt.</p>
+
+<h4 id="nhược-điểm-horizontal-scaling">Nhược điểm: horizontal scaling</h4>
+
+<ul>
+  <li>Mở rộng ngang yêu cầu phức tạp hơn và cần có clone server
+    <ul>
+      <li>Server nên để stateless: chúng không nên lưu trữ bất kỳ dữ liệu nào liên quan đến người dùng như sessions hay ảnh cá nhân</li>
+      <li>Sessions có thể lưu ở một trung tâm dữ liệu như một database (SQL, NoSQL) hoặc cache bằng Redis hay Memcached</li>
+    </ul>
+  </li>
+  <li>Downstream server ví dụ như cache hay database cần xử lý nhiều kết nối đồng thời bởi vì upstream server được mở rộng</li>
+</ul>
+
+<h3 id="nhược-điểm-load-balancer">Nhược điểm: load balancer</h3>
+
+<ul>
+  <li>The load balancer có thể trở thành thắt cổ chai nếu không có đủ tài nguyên hoặc không được cấu ình tốt.</li>
+  <li>Có thể tăng sự phức tạp.</li>
+  <li>Một load balancer đơn lẻ là một điểm lỗi, nếu dùng nhiều load balancer thì việc cấu hình lại phức tạp hơn.</li>
+</ul>
+
+<h3 id="nguồn-và-tài-liệu-đọc-thêm-5">Nguồn và tài liệu đọc thêm</h3>
+
+<ul>
+  <li><a href="https://www.nginx.com/blog/inside-nginx-how-we-designed-for-performance-scale/">NGINX architecture</a></li>
+  <li><a href="http://www.haproxy.org/download/1.2/doc/architecture.txt">HAProxy architecture guide</a></li>
+  <li><a href="http://www.lecloud.net/post/7295452622/scalability-for-dummies-part-1-clones">Scalability</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Load_balancing_(computing)">Wikipedia</a></li>
+  <li><a href="https://www.nginx.com/resources/glossary/layer-4-load-balancing/">Layer 4 load balancing</a></li>
+  <li><a href="https://www.nginx.com/resources/glossary/layer-7-load-balancing/">Layer 7 load balancing</a></li>
+  <li><a href="http://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-listener-config.html">ELB listener config</a></li>
+</ul>
+
+<h2 id="reverse-proxy-web-server">Reverse proxy (web server)</h2>
+
+<p align="center">
+  <img src="http://i.imgur.com/n41Azff.png" />
+  <br />
+  <i>&lt;a href=https://upload.wikimedia.org/wikipedia/commons/6/67/Reverse_proxy_h2g2bob.svg&gt;Source: Wikipedia&lt;/a&gt;</i>
+  <br />
+</p>
+
+<p>Một reverse proxy là một web server tập trung các dịch vụ bên trong (internal services) và cung cấp giao diện được chuẩn hóa ra bên ngoài.  Requests từ clients được chuyển tiếp đến server có khả năng hoàn thành nó trước khi reverse proxy trả về response của server cho client.</p>
+
+<p>Các lợi ích kèm theo bao gồm:</p>
+
+<ul>
+  <li><strong>Tăng tính bảo mật</strong> - Che dấu các thông tin về backend servers, blacklist IPs, số kết nối tối đa được cấp cho mỗi client</li>
+  <li><strong>Tăng khả năng mở rộng và linh hoạt</strong> - Client chỉ nhìn thấy địa chỉ IP của reverse proxy, cho phép mở rộng thêm server hoặc thay đổi cấu hình của những server này.</li>
+  <li><strong>Chấm dứt SSL (SSL termination)</strong> - đã nói ở phần cân bằng tải</li>
+  <li><strong>Nén (Compression)</strong> - nén server response</li>
+  <li><strong>Caching</strong> - trả về các response đã được cache</li>
+  <li><strong>Các nội dung tĩnh (Static content)</strong> - Nếu client yêu cầu các nội dung tĩnh không cần đến server xử lý, reverse proxy có thể trả về trực tiếp các nội dung này.
+    <ul>
+      <li>HTML/CSS/JS</li>
+      <li>Photos</li>
+      <li>Videos</li>
+      <li>Etc</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="load-balancer-vs-reverse-proxy">Load balancer vs reverse proxy</h3>
+
+<ul>
+  <li>Triển khai một load balancer là có lợi nếu bạn có nhiều server. Một cách thường xuyên, load balancer định tuyến traffic đến một tạp các server phục vụ cùng một chức năng.</li>
+  <li>Reverse proxy có thể hữu dụng ngay cả với chỉ một web server, với các lợi tích đã nêu trên.</li>
+  <li>Giải pháp ví dụ như NGINX và HAProxy có thể hỗ trợ cả layer 7 reverse proxying và load balancing.</li>
+</ul>
+
+<h3 id="nhược-điểm-reverse-proxy">Nhược điểm: reverse proxy</h3>
+
+<ul>
+  <li>Tăng thêm tính phức tạp.</li>
+  <li>Một reverse proxy đơn lẻ là một điểm lỗi đơn, cấu hình nhiều reverse proxy (ví dụ một <a href="https://en.wikipedia.org/wiki/Failover">failover</a>) thì lại thêm tính phức tạp.</li>
+</ul>
+
+<h3 id="nguồn-và-tài-liệu-đọc-thêm-6">Nguồn và tài liệu đọc thêm</h3>
+
+<ul>
+  <li><a href="https://www.nginx.com/resources/glossary/reverse-proxy-vs-load-balancer/">Reverse proxy vs load balancer</a></li>
+  <li><a href="https://www.nginx.com/blog/inside-nginx-how-we-designed-for-performance-scale/">NGINX architecture</a></li>
+  <li><a href="http://www.haproxy.org/download/1.2/doc/architecture.txt">HAProxy architecture guide</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Reverse_proxy">Wikipedia</a></li>
+</ul>
+
+<h2 id="application-layer">Application layer</h2>
+
+<p align="center">
+  <img src="http://i.imgur.com/yB5SYwm.png" />
+  <br />
+  <i>&lt;a href=http://lethain.com/introduction-to-architecting-systems-for-scale/#platform_layer&gt;Source: Intro to architecting systems for scale&lt;/a&gt;</i>
+</p>
+
+<p>Chia ra web layer từ the application layer (còn được biết đến như platform layer) cho phép bạn mở rộng và cấu hình cả hai một cách độc lập. Thêm một API mới kết quả chỉ là thêm một application server mà không cần thêm một web server.</p>
+
+<p><strong>Single responsibility principle</strong> ủng hộ cho việc có các service nhỏ và tự trị làm việc cùng với nhau. Các team nhỏ với các dịch vụ nhỏ có thể trù hoạch mạnh mẽ hơn cho sự phát triển nhanh chóng.</p>
+
+<p>Worker ở application layer có thể cho phép bất đồng bộ (asynchronism).</p>
+
+<h3 id="microservices">Microservices</h3>
+
+<p>Vấn đề bàn đến là <a href="https://en.wikipedia.org/wiki/Microservices">microservices</a>, có thể được miêu tả như một bộ các service được triển khai độc lập, nhỏ và hướng module.  Mỗi service chạy ở một tiến trình riêng biệt và giao tiếp thông qua một cơ chế gọn nhẹ, được xác định rõ hàng để thực hiện một nghiệp vụ. <sup>&lt;a href=https://smartbear.com/learn/api-design/what-are-microservices&gt;1&lt;/a&gt;</sup></p>
+
+<p>Pinterest, như là một ví dụ, có thể có các microservice sau đây: user profile, follower, feed, search, photo upload, …</p>
+
+<h3 id="service-discovery">Service Discovery</h3>
+
+<p>Các hệ thống như <a href="https://www.consul.io/docs/index.html">Consul</a>, <a href="https://coreos.com/etcd/docs/latest">Etcd</a>, and <a href="http://www.slideshare.net/sauravhaloi/introduction-to-apache-zookeeper">Zookeeper</a> có thể giúp các service tìm được các service khác bằng việc theo dõi các tên, địa chỉ, và cổng đã được đăng ký.  <a href="https://www.consul.io/intro/getting-started/checks.html">Health checks</a> giúp kiểm chứng sự toàn vẹn của các service thường được thực hiện bằng cách sử dụng HTTP endpoint. Cả Consul và Etcd được xây dựng trên key-value store rất hữu dụng cho việc lưu trữ các giá trị cấu hình và các dữ liệu được chia sẻ khác.</p>
+
+<h3 id="nhược-điểm-application-layer">Nhược điểm: application layer</h3>
+
+<ul>
+  <li>Thêm một application layer với các dịch vụ kết đôi lỏng lẻo yêu cầu cách tiếp cận khác về kiến trúc, vận hành, và các quan điểm quá trình (process viewpoint) (so với một monolithic system).</li>
+  <li>Microservices có thể thêm độ phức tạp trông việc triển khai và vận hành.</li>
+</ul>
+
+<h3 id="nguồn-và-tài-liệu-đọc-thêm-7">Nguồn và tài liệu đọc thêm</h3>
+
+<ul>
+  <li><a href="http://lethain.com/introduction-to-architecting-systems-for-scale">Intro to architecting systems for scale</a></li>
+  <li><a href="http://www.puncsky.com/blog/2016/02/14/crack-the-system-design-interview/">Crack the system design interview</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Service-oriented_architecture">Service oriented architecture</a></li>
+  <li><a href="http://www.slideshare.net/sauravhaloi/introduction-to-apache-zookeeper">Introduction to Zookeeper</a></li>
+  <li><a href="https://cloudncode.wordpress.com/2016/07/22/msa-getting-started/">Here’s what you need to know about building microservices</a></li>
+</ul>
+
+<h2 id="cơ-sở-dữ-liệu-database">Cơ sở dữ liệu (Database)</h2>
+
+<p align="center">
+  <img src="http://i.imgur.com/Xkm5CXz.png" />
+  <br />
+  <i>&lt;a href=https://www.youtube.com/watch?v=vg5onp8TU6Q&gt;Source: Scaling up to your first 10 million users&lt;/a&gt;</i>
+</p>
+
+<h3 id="relational-database-management-system-rdbms">Relational database management system (RDBMS)</h3>
+
+<p>Một CSDL quan hệ như SQL là một bộ sưu tập các data được tổ chức dưới dạng bảng.</p>
+
+<p><strong>ACID</strong> là một tập các thuộc tính của RDBMS <a href="https://en.wikipedia.org/wiki/Database_transaction">transactions</a>.</p>
+
+<p align="center">
+  <img src="https://tedu.com.vn/UploadData/images/acid-600x338.png" />
+  <br />
+</p>
+
+<ul>
+  <li><strong>Atomicity</strong> - Mỗi transaction hoặc là tất cả các thao tác thành công hoặc tất cả thất bại</li>
+  <li><strong>Consistency</strong> - Bất kỳ transaction nào cũng đưa CSDL từ một trạng thái hợp lệ này sang một trạng thái hợp lệ khác</li>
+  <li><strong>Isolation</strong> - Các giao dịch phải tách biệt nhau</li>
+  <li><strong>Durability</strong> - Các dữ liệu đã commit là bền vững</li>
+</ul>
+
+<p>Có rất nhiều kỹ thuật để mở rộng RDBMS: <strong>master-slave replication</strong>, <strong>master-master replication</strong>, <strong>federation</strong>, <strong>sharding</strong>, <strong>denormalization</strong>, và <strong>SQL tuning</strong>.</p>
+
+<h4 id="master-slave-replication">Master-slave replication</h4>
+
+<p>Server master phục vụ đọc và ghi, nhân bản các dữ liệu được ghi ra slave, nơi mà dữ liệu chỉ được đọc. Các slave có thể nhân bản ra các slave khác (dạng cây). Nếu master sập, hệ thống sẽ ở trạng thái chỉ đọc cho đến khi một slave được thăng lên làm master hoặc master được khôi phục.</p>
+
+<p align="center">
+  <img src="http://i.imgur.com/C9ioGtn.png" />
+  <br />
+  <i>&lt;a href=http://www.slideshare.net/jboner/scalability-availability-stability-patterns/&gt;Source: Scalability, availability, stability, patterns&lt;/a&gt;</i>
+</p>
+
+<h5 id="nhược-điểm-master-slave-replication">Nhược điểm: master-slave replication</h5>
+
+<ul>
+  <li>Cần thêm các logic để xác định cơ chế chuyển một slave nên master.</li>
+</ul>
+
+<h4 id="master-master-replication">Master-master replication</h4>
+
+<p>Tất cả đều hỗ trợ đọc ghi, các server là ngang hàng về việc ghi. Nếu một master sập, hệ thống vẫn tiếp tục đọc ghi.</p>
+
+<p align="center">
+  <img src="http://i.imgur.com/krAHLGg.png" />
+  <br />
+  <i>&lt;a href=http://www.slideshare.net/jboner/scalability-availability-stability-patterns/&gt;Source: Scalability, availability, stability, patterns&lt;/a&gt;</i>
+</p>
+
+<h5 id="nhược-điểm-master-master-replication">Nhược điểm: master-master replication</h5>
+
+<ul>
+  <li>Bạn sẽ cần một load balancer hoặc sẽ cần thay đổi logic của application để quết định ghi ở đâu.</li>
+  <li>Hầu hết hệ thống master-master là nhất quán lỏng lẻo (xâm phạm ACID) hoặc sẽ trễ trong việc ghi để đồng bộ.</li>
+  <li>Giải quyết xung đột sẽ càng phức tạp nếu thêm server ghi.</li>
+</ul>
+
+<h5 id="nhược-điểm-replication">Nhược điểm: replication</h5>
+
+<ul>
+  <li>Có khả năng mất mát dữ liệu nếu master chết trước khi nhân bản được hoàn thành.</li>
+  <li>Mỗi lần ghi sẽ sinh ra các lần nhân bản. Nếu có rất nhiều ghi, việc nhân bản có thể bị sa lầy và không thể làm như các hệ thống nhiều đọc.</li>
+  <li>Càng nhiều read slave, bạn càng cần nhân bản nhiều, độ trễ càn lớn.</li>
+  <li>Ở một vài hệ thống, viết lên master có thể sinh nhiều luồng ghi song song, khi nhân bản chỉ cung cấp viết tuần tự với một luồng đơn.</li>
+  <li>Nhân bản cần thêm phần cứng và độ phức tạp.</li>
+</ul>
+
+<h5 id="nguồn-và-tài-liệu-đọc-thêm-replication">Nguồn và tài liệu đọc thêm: replication</h5>
+
+<ul>
+  <li><a href="http://www.slideshare.net/jboner/scalability-availability-stability-patterns/">Scalability, availability, stability, patterns</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Multi-master_replication">Multi-master replication</a></li>
+</ul>
+
+<h4 id="federation">Federation</h4>
+
+<p align="center">
+  <img src="http://i.imgur.com/U3qV33e.png" />
+  <br />
+  <i>&lt;a href=https://www.youtube.com/watch?v=vg5onp8TU6Q&gt;Source: Scaling up to your first 10 million users&lt;/a&gt;</i>
+</p>
+
+<p>Federation (or hoặc phân chia theo hàm) chia database bằng hàm. Ví dụ, thay vì dùng một database đơn, bạn có thể có ba database: <strong>forums</strong>, <strong>users</strong>, và <strong>products</strong>, kết quả là sẽ ít traffic đọc ghi cho mỗi database và cuối cùng ít lag cho nhân bản. Database nhỏ hơn kết quả là nhiều dữ liệu có thể được vừa cho memory, có thể tạo nên nhiều cache hit hơn và cải thiện cache một cách cục bộ. Do có nhiều database bạn có thể ghi song song, cải thiện thông lượng.</p>
+
+<h5 id="nhược-điểm-federation">Nhược điểm: federation</h5>
+
+<ul>
+  <li>Federation không hiệu quả nếu schema yêu cầu hàm hoặc bảng lớn.</li>
+  <li>Bạn sẽ cần cập nhật application logic để xác định ghi và đọc trên database nào.</li>
+  <li>Join bảng sẽ rất phức tạp với một <a href="http://stackoverflow.com/questions/5145637/querying-data-by-joining-two-tables-in-two-database-on-different-servers">server link</a>.</li>
+  <li>Federation cần thêm phần cứng và độ phức tạp.</li>
+</ul>
+
+<h5 id="nguồn-và-tài-liệu-đọc-thêm-federation">Nguồn và tài liệu đọc thêm: federation</h5>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=vg5onp8TU6Q">Scaling up to your first 10 million users</a></li>
+</ul>
+
+<h4 id="sharding">Sharding</h4>
+
+<p align="center">
+  <img src="http://i.imgur.com/wU8x5Id.png" />
+  <br />
+  <i>&lt;a href=http://www.slideshare.net/jboner/scalability-availability-stability-patterns/&gt;Source: Scalability, availability, stability, patterns&lt;/a&gt;</i>
+</p>
+
+<p>Sharding phân tán dữ liệu xuyên suốt các database khác nhau như mỗi database giữ một phần của dữ liệu. Lấy user database làm ví dụ, Nếu càng nhiều user, càng nhiều shard sẽ được thêm vào cluster.</p>
+
+<p>Tương tự như ưu điểm của federation, sharding. kích cỡ index được giảm đi, cải thiện hiệu năng và truy vấn nhanh hơn. Nếu một shard sập các shard khác vẫn họat động, mặc dù bạn vẫn cần nhân bản để tránh mất mát dữ liệu. Như federation, bạn có thể ghi một cách song song.</p>
+
+<p>Bạn có thể dùng họ hoặc vị trí địa lý để shard một bảng có nhiều người dùng.</p>
+
+<h5 id="nhược-điểm-sharding">Nhược điểm: sharding</h5>
+
+<ul>
+  <li>Cần cập nhật lại logic.</li>
+  <li>Dữ liệu có thể bị lõm ở shard.  Ví dụ, Sẽ có nhiều request vào một shard trong khi các shard khác rảnh rỗi.
+    <ul>
+      <li>Cân bằng lại yêu cầu thêm độ phức tạp. Một hàm cho sharding dựa trên <a href="http://www.paperplanes.de/2011/12/9/the-magic-of-consistent-hashing.html">consistent hashing</a> có thể giảm hiểu lượng dữ liệu phải di chuyển qua lại khi có thay đổi.</li>
+    </ul>
+  </li>
+  <li>Join từ nhiều shard có thể phức tạp.</li>
+  <li>Sharding yêu cầu thêm phần cứng và độ phức tạp.</li>
+</ul>
+
+<h5 id="nguồn-và-tài-liệu-đọc-thêm-sharding">Nguồn và tài liệu đọc thêm: sharding</h5>
+
+<ul>
+  <li><a href="http://highscalability.com/blog/2009/8/6/an-unorthodox-approach-to-database-design-the-coming-of-the.html">The coming of the shard</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Shard_(database_architecture)">Shard database architecture</a></li>
+  <li><a href="http://www.paperplanes.de/2011/12/9/the-magic-of-consistent-hashing.html">Consistent hashing</a></li>
+</ul>
+
+<h4 id="denormalization">Denormalization</h4>
+
+<p>Denormalization mục tiêu là tối ưu hóa đọc bằng một vài chi phí cho việc ghi. Các bản copy thừa của dữ liệu được thêm vào các bảng để hạn chế nhiều lệnh join. Một vài RDBMS như <a href="https://en.wikipedia.org/wiki/PostgreSQL">PostgreSQL</a> và Oracle cung cấp <a href="https://en.wikipedia.org/wiki/Materialized_view">materialized views</a> để xử lý công việc lưu trữ dư thừa và giũ chúng nhất quán.</p>
+
+<p>Một khi dữ liệu phân tán từ các kỹ thuật như <a href="#federation">federation</a> và <a href="#sharding">sharding</a>, việc join sẽ rất phức tạp. Denormalization sẽ giảm thiểu việc phải join một cách phức tạp.</p>
+
+<p>Ở hầu hết các hệ thống, việc đọc thường gấp 100 thậm chí 1000:1 việc ghi. việc đọc lại yêu cầu các phép join tốn kém, tốn một khoảng thời gian lớn cho việc truy xuất.</p>
+
+<h5 id="nhược-điểm-denormalization">Nhược điểm: denormalization</h5>
+
+<ul>
+  <li>Dữ liệu bị trùng lặp.</li>
+  <li>Phải đồng bộ hóa dư thừa, thiết kế database phức tạp hơn.</li>
+  <li>Không sử dụng cho các ứng dụng có lượng ghi lớn.</li>
+</ul>
+
+<h6 id="nguồn-và-tài-liệu-đọc-thêm-denormalization">Nguồn và tài liệu đọc thêm: denormalization</h6>
+
+<ul>
+  <li><a href="https://en.wikipedia.org/wiki/Denormalization">Denormalization</a></li>
+</ul>
+
+<h4 id="sql-tuning">SQL tuning</h4>
+
+<p>SQL tuning là một chủ đề lớn của rất nhiều <a href="https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Daps&amp;field-keywords=sql+tuning">sách</a> đã được viết như một nguồn tham khảo.</p>
+
+<p>Nó rất quan trọng để <strong>benchmark</strong> và <strong>profile</strong> để mô phỏng và phát hiện các nút thắt cổ chai.</p>
+
+<ul>
+  <li><strong>Benchmark</strong> - Mô phỏng trường hợp tải cao với công cụ như <a href="http://httpd.apache.org/docs/2.2/programs/ab.html">ab</a>.</li>
+  <li><strong>Profile</strong> - Công cụ kiểm định như <a href="http://dev.mysql.com/doc/refman/5.7/en/slow-query-log.html">slow query log</a> để theo dõi các vấn đề về hiệu năng.</li>
+</ul>
+
+<p>Benchmarking và profiling có thể giúp cho bạn cải thiện hiệu năng theo những cách sau.</p>
+
+<h5 id="làm-chặt-hơn-schema">Làm chặt hơn schema</h5>
+
+<ul>
+  <li>MySQL dumps vào đĩa bằng các block liên tiếp cho việc truy cập nhanh.</li>
+  <li>Sử dụng <code class="language-plaintext highlighter-rouge">CHAR</code> thay vì <code class="language-plaintext highlighter-rouge">VARCHAR</code> cho các trường có độ dài cố định.
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">CHAR</code> cho phép random access một cách hiệu quả, trong khi với <code class="language-plaintext highlighter-rouge">VARCHAR</code>, bạn phải tìm đến hết string trước khi chuyển sang cái tiếp theo.</li>
+    </ul>
+  </li>
+  <li>Sử dụng <code class="language-plaintext highlighter-rouge">TEXT</code> cho một lượng lớn ký tự như một bài đăng của blog. <code class="language-plaintext highlighter-rouge">TEXT</code> còn cho phép boolean seach. Sử dụng <code class="language-plaintext highlighter-rouge">TEXT</code> lưu một con trỏ tới đĩa để lưu trũ text block.</li>
+  <li>Sử dụng <code class="language-plaintext highlighter-rouge">INT</code> cho các số từ 2^32 hoặc 4 tỉ.</li>
+  <li>Sử dụng <code class="language-plaintext highlighter-rouge">DECIMAL</code> cho đơn vị tiền tệ.</li>
+  <li>Tránh sử dụng <code class="language-plaintext highlighter-rouge">BLOBS</code> lớn, thay vào đó lưu địa chỉ của tài nguyên.</li>
+  <li><code class="language-plaintext highlighter-rouge">VARCHAR(255)</code> là số ký tự lớn nhất có thể đếm được bằng số 8-bit, thường tối đa hóa việc sử dụng byte trong một số RDBMS.</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">NOT NULL</code> ở các trường có thể dùng để tăng hiệu năng <a href="http://stackoverflow.com/questions/1017239/how-do-null-values-affect-performance-in-a-database-search">improve search performance</a>.</li>
+</ul>
+
+<h5 id="sử-dụng-việc-đánh-chỉ-số-tốt">Sử dụng việc đánh chỉ số tốt</h5>
+
+<ul>
+  <li>Cột mà bạn truy vấn (<code class="language-plaintext highlighter-rouge">SELECT</code>, <code class="language-plaintext highlighter-rouge">GROUP BY</code>, <code class="language-plaintext highlighter-rouge">ORDER BY</code>, <code class="language-plaintext highlighter-rouge">JOIN</code>) có thể nhanh hơn nhờ index.</li>
+  <li>Index thường được biểu diễn dưới dạng cây cân bằng <a href="https://en.wikipedia.org/wiki/B-tree">B-tree</a> giữa cho dữ liệu được sắp xếp để tìm kiếm, truy cập tuần tự, thêm, và xóa đọ phức tạp logarit.</li>
+  <li>Việc index yêu cầu thêm không gian lưu trữ.</li>
+  <li>Việc viết có thể chậm hơn nếu dùng index.</li>
+  <li>Khi loading một lượng lớn dữ liệu, có thể nhanh hơn nếu vô hiệu hóa index, load dữ liệu, sau đó xây dựng lại index.</li>
+</ul>
+
+<h5 id="tránh-join">Tránh join</h5>
+
+<ul>
+  <li>Denormalize, khi hiệu năng yêu cầu đến nó.</li>
+</ul>
+
+<h5 id="phân-mảnh-bảng">Phân mảnh bảng</h5>
+
+<ul>
+  <li>Chia bảng bằng cách đặt các điểm nóng trong một bảng riêng biệt để giúp giữ nó trong memory.</li>
+</ul>
+
+<h5 id="điều-chỉnh-query-cache">Điều chỉnh query cache</h5>
+
+<ul>
+  <li>Trong một vài trường hợp, <a href="http://dev.mysql.com/doc/refman/5.7/en/query-cache">query cache</a> có thể dẫn đến <a href="https://www.percona.com/blog/2014/01/28/10-mysql-performance-tuning-settings-after-installation/">các vấn đề về hiệu năng</a>.</li>
+</ul>
+
+<h5 id="nguồn-và-tài-liệu-đọc-thêm-sql-tuning">Nguồn và tài liệu đọc thêm: SQL tuning</h5>
+
+<ul>
+  <li><a href="http://20bits.com/article/10-tips-for-optimizing-mysql-queries-that-dont-suck">Tips for optimizing MySQL queries</a></li>
+  <li><a href="http://stackoverflow.com/questions/1217466/is-there-a-good-reason-i-see-varchar255-used-so-often-as-opposed-to-another-l">Is there a good reason i see VARCHAR(255) used so often?</a></li>
+  <li><a href="http://stackoverflow.com/questions/1017239/how-do-null-values-affect-performance-in-a-database-search">How do null values affect performance?</a></li>
+  <li><a href="http://dev.mysql.com/doc/refman/5.7/en/slow-query-log.html">Slow query log</a></li>
+</ul>
+
+<h3 id="cơ-sở-dữ-liệu-nosql">Cơ sở dữ liệu NoSQL</h3>
+<ul>
+  <li><a href="http://nosql-database.org/">List Of NoSQL Databases</a></li>
+</ul>
+
+<p>NoSQL is là một tập các dữ liệu được biểu hiện theo cách <strong>key-value store</strong>, <strong>document-store</strong>, <strong>wide column store</strong>, hoặc là một <strong>graph database</strong>.  Dữ liệu là không chuẩn hóa, và phép join được sử dụng ở mức code. Hầu hết chúng không dùng ACID mà dùng <a href="#eventual-consistency">eventual consistency</a>.</p>
+
+<p><strong>BASE</strong> thường được dùng trong NoSQL. Theo <a href="#cap-theorem">CAP Theorem</a>, BASE chọn tính sẵn sàng cao hơn tính nhất quán.</p>
+
+<ul>
+  <li><strong>Basically available</strong> - hệ thống đảm bảo tính sẵn sàng.</li>
+  <li><strong>Soft state</strong> - Trạng thái có thể thay đổi theo thời gian, kể cả không có input.</li>
+  <li><strong>Eventual consistency</strong> - Hệ thống sẽ nhất quán sau một khoảng thời gian nhất định.</li>
+</ul>
+
+<p>Thêm vào đó chọn <a href="#sql-or-nosql">SQL hay NoSQL</a>, rất hữu ích để hiểu được NoSQL phù hợp với ca sử dụng nào nhất. Chúng tôi sẽ review <strong>key-value stores</strong>, <strong>document-stores</strong>, <strong>wide column stores</strong>, và <strong>graph databases</strong> ở phần tiếp theo.</p>
+
+<h4 id="key-value-store">Key-value store</h4>
+<blockquote>
+  <p>Abstraction: Bảng băm(hash table)</p>
+</blockquote>
+
+<p>Một CSDL key-value thông thường cho độ phức tạp O(1) cho việc đọc ghi và thường được sử dụng trên RAM hoặc SSD để tối ưu hóa tốc độ. CSDL có thể duy trì khóa theo <a href="https://en.wikipedia.org/wiki/Lexicographical_order">thứ tự từ điển (lexicographical order)</a>, cho phép truy xuất hiệu quả các vùng khóa (key range).  Nó có thể cho phép lưu giá trị (value) dưới dạng siêu dữ liệu (metadata).</p>
+
+<p>CSDL cung cấp hiệu năng cao và thường được sử dụng cho mô hình dữ liệu đơn giản hoặc các dữ liệu thay đổi nhanh, ví dụ như các dữ liệu được lưu ở lớp in-memory cache. Bởi vì chúng chỉ cung cấp một tập hữu hạn các toán tử, các toán tử phức tạp sẽ được chuyển đến lớp application.</p>
+
+<p>CSDL key-value là nền tảng cho các hệ thống phức tạp hơn như CSDL dạng document, và trong một số trường hợp là graph database.</p>
+
+<h5 id="nguồn-và-tài-liệu-đọc-thêm-key-value-store">Nguồn và tài liệu đọc thêm: key-value store</h5>
+
+<ul>
+  <li><a href="https://en.wikipedia.org/wiki/Key-value_database">Key-value database</a></li>
+  <li><a href="http://stackoverflow.com/questions/4056093/what-are-the-disadvantages-of-using-a-key-value-table-over-nullable-columns-or">Disadvantages of key-value stores</a></li>
+  <li><a href="http://qnimate.com/overview-of-redis-architecture/">Redis architecture</a></li>
+  <li><a href="https://www.adayinthelifeof.nl/2011/02/06/memcache-internals/">Memcached architecture</a></li>
+</ul>
+
+<h4 id="document-store">Document store</h4>
+
+<blockquote>
+  <p>Abstraction: key-value store với documents được lưu như một giá trị</p>
+</blockquote>
+
+<p>Một document store lấy văn bản (document) làm trung tâm (XML, JSON, binary, …), một document có thể lưu mọi thông tin của một đối tượng.  Document stores cung cấp các API hoặc một ngôn ngữ truy vấn để truy vấn dựa trên cấu trúc nội tại của văn bản.  <em>Ghi chú, nhiều key-value store có bao gồm các tính năng để làm việc với siêu dữ liệu, làm mờ ranh giới giữa 2 loại CSDL.</em></p>
+
+<p>Dựa trên phần cài đặt phía dưới, văn bản được tổ chức dưới dạng các collection, tag, metadata, hoặc directorie.  Mặc dù các văn bản có thể được tổ chức hoặc nhóm lại với nhau, Văn bản có thể chứa các trường khác hoàn toàn với phần còn lại.</p>
+
+<p>Một vài CSDL nổi tiếng như <a href="https://www.mongodb.com/mongodb-architecture">MongoDB</a> và <a href="https://blog.couchdb.org/2016/08/01/couchdb-2-0-architecture/">CouchDB</a> cung cấp ngôn ngữ truy vấn giống SQL.  <a href="http://www.read.seas.harvard.edu/~kohler/class/cs239-w08/decandia07dynamo.pdf">DynamoDB</a> cung cấp cả dạng key-value và document.</p>
+
+<p>Document stores cung cấp độ linh hoạt cao và thường được dùng với những loại dữ liệu phải thay đổi đột ngột.</p>
+
+<h5 id="nguồn-và-tài-liệu-đọc-thêm-document-store">Nguồn và tài liệu đọc thêm: document store</h5>
+
+<ul>
+  <li><a href="https://en.wikipedia.org/wiki/Document-oriented_database">Document-oriented database</a></li>
+  <li><a href="https://www.mongodb.com/mongodb-architecture">MongoDB architecture</a></li>
+  <li><a href="https://blog.couchdb.org/2016/08/01/couchdb-2-0-architecture/">CouchDB architecture</a></li>
+  <li><a href="https://www.elastic.co/blog/found-elasticsearch-from-the-bottom-up">Elasticsearch architecture</a></li>
+</ul>
+
+<h4 id="wide-column-store">Wide column store</h4>
+
+<p align="center">
+  <img src="http://i.imgur.com/n16iOGk.png" />
+  <br />
+  <i>&lt;a href=http://blog.grio.com/2015/11/sql-nosql-a-brief-history.html&gt;Source: SQL &amp; NoSQL, a brief history&lt;/a&gt;</i>
+</p>
+
+<blockquote>
+  <p>Abstraction: nested map <code class="language-plaintext highlighter-rouge">ColumnFamily&lt;RowKey, Columns&lt;ColKey, Value, Timestamp&gt;&gt;</code></p>
+</blockquote>
+
+<p>Đơn vị dữ liệu cơ bản của wide column store là một cột (cặp name/value). Một cột có thể được nhóm vào một họ các cột (column family) (tương tự như một bảng bên SQL).  Super column family là sự nhóm lại của các column family. Bạn có thể truy cập mỗi cột một cách độc lập với một row key, và các cột với cùng một row key tạo thành một dòng. Mỗi giá trị bao gồm một timestamp cho việc tạo phiên bản (versioning) và để giải quyết các sung đột.</p>
+
+<p>Google giới thiệu <a href="http://www.read.seas.harvard.edu/~kohler/class/cs239-w08/chang06bigtable.pdf">Bigtable</a> như là wide column store đầu tiên, nó tác động tới dự án open-source <a href="https://www.mapr.com/blog/in-depth-look-hbase-architecture">HBase</a> thường được sử dụng trong hệ sinh thái Hadoop, và <a href="http://docs.datastax.com/en/archived/cassandra/2.0/cassandra/architecture/architectureIntro_c.html">Cassandra</a> từ Facebook.  Các CSDL ví dụ như BigTable, HBase, và Cassandra duy trì khóa theo thứ tự bảng chữ cái.</p>
+
+<p>Wide column stores cung cấp tính sẵn sàng và mở rộng cao. Chúng thường được sử dụng để giải quyết lượng dữ liệu rất lớn.</p>
+
+<h5 id="nguồn-và-tài-liệu-đọc-thêm-wide-column-store">Nguồn và tài liệu đọc thêm: wide column store</h5>
+
+<ul>
+  <li><a href="http://blog.grio.com/2015/11/sql-nosql-a-brief-history.html">SQL &amp; NoSQL, a brief history</a></li>
+  <li><a href="http://www.read.seas.harvard.edu/~kohler/class/cs239-w08/chang06bigtable.pdf">Bigtable architecture</a></li>
+  <li><a href="https://www.mapr.com/blog/in-depth-look-hbase-architecture">HBase architecture</a></li>
+  <li><a href="http://docs.datastax.com/en/archived/cassandra/2.0/cassandra/architecture/architectureIntro_c.html">Cassandra architecture</a></li>
+</ul>
+
+<h4 id="graph-database">Graph database</h4>
+
+<p align="center">
+  <img src="http://i.imgur.com/fNcl65g.png" />
+  <br />
+  <i>&lt;a href=https://en.wikipedia.org/wiki/File:GraphDatabase_PropertyGraph.png&gt;Source: Graph database&lt;/a&gt;</i>
+</p>
+
+<blockquote>
+  <p>Abstraction: graph</p>
+</blockquote>
+
+<p>Trong CSDL đồ thị (graph database), mỗi nút(node) là một bản ghi và mỗi cạnh là một quan hệ (relationship) giữa hai nút. Graph databases được tối ưu cho việc biểu diễn dữ liệu với các quan hệ phức tạp với rất nhiều khóa ngoại hay quan hệ nhiều nhiều.</p>
+
+<p>Graphs databases cung cấp hiệu năng cao cho mô hình dữ liệu với các quan hệ phức tạp, ví dụ mạng xã hội. Chúng tương đối mới và chưa được sử dụng rộng rãi; Sẽ khó hơn cho bạn trong việc tìm tài nguyên hay công cụ phát triển. Nhiều CSDL dạng này chỉ có thê truy cập qua <a href="#representational-state-transfer-rest">REST APIs</a>.</p>
+
+<h5 id="nguồn-và-tài-liệu-đọc-thêm-graph">Nguồn và tài liệu đọc thêm: graph</h5>
+<ul>
+  <li><a href="https://en.wikipedia.org/wiki/Graph_database">Graph database</a></li>
+  <li><a href="https://neo4j.com/">Neo4j</a></li>
+  <li><a href="https://neo4j.com/developer/cypher-query-language/">CQL</a></li>
+  <li><a href="https://blog.twitter.com/2010/introducing-flockdb">FlockDB</a></li>
+</ul>
+
+<h4 id="nguồn-và-tài-liệu-đọc-thêm-nosql">Nguồn và tài liệu đọc thêm: NoSQL</h4>
+
+<ul>
+  <li><a href="http://stackoverflow.com/questions/3342497/explanation-of-base-terminology">Explanation of base terminology</a></li>
+  <li><a href="https://medium.com/baqend-blog/nosql-databases-a-survey-and-decision-guidance-ea7823a822d#.wskogqenq">NoSQL databases a survey and decision guidance</a></li>
+  <li><a href="http://www.lecloud.net/post/7994751381/scalability-for-dummies-part-2-database">Scalability</a></li>
+  <li><a href="https://www.youtube.com/watch?v=qI_g07C_Q5I">Introduction to NoSQL</a></li>
+  <li><a href="http://horicky.blogspot.com/2009/11/nosql-patterns.html">NoSQL patterns</a></li>
+</ul>
+
+<h3 id="sql-hay-nosql">SQL hay NoSQL</h3>
+
+<p align="center">
+  <img src="http://i.imgur.com/wXGqG5f.png" />
+  <br />
+  <i>&lt;a href=https://www.infoq.com/articles/Transition-RDBMS-NoSQL/&gt;Source: Transitioning from RDBMS to NoSQL&lt;/a&gt;</i>
+</p>
+
+<p>Lý do cho <strong>SQL</strong>:</p>
+
+<ul>
+  <li>Dữ liệu có cấu trúc</li>
+  <li>schema chặt chẽ</li>
+  <li>Dữ liệu có tính quan hệ cao</li>
+  <li>Cần các phép nối phức tạp</li>
+  <li>Cần đến Transaction (đảm bảo ACID)</li>
+  <li>Các mẫu rõ ràng cho việc mở rộng</li>
+  <li>Được hỗ trợ nhiều hơn từ: developers, community, code, tools, …</li>
+  <li>Tra cứu trên index rất nhanh</li>
+</ul>
+
+<p>Lý do cho <strong>NoSQL</strong>:</p>
+
+<ul>
+  <li>Dữ liệu có tính bán cấu trúc</li>
+  <li>schema động và linh hoạt</li>
+  <li>Dữ liệu ít có tính quan hệ</li>
+  <li>Không cần các phép nối phức tạp</li>
+  <li>Lưu dữ liệu nhiều đên mữ TB, PB</li>
+  <li>Cần chịu tải rất lớn</li>
+  <li>Cần thông lượng cao cho IOPS</li>
+</ul>
+
+<p>Các dữ liệu mẫu thích hợp cho NoSQL:</p>
+
+<ul>
+  <li>Rapid ingest of clickstream and log data</li>
+  <li>Leaderboard or scoring data</li>
+  <li>Temporary data, such as a shopping cart</li>
+  <li>Frequently accessed (‘hot’) tables</li>
+  <li>Metadata/lookup tables</li>
+</ul>
+
+<h5 id="nguồn-và-tài-liệu-đọc-thêm-sql-or-nosql">Nguồn và tài liệu đọc thêm: SQL or NoSQL</h5>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=vg5onp8TU6Q">Scaling up to your first 10 million users</a></li>
+  <li><a href="https://www.sitepoint.com/sql-vs-nosql-differences/">SQL vs NoSQL differences</a></li>
+</ul>
+
+<h2 id="cache">Cache</h2>
+
+<p align="center">
+  <img src="http://i.imgur.com/Q6z24La.png" />
+  <br />
+  <i>&lt;a href=http://horicky.blogspot.com/2010/10/scalable-system-design-patterns.html&gt;Source: Scalable system design patterns&lt;/a&gt;</i>
+</p>
+
+<p>Caching cải thiện thời gian tải trang và giảm thiểu việc phải tương tác với database của server. Ở mô hình này, Bộ điểu phối (Dispatcher) trước tiên sẽ tra cứu nếu request đã được thực hiện trước đó và cố gắng tìm kết qủa trước đó để trả lại, để tiết kiệm thời gian thực thi.</p>
+
+<p>Cơ sở dữ liệu thường hoạt động tốt nhờ việc phân phối đồng đều các lần đọc ghi trên các phân vùng của nó. Các item phổ biến sẽ làm mất cân bằng phân phối, gây nghẽn cổ trai. Đưa một bộ nhơ đệm (cache) ở phía trước cơ sở dữ liệu có thể giải quyết vấn đề tải không đều và sự tăng đột biến lượng truy cập.</p>
+
+<h3 id="client-caching">Client caching</h3>
+
+<p>Caches có thể được đặt bên phía client (Hệ điều hành hoặc trình duyệt), <a href="#reverse-proxy">server side</a>, hoặc ở một lớp bộ nhớ đệm khác.</p>
+
+<h3 id="cdn-caching">CDN caching</h3>
+
+<p><a href="#content-delivery-network">CDNs</a> được coi là một loại bộ nhớ cache.</p>
+
+<h3 id="web-server-caching">Web server caching</h3>
+
+<p><a href="#reverse-proxy-web-server">Reverse proxies</a> và cache ví dụ như <a href="https://www.varnish-cache.org/">Varnish</a> có thể phục vụ trực tiếp các nội dung tĩnh và động.  Web servers còn có thể cache lại request, trả về responses mà không cần giao tiếp với application server.</p>
+
+<h3 id="database-caching">Database caching</h3>
+
+<p>Cơ sở dữ liệu thường bao gồm một vài mức cache ở cấu hình mặc định, tối ưu hóa cho việc sử dụng chung nhất. Tinh chỉnh các cấu hình này cho các trường hợp sử dụng đặc thù có thể làm tăng thêm hiệu suất.</p>
+
+<h3 id="application-caching">Application caching</h3>
+
+<p>In-memory caches ví dụ như Memcached và Redis là các giá trị key-value giữa ứng dụng và your data storage.  Bởi vì dữ liệu được giữ trên RAM, nó sẽ nhanh hơn rất nhiều so với dữ liệu được lấy từ database (lưu trên đĩa). Dung lượng RAM hạn chế hơn dung lượng đĩa, vì vậy thuật toán <a href="https://en.wikipedia.org/wiki/Cache_algorithms">cache invalidation</a> ví dụ <a href="https://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used">least recently used (LRU)</a> có thể bỏ các dữ liệu ít dùng và giữ lại các dữ liệu thường xuyên được sử dụng trên RAM.</p>
+
+<p>Redis có các tính năng bổ sung dưới đây:</p>
+
+<ul>
+  <li>Tùy chọn lưu trữ lâu dài (Persistence option)</li>
+  <li>Cấu trúc dữ liệu dựng sẵn ví dụ như sorted sets và list</li>
+</ul>
+
+<p>Có nhiều mức cache được xếp vào hai loại chính: <strong>database queries</strong> và <strong>objects</strong>:</p>
+
+<ul>
+  <li>Row level</li>
+  <li>Query-level</li>
+  <li>Fully-formed serializable objects</li>
+  <li>Fully-rendered HTML</li>
+</ul>
+
+<p>Thông thường bạn nên cố tránh cache trên tệp, ví nó làm cho việc nhân bản và tự động mở rộng trở nên khó khăn hơn.</p>
+
+<h3 id="caching-at-the-database-query-level">Caching at the database query level</h3>
+
+<p>Bất kì khi nào bạn truy vấn, băm truy vấn thành một khóa và lưu kết quả vào cache.</p>
+
+<p>Cách tiếp cận này có những vấn đề sau:</p>
+
+<ul>
+  <li>Khó để xóa các dữ liệu đã cache với truy vấn phức tạp</li>
+  <li>Nếu một mảnh dữ liệu thay đổi ví dụ như một ô trên bảng, bạn phải xóa toàn bộ các truy vấn đã cache có chứa ô bị thay đổi đó.</li>
+</ul>
+
+<h3 id="caching-at-the-object-level">Caching at the object level</h3>
+
+<p>Coi dữ liệu như các đối tượng, tương tự với việc bạn làm với mã nguồn.  Have your application assemble the dataset from the database into a class instance or a data structure(s):</p>
+
+<ul>
+  <li>Xóa đối tượng nếu dữ liệu ở mức dưới có sự thay đổi.</li>
+  <li>Cho phép xử lý bất đồng bộ: workers tập hợp các đối tượng bằng cách tiêu thụ các đối tượng được cache gần nhất.</li>
+</ul>
+
+<p>Gợi ý các thành phần nên cache:</p>
+
+<ul>
+  <li>User sessions</li>
+  <li>Fully rendered web pages</li>
+  <li>Activity streams</li>
+  <li>User graph data</li>
+</ul>
+
+<h3 id="khi-nào-nên-cập-nhật-cache">Khi nào nên cập nhật cache</h3>
+
+<p>Bởi vì bạn chỉ có thể lưu một lượng giới hạn dữ liệu trong cache, bạn cần chọn chiến lược cập nhật phù hợp với trường hợp của mình.</p>
+
+<h4 id="cache-aside">Cache-aside</h4>
+
+<p align="center">
+  <img src="http://i.imgur.com/ONjORqk.png" />
+  <br />
+  <i>&lt;a href=http://www.slideshare.net/tmatyashovsky/from-cache-to-in-memory-data-grid-introduction-to-hazelcast&gt;Source: From cache to in-memory data grid&lt;/a&gt;</i>
+</p>
+
+<p>Hệ thống chịu trách nhiệm đọc và ghi từ bộ nhớ. Bộ nhớ đệm không trực tiếp tương tác với cơ sở dữ liệu. Hệ thống sẽ làm những việc sau:</p>
+
+<ul>
+  <li>Tra cứu entry trong cache, nếu cache-miss</li>
+  <li>Tải entry lên từ đĩa</li>
+  <li>Thêm entry vào cache</li>
+  <li>Trả về entry</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def get_user(self, user_id):
+    user = cache.get("user.{0}", user_id)
+    if user is None:
+        user = db.query("SELECT * FROM users WHERE user_id = {0}", user_id)
+        if user is not None:
+            key = "user.{0}".format(user_id)
+            cache.set(key, json.dumps(user))
+    return user
+</code></pre></div></div>
+<p><a href="https://memcached.org/">Memcached</a> thường được dùng trong trường hợp này.</p>
+
+<p>Đọc tuần tự dữ liệu được thêm vào cache thì nhanh. Cache-aside cũng được gọi là lazy loading. Chỉ những dữ liệu yêu cầu mới được cache, tránh đưa vào cache những dữ liệu không được yêu cầu.</p>
+
+<h4 id="write-through">Write-through</h4>
+
+<p align="center">
+  <img src="http://i.imgur.com/0vBc0hN.png" />
+  <br />
+  <i>&lt;a href=http://www.slideshare.net/jboner/scalability-availability-stability-patterns/&gt;Source: Scalability, availability, stability, patterns&lt;/a&gt;</i>
+</p>
+
+<p>Hệ thống sử dụng cache như một nơi lưu trữ chính, đọc và ghi dữ liệu lên nó, trong khi cache đóng vai trò đọc và ghi dữ liệu trên database:</p>
+
+<ul>
+  <li>Hệ thống thêm, sửa entry trên cache</li>
+  <li>Cache ghi một cách đồng bộ lên</li>
+  <li>Trả về kết quả</li>
+</ul>
+
+<p>Application code:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>set_user(12345, {"foo":"bar"})
+</code></pre></div></div>
+
+<p>Cache code:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def set_user(user_id, values):
+    user = db.query("UPDATE Users WHERE id = {0}", user_id, values)
+    cache.set(user_id, user)
+</code></pre></div></div>
+
+<p>Write-through là chậm trên tổng thể do thao tác ghi, nhưng đọc tuần tự trên các dữ liệu vừa được ghi là nhanh. Người dùng thường dễ chấp nhận độ trễ cho cập nhật dữ liệu hơn là khi đọc dữ liệu. Dữ liệu trong cache không bị cũ.</p>
+
+<h4 id="write-behind-write-back">Write-behind (write-back)</h4>
+
+<p align="center">
+  <img src="http://i.imgur.com/rgSrvjG.png" />
+  <br />
+  <i>&lt;a href=http://www.slideshare.net/jboner/scalability-availability-stability-patterns/&gt;Source: Scalability, availability, stability, patterns&lt;/a&gt;</i>
+</p>
+
+<p>Trong write-behind, Ứng dụng sẽ làm các bước sau:</p>
+
+<ul>
+  <li>Thêm, cập nhật vào cache</li>
+  <li>Ghi bất đồng bộ ra database, cải thiện hiệu năng ghi</li>
+</ul>
+
+<h5 id="nhược-điểm-write-behind">Nhược điểm: write-behind</h5>
+
+<ul>
+  <li>Có thể mất mát dữ liệu nếu dữ liệu mới chỉ được ghi vào cache mà chưa được ghi vào data.</li>
+  <li>Cài đặt có thể khó hơn write-through hoặc cache aside.</li>
+</ul>
+
+<h4 id="refresh-ahead">Refresh-ahead</h4>
+
+<p align="center">
+  <img src="http://i.imgur.com/kxtjqgE.png" />
+  <br />
+  <i>&lt;a href=http://www.slideshare.net/tmatyashovsky/from-cache-to-in-memory-data-grid-introduction-to-hazelcast&gt;Source: From cache to in-memory data grid&lt;/a&gt;</i>
+</p>
+
+<p>Bạn có thể cấu hình cache làm mới tự động các entry được truy cập gần đây trước thời gian nó hết hạn.</p>
+
+<p>Refresh-ahead có thể giảm độ trễ với read-through nếu cache có thể dự đoán chính xác item nào có thể được truy cập trong tương lai.</p>
+
+<h5 id="bất-lợi-refresh-ahead">Bất lợi: refresh-ahead</h5>
+
+<ul>
+  <li>Việc tiên đoán có thể làm ảnh hưởng đến hiệu năng.</li>
+</ul>
+
+<h3 id="nhược-điểm-cache">Nhược điểm: cache</h3>
+
+<ul>
+  <li>Cần đảm bảo thông tin là đúng và nhất quán giũa cache và database, <a href="https://en.wikipedia.org/wiki/Cache_algorithms">Các giải thuật về cache</a>.</li>
+  <li>Cần thay đổi ứng dụng nếu thêm Redis hay Memcache.</li>
+  <li>Chiến lược cập nhật cache là tương đối khó và có sự đặc thù cho các ứng dụng khác nhau.</li>
+</ul>
+
+<h3 id="nguồn-và-tài-liệu-đọc-thêm-8">Nguồn và tài liệu đọc thêm</h3>
+
+<ul>
+  <li><a href="http://www.slideshare.net/tmatyashovsky/from-cache-to-in-memory-data-grid-introduction-to-hazelcast">From cache to in-memory data grid</a></li>
+  <li><a href="http://horicky.blogspot.com/2010/10/scalable-system-design-patterns.html">Scalable system design patterns</a></li>
+  <li><a href="http://lethain.com/introduction-to-architecting-systems-for-scale/">Introduction to architecting systems for scale</a></li>
+  <li><a href="http://www.slideshare.net/jboner/scalability-availability-stability-patterns/">Scalability, availability, stability, patterns</a></li>
+  <li><a href="http://www.lecloud.net/post/9246290032/scalability-for-dummies-part-3-cache">Scalability</a></li>
+  <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/UserGuide/Strategies.html">AWS ElastiCache strategies</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Cache_(computing)">Wikipedia</a></li>
+</ul>
+
+<h2 id="bất-đồng-bộ-asynchronism">Bất đồng bộ (Asynchronism)</h2>
+
+<p align="center">
+  <img src="http://i.imgur.com/54GYsSx.png" />
+  <br />
+  <i>&lt;a href=http://lethain.com/introduction-to-architecting-systems-for-scale/#platform_layer&gt;Source: Intro to architecting systems for scale&lt;/a&gt;</i>
+</p>
+
+<p>Các luồng làm việc bất đồng bộ (Asynchronous workflow) giúp giảm thiểu thời gian yêu cầu cho những tác vụ tốn tài nguyên mà bình thường chứng được xử lý đồng bộ. Chúng cũng giúp đỡ bằng cách làm những việc tốn thời gian trước, ví dụ như tập hợp dữ liệu một cách định kỳ.</p>
+
+<h3 id="message-queues">Message queues</h3>
+
+<p>Message queues nhận, giữ, và vận chuyển các tin nhắn. Nếu một tác vụ mất nhiều thời gian để xử lý một các đồng bộ, bạn có thể dùng một message queue với luồng công việc dưới đây:</p>
+
+<ul>
+  <li>Một ứng dụng công bố (publish) một công việc đến hàng đợi, sau đó thông báo cho người dùng trạng thái của coong việc</li>
+  <li>Một worker lấy (pick up) công việc từ hang đợi, xử lý nó, sau đó thông báo là công việc đã hoàn thành</li>
+</ul>
+
+<p>Người dùng không đợi cho đến khi công việc xử lý xong và công việc được xử lý dưới nền. Trong suốt thời gian này, phía client có thể làm một chút xử lý nhó để làm như công việc đã xửu lý xong. Ví dụ, Nếu đăng lên tweet, tweet sẽ ngay lập tức được đưa lên timeline, nhưng có thể phải mất một chút thời gian để tweet của bạn thực sự được đưa đến những người theo dõi.</p>
+
+<p><strong>Redis</strong> là hữu dụng nư một message broker đơn giản nhưng tin nhắn có thể bị mất.</p>
+
+<p><strong>RabbitMQ</strong> phổ biến nhưng yêu cầu bạn làm cho hệ thống tương thích với giao thức ‘AMQP’ và quản lý các node của bạn.</p>
+
+<p><strong>Amazon SQS</strong>, được tổ chức (hosted) nhưng có độ trễ cao và có thể tin nhắn sẽ được gửi đi đến hai lần (lặp).</p>
+
+<h3 id="task-queues">Task queues</h3>
+
+<p>Các Tasks queue nhận các task và những dữ liệu liên quan, chạy chúng, sau đó chuyển đi các kết quả của chúng. Task queue hỗ trợ lập lịch cà có thể chạy các công việc đòi hỏi tính toán nhiều ở trong nền.</p>
+
+<p><strong>Celery</strong> hỗ trợ lạp lịch và chủ yếu hỗ trợ python.</p>
+
+<h3 id="back-pressure">Back pressure</h3>
+
+<p>Nếu các hàng đợi lớn lên đáng kể, kích cỡ hàng đợi có thể lớn hơn bộ nhớ, dẫn đến cache mis, đọc từ đĩa, và hiệu năng chậm đi đáng kể. <a href="http://mechanical-sympathy.blogspot.com/2012/05/apply-back-pressure-when-overloaded.html">Back pressure</a> có thể giới hạn kích cỡ hàng đợi, qua đó duy trì một tỉ lệ băng thông cao và thời gian phản hồi tốt cho các công việc có trong hàng đợi. Khi mà hàng đợi đầy, client sẽ nhận phản hồi bận từ server hoặc mã trạng thái HTTP 503 để thử lại lần nữa. Client có thể thử request sau đó, có thể với <a href="https://en.wikipedia.org/wiki/Exponential_backoff">exponential backoff</a>.</p>
+
+<h3 id="nhược-điểm-asynchronism">Nhược điểm: asynchronism</h3>
+
+<ul>
+  <li>Các ca sử dụng như các tính toán nhẹ và các luồng xử lý thời gian thực có thể sẽ thích hợp hơn nếu dùng xử lý đồng bộ, trong khi xử lý bất đồng bộ có thể chậm và phức tạp.</li>
+</ul>
+
+<h3 id="nguồn-và-tài-liệu-đọc-thêm-9">Nguồn và tài liệu đọc thêm</h3>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=1KRYH75wgy4">It’s all a numbers game</a></li>
+  <li><a href="http://mechanical-sympathy.blogspot.com/2012/05/apply-back-pressure-when-overloaded.html">Applying back pressure when overloaded</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Little%27s_law">Little’s law</a></li>
+  <li><a href="https://www.quora.com/What-is-the-difference-between-a-message-queue-and-a-task-queue-Why-would-a-task-queue-require-a-message-broker-like-RabbitMQ-Redis-Celery-or-IronMQ-to-function">What is the difference between a message queue and a task queue?</a></li>
+</ul>
+
+<h2 id="communication">Communication</h2>
+
+<p align="center">
+  <img src="http://i.imgur.com/5KeocQs.jpg" />
+  <br />
+  <i>&lt;a href=http://www.escotal.com/osilayer.html&gt;Source: OSI 7 layer model&lt;/a&gt;</i>
+</p>
+
+<h3 id="hypertext-transfer-protocol-http">Hypertext transfer protocol (HTTP)</h3>
+<h3 id="transmission-control-protocol-tcp">Transmission control protocol (TCP)</h3>
+<h3 id="user-datagram-protocol-udp">User datagram protocol (UDP)</h3>
+
+<h3 id="remote-procedure-call-rpc">Remote procedure call (RPC)</h3>
+
+<p align="center">
+  <img src="http://i.imgur.com/iF4Mkb5.png" />
+  <br />
+  <i>&lt;a href=http://www.puncsky.com/blog/2016/02/14/crack-the-system-design-interview/&gt;Source: Crack the system design interview&lt;/a&gt;</i>
+</p>
+
+<p>Trong RPC, một client tạo nên một thủ tục có thể được thực thi ở một địa chỉ khác, thường là server từ xa. Thủ tục được mã hóa như thể nó là một cuộc gọi cục bộ, trừu tượng hóa các công đoạn cụ thể làm thế nào để server liên lạc với client. Gọi từ xa thường chậm hơn và ít phụ thuộc hơn so với gọi cụ bộ nên nó rất hữu dụng để để phân biệc một RPC call hay cuộc gọi cục bộ. RPC frameworks phổ biến bao gồm <a href="https://developers.google.com/protocol-buffers/">Protobuf</a>, <a href="https://thrift.apache.org/">Thrift</a>, và <a href="https://avro.apache.org/docs/current/">Avro</a>.</p>
+
+<p>RPC là một giao thức request-response:</p>
+
+<ul>
+  <li><strong>Client program</strong> - gọi stub procedure bên client.  Tham số được thêm vào ngăn xếp như là gọi thủ tục cục bộ.</li>
+  <li><strong>Client stub procedure</strong> - Marshals (gói) id và các tham số của thủ tục vào một request mesage.</li>
+  <li><strong>Client communication module</strong> - Hệ điều hành gửi mesage từ client lên server.</li>
+  <li><strong>Server communication module</strong> - hệ điều hành chuyển message đến stub procedure bên server.</li>
+  <li><strong>Server stub procedure</strong> -  Unmarshalls (giải nén) kết quả, gọi các thủ tục phía server phù hợp với id của thủ tục được gửi đến và truyền vào các tham số nhận được.</li>
+  <li>server phàn hồi bằng cách lặp lại các bước trên ở thứ tự ngược lại.</li>
+</ul>
+
+<p>gọi RPC mẫu:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /someoperation?data=anId
+
+POST /anotheroperation
+{
+  "data":"anId";
+  "anotherdata": "another value"
+}
+</code></pre></div></div>
+
+<p>RPC tập trung vào các hành vi. RPC thường được sử dụng cho vấn đề về hiệu năng với những giao tiếp nội tại, vì bạn có thể gọi bản địa (native call) một cách thủ công để phù hợp hơn với ca sử dụng (khác REST).</p>
+
+<p>Chọn một native library (aka SDK) khi:</p>
+
+<ul>
+  <li>Bạn biết nền tảng nhắm tới.</li>
+  <li>Bạn muốn kiểm soát “logic được truy cập như thế nào”.</li>
+  <li>Bạn muốn kiểm soát cơ chế kiểm soát lỗi xảy ra như thế nào trong thư viện của bạn.</li>
+  <li>Hiệu năng và trải nghiệm người dùng cuối là điều lo lắng chính của bạn.</li>
+</ul>
+
+<p>HTTP API dưới đây <strong>REST</strong> có xu hướng được sử dụng nhiều hơn cho public API.</p>
+
+<h4 id="nhược-điểm-rpc">Nhược điểm: RPC</h4>
+
+<ul>
+  <li>RPC client có liên kết chặt chẽ với việc cài đặt phía server.</li>
+  <li>Một API mới sẽ phải định nghĩa lại cho tất cả tác vụ hoặc ca sử dụng.</li>
+  <li>Khó để có thể debug RPC.</li>
+  <li>You có thể không có khả năng nâng cấp các công nghệ đang có. Ví dụ, có thể yêu cầu thêm nỗ lực để chắc chắn <a href="http://etherealbits.com/2012/12/debunking-the-myths-of-rpc-rest/">RPC call đã được cache</a> ở server cache như <a href="http://www.squid-cache.org/">Squid</a>.</li>
+</ul>
+
+<h3 id="representational-state-transfer-rest">Representational state transfer (REST)</h3>
+
+<p>REST is là một kiểu kiến trúc thi hành một mô hình client/server mà client thực hiện hành vi trên một tập các tài nguyên được quản lý bới server. Server cung cấp một đại diện cho tài nguyên và hành vi mà có thể được vận dụng cũng như lấy một đại diện mới của các tài nguyên. Tất cả giao tiếp phải là stateless và có thể cache được.</p>
+
+<p>Có 4 tiêu chí chất lượng cho một giao diện RESTful:</p>
+
+<ul>
+  <li><strong>(Xác định tài nguyên) (URI trong HTTP)</strong> - sử dụng cùng một URI cho bất kỳ tác vụ nào.</li>
+  <li><strong>Thay đổi với representations (Verbs trong HTTP)</strong> - sử dụng verb, header, and body.</li>
+  <li><strong>Self-descriptive error message (status response trong HTTP)</strong> - Sử dụng status code, “đừng phát minh lại chiếc bánh xe”.</li>
+  <li><strong><a href="http://restcookbook.com/Basics/hateoas/">HATEOAS</a> (HTML interface for HTTP)</strong> - web service của bạn nên được truy cập đầy đủ trong một trình duyệt.</li>
+</ul>
+
+<p>Mẫu cho việc sử dụng REST:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /someresources/anId
+
+PUT /someresources/anId
+{"anotherdata": "another value"}
+</code></pre></div></div>
+
+<p>REST lại tập trung vào việc phơi bày (expose) dữ liệu. tối hiểu hóa sự liên kết giữ client/server và thường được sử dụng trong các public HTTP API. REST sử dụng method một cách chuẩn mực và chung chung hơn thông qua API, <a href="https://github.com/for-GET/know-your-http-well/blob/master/headers.md">đại diện thông qua header</a>, và các hành vi thông qua verbs như GET, POST, PUT, DELETE, và PATCH.  Là stateless, REST là rất tuyệt cho việc mở rộng theo chiều ngang và phân mảnh.</p>
+
+<h4 id="nhược-điểm-rest">Nhược điểm: REST</h4>
+
+<ul>
+  <li>Với việc REST tập trung vào dữ liệu được phơi bày (exposing data), nó có thể không hoàn toàn tương thích nếu tài nguyên không được tổ chức theo nguyên tắc hoặc được truy cập dưới dạng phân cấp đơn giản. Ví dụ, trả về tất cả các bản ghi đã được cập nhật từ giờ trước match với một tập các sự kiện không dễ để thể hiện với một đường dẫn. Với REST, Nó như là một sự cài đặt với sự kết hợp của đường dẫn URI, query parameter, và có thể còn request body nữa.</li>
+  <li>REST thông thường phụ thuộc vào một vài verbs (GET, POST, PUT, DELETE, và PATCH) đôi khi không phù hợp với ca sử dụng của bạn. Ví dụ, chuyển một tài liệu đã hết hạn đến một thư mục có thể không hoàn toàn phù hợp với những verb này.</li>
+  <li>Việc nạp các tài nguyên phức tạp với phân cấp lồng nhau yêu cầu nhiều lần kết nối giũa client và server để render một giao diện, ví dụ. nạp nội dung cho một blog và bình luận cho blog đó. Đối với các thiết bị di động hoạt động trên mỗi trường mạng bất ổn, việc này sẽ có vấn đề.</li>
+  <li>Theo thời gian, nhiều trường được thêm vào API response và các client cũ phải nhận thêm các trường dữ liệu mới này, mặc cho chúng không hề cần các trường đó, như một hệ quả, nó làm tăng kích thước của payload và dẫn đến độ trễ gia tăng.</li>
+</ul>
+
+<h3 id="so-sánh-rpc-and-rest">So sánh RPC and REST</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Operation</th>
+      <th>RPC</th>
+      <th>REST</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Signup</td>
+      <td><strong>POST</strong> /signup</td>
+      <td><strong>POST</strong> /persons</td>
+    </tr>
+    <tr>
+      <td>Resign</td>
+      <td><strong>POST</strong> /resign<br />{<br />“personid”: “1234”<br />}</td>
+      <td><strong>DELETE</strong> /persons/1234</td>
+    </tr>
+    <tr>
+      <td>Read a person</td>
+      <td><strong>GET</strong> /readPerson?personid=1234</td>
+      <td><strong>GET</strong> /persons/1234</td>
+    </tr>
+    <tr>
+      <td>Read a person’s items list</td>
+      <td><strong>GET</strong> /readUsersItemsList?personid=1234</td>
+      <td><strong>GET</strong> /persons/1234/items</td>
+    </tr>
+    <tr>
+      <td>Add an item to a person’s items</td>
+      <td><strong>POST</strong> /addItemToUsersItemsList<br />{<br />“personid”: “1234”;<br />“itemid”: “456”<br />}</td>
+      <td><strong>POST</strong> /persons/1234/items<br />{<br />“itemid”: “456”<br />}</td>
+    </tr>
+    <tr>
+      <td>Update an item</td>
+      <td><strong>POST</strong> /modifyItem<br />{<br />“itemid”: “456”;<br />“key”: “value”<br />}</td>
+      <td><strong>PUT</strong> /items/456<br />{<br />“key”: “value”<br />}</td>
+    </tr>
+    <tr>
+      <td>Delete an item</td>
+      <td><strong>POST</strong> /removeItem<br />{<br />“itemid”: “456”<br />}</td>
+      <td><strong>DELETE</strong> /items/456</td>
+    </tr>
+  </tbody>
+</table>
+
+<p align="center">
+  <i>&lt;a href=https://apihandyman.io/do-you-really-know-why-you-prefer-rest-over-rpc/&gt;Source: Do you really know why you prefer REST over RPC&lt;/a&gt;</i>
+</p>
+
+<h4 id="nguồn-và-tài-liệu-đọc-thêm-rest-and-rpc">Nguồn và tài liệu đọc thêm: REST and RPC</h4>
+
+<ul>
+  <li><a href="https://apihandyman.io/do-you-really-know-why-you-prefer-rest-over-rpc/">Do you really know why you prefer REST over RPC</a></li>
+  <li><a href="http://programmers.stackexchange.com/a/181186">When are RPC-ish approaches more appropriate than REST?</a></li>
+  <li><a href="http://stackoverflow.com/questions/15056878/rest-vs-json-rpc">REST vs JSON-RPC</a></li>
+  <li><a href="http://etherealbits.com/2012/12/debunking-the-myths-of-rpc-rest/">Debunking the myths of RPC and REST</a></li>
+  <li><a href="https://www.quora.com/What-are-the-drawbacks-of-using-RESTful-APIs">What are the drawbacks of using REST</a></li>
+  <li><a href="http://www.puncsky.com/blog/2016/02/14/crack-the-system-design-interview/">Crack the system design interview</a></li>
+  <li><a href="https://code.facebook.com/posts/1468950976659943/">Thrift</a></li>
+  <li><a href="http://arstechnica.com/civis/viewtopic.php?t=1190508">Why REST for internal use and not RPC</a></li>
+</ul>
+
+<h2 id="bảo-mật-security">Bảo mật (Security)</h2>
+
+<p>Phần này sẽ cần cập nhật thêm.</p>
+
+<p>Bảo mật là một chủ đề rất rộng. Nên ở đây chỉ nêu một vài vấn đề cơ bản</p>
+
+<ul>
+  <li>Mã hóa trong chuyển tiếp cũng như trong lưu trữ.</li>
+  <li>Khử độc(Sanitize) tất cả đầu vào của người dùng để tránh tấn công <a href="https://en.wikipedia.org/wiki/Cross-site_scripting">XSS</a> và <a href="https://en.wikipedia.org/wiki/SQL_injection">SQL injection</a>.</li>
+  <li>Sử dụng các truy vấn có thể truyền tham số để tránh SQL Injection (Các thư viện đều hỗ trợ, tốt hơn là nên dùng ORM).</li>
+  <li>Sử dụng định lý <a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege">least privilege</a>. Nên dùng các quy luật chặt chẽ để phân quyền trên các tiến trình và tài nguyên.</li>
+</ul>
+
+<h3 id="nguồn-và-tài-liệu-đọc-thêm--security">Nguồn và tài liệu đọc thêm : Security</h3>
+
+<ul>
+  <li><a href="https://github.com/FallibleInc/security-guide-for-developers">Security guide for developers</a></li>
+  <li><a href="https://www.owasp.org/index.php/OWASP_Top_Ten_Cheat_Sheet">OWASP top ten</a></li>
+</ul>
+
+<!-- Bổ sung về authentication bằng token -->
+<h3 id="sử-dụng-jwt-cho-việc-định-danh-authentication">Sử dụng JWT cho việc định danh (authentication)</h3>
+
+<p align="center">
+  <img src="https://cdn.auth0.com/blog/cookies-vs-tokens/cookie-token-auth.png" />
+  <br />
+  <i>&lt;a href=https://auth0.com/blog/cookies-vs-tokens-definitive-guide/&gt;Source: auth0&lt;/a&gt;</i>
+</p>
+
+<ul>
+  <li>Lợi thế của JWT hay token-based authentication nói chung
+    <ul>
+      <li><strong>phi trạng thái (stateless), khả năng mở rộng (scalable) và tách biệt (decoupled):</strong> có lẽ lợi thế lớn nhất của jwt so với dùng session là phi trạng thái. Server không phải lưu lại bản ghi của token mà chỉ cần xác nhận token đấy có hợp lệ hay không, bản thân token nó đã mang các thông tin cần thiết rồi.</li>
+      <li><strong>Cross Domain và CORS:</strong> Session sẽ gặp khó khăn khi phải quản lý ở nhiều domain khác nhau, jwt có thể xử lý vấn đề này</li>
+      <li><strong>Store Data in the JWT:</strong> jwt có thể lưu lại bất kỳ dữ liệu nào, nếu nó là một JSON hợp lệ. Bạn có thể lưu lại các thông tin cần thiết cho hệ thống của bạn.</li>
+      <li><strong>Hiệu năng:</strong> Từ những lợi thế trên, ta sẽ có lợi thế về hiệu năng. Khi dùng session thông thường, server phải mở một hoặc nhiều kết nối để tìm kiếm trong CSDL trong khi dùng token thì bạn chỉ cần mở kết nối khi cần lấy dữ liệu mà thôi, tất cả thông tin về authentication cũng như authorization đều được lưu trong jwt.</li>
+      <li><strong>Mobile Ready:</strong> Không phải thiết bị nào cũng hỗ trợ tốt cho cookie, jwt là một sự thay thế không tồi.</li>
+    </ul>
+  </li>
+  <li>Làm cách nào để vô hiệu hóa một jwt (cho việc đăng xuất cũng như hủy đăng nhập từ các thiết bị khác)
+    <ul>
+      <li>Xây dựng một danh sách đen (blacklist) các jwt bị vô hiệu hóa.</li>
+      <li>Set thời gian sống cho mỗi jwt thật ngắn, sau đó refresh lại token vào mốc thời gian cần thiết.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="nguồn-và-tài-liệu-đọc-thêm-jwt">Nguồn và tài liệu đọc thêm: JWT</h4>
+<ul>
+  <li><a href="https://auth0.com/blog/cookies-vs-tokens-definitive-guide/">Cookies vs Tokens: The Definitive Guide</a></li>
+  <li><a href="http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/">Stop using JWT for sessions</a></li>
+</ul>
+
+<h3 id="các-kiểu-tấn-công-web-phổ-biến">Các kiểu tấn công web phổ biến</h3>
+<ul>
+  <li><a href="https://www.owasp.org/index.php/OWASP_Top_Ten_Cheat_Sheet">OWASP Top Ten Cheat Sheet</a>
+    <h3 id="tường-lửa-ứng-dụng-web">Tường lửa ứng dụng web</h3>
+  </li>
+  <li>Ruled base (Blacklist)</li>
+  <li>Anormaly Detection (Whitelist)</li>
+</ul>
+
+<h2 id="todo">TODO</h2>
+<ol>
+  <li>Centralized vs Decentralized vs Distributed</li>
+  <li>Apache vs Nginx</li>
+  <li>Redis Architecture</li>
+  <li>Zoo Keeper, ETCD</li>
+</ol>
+
+
+  </div><a class="u-url" href="/basic-knowledge/system-design-for-beginner" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/basic-knowledge/clean-code" class="prev-post">← Clean Code .NET</a>
+      
+      
+        <a href="/clean-code/chaper-01" class="next-post">Chương 1 - Code Clean →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

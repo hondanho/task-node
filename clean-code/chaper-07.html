@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Chương 7 - Xử lý lỗi | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Chương 7 - Xử lý lỗi" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="- Michael Feathers" />
+<meta property="og:description" content="- Michael Feathers" />
+<link rel="canonical" href="http://localhost:4000/clean-code/chaper-07" />
+<meta property="og:url" content="http://localhost:4000/clean-code/chaper-07" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Chương 7 - Xử lý lỗi" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"- Michael Feathers","headline":"Chương 7 - Xử lý lỗi","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/clean-code/chaper-07"},"url":"http://localhost:4000/clean-code/chaper-07"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Chương 7 - Xử lý lỗi</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/clean-code">clean-code</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><em>- Michael Feathers</em>
+<img src="../assets/image/chap07_image01.png" alt="Image tilte_1" /></p>
+
+<p>Có vẻ kỳ lạ khi lại có một phần về xử lý lỗi trong một cuốn sách về mã sạch. Xử lý lỗi chỉ là một trong những việc mà tất cả chúng ta phải làm khi lập trình. Đầu vào có thể bất thường và thiết bị có thể bị lỗi. Nói tóm lại, mọi thứ đều có thể xảy ra sai sót, và khi chúng xảy ra, chúng ta với tư cách là người lập trình có trách nhiệm đảm bảo rằng mã của chúng ta thực hiện những gì nó cần làm.</p>
+
+<p>Tuy nhiên, triển khai với mã sạch phải rõ ràng. Nhiều khi mã bị chi phối hoàn toàn bởi việc xử lý lỗi. Khi tôi nói bị chi phối, tôi không có ý nói rằng xử lý lỗi chỉ là tất cả những gì họ làm. Ý tôi là gần như không thể thấy mã làm gì vì tất cả các lỗi xử lý được rải rác. Xử lý lỗi là quan trọng, <em>nhưng nếu nó che khuất logic thì đó là sai</em>.</p>
+
+<p>Trong chương này, tôi sẽ trình bày một số kỹ thuật và cân nhắc mà bạn có thể sử dụng để viết mã vừa rõ ràng vừa mạnh mẽ — mã xử lý lỗi một cách duyên dáng và đúng phong cách.</p>
+
+<h2 id="sử-dụng-ngoại-lệ-thay-vì-để-cho-mã-xử-lý">Sử dụng ngoại lệ thay vì để cho mã xử lý</h2>
+<p>Trong quá khứ xa xôi, có rất nhiều ngôn ngữ không có ngoại lệ. Trong các ngôn ngữ đó, các kỹ thuật xử lý và báo cáo lỗi bị hạn chế. Bạn đặt cờ lỗi hoặc trả lại mã lỗi mà người gọi có thể kiểm tra. Mã trong Listing 7-1 minh họa những cách tiếp cận này.</p>
+
+<p><strong>Listing 7-1</strong><br />
+<strong>DeviceController.java</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DeviceController</span> <span class="o">{</span> 
+    <span class="o">...</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sendShutDown</span><span class="o">()</span> <span class="o">{</span> 
+        <span class="nc">DeviceHandle</span> <span class="n">handle</span> <span class="o">=</span> <span class="n">getHandle</span><span class="o">(</span><span class="no">DEV1</span><span class="o">);</span> 
+        <span class="c1">// Kiểm tra trạng thái của thiết bị</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">handle</span> <span class="o">!=</span> <span class="nc">DeviceHandle</span><span class="o">.</span><span class="na">INVALID</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// Lưu trạng thái thiết bị vào record field</span>
+            <span class="n">retrieveDeviceRecord</span><span class="o">(</span><span class="n">handle</span><span class="o">);</span>
+            <span class="c1">// Nếu không bị treo, hãy tắt</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">record</span><span class="o">.</span><span class="na">getStatus</span><span class="o">()</span> <span class="o">!=</span> <span class="no">DEVICE_SUSPENDED</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">pauseDevice</span><span class="o">(</span><span class="n">handle</span><span class="o">);</span> 
+                <span class="n">clearDeviceWorkQueue</span><span class="o">(</span><span class="n">handle</span><span class="o">);</span> 
+                <span class="n">closeDevice</span><span class="o">(</span><span class="n">handle</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="n">logger</span><span class="o">.</span><span class="na">log</span><span class="o">(</span><span class="s">"Thiết bị bị treo. Không thể tắt"</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">logger</span><span class="o">.</span><span class="na">log</span><span class="o">(</span><span class="s">"Xử lý không hợp lệ cho: "</span> <span class="o">+</span> <span class="no">DEV1</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span> 
+        <span class="o">}</span>
+    <span class="o">}</span> 
+    <span class="o">...</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Vấn đề với những cách tiếp cận này là chúng gây lộn xộn cho người gọi. Người gọi phải kiểm tra lỗi ngay sau cuộc gọi. Thật không may, người gọi rất dễ quên. Đối với trường hợp này, tốt hơn là bạn nên ném một ngoại lệ khi bạn gặp lỗi. Mã sạch hơn. Logic của nó không bị che khuất bởi việc xử lý lỗi. <br />
+Listing 7-2 hiển thị mã sau khi chúng ta đã chọn đưa ra các ngoại lệ trong các phương pháp có thể phát sinh lỗi.</p>
+
+<p><strong>Listing 7-2</strong><br />
+<strong>DeviceController.java (with exceptions)</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DeviceController</span> <span class="o">{</span> 
+    <span class="o">...</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sendShutDown</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">tryToShutDown</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">DeviceShutDownError</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">logger</span><span class="o">.</span><span class="na">log</span><span class="o">(</span><span class="n">e</span><span class="o">);</span> <span class="o">}</span>
+        <span class="o">}</span>
+        
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">tryToShutDown</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">DeviceShutDownError</span> <span class="o">{</span>
+        <span class="nc">DeviceHandle</span> <span class="n">handle</span> <span class="o">=</span> <span class="n">getHandle</span><span class="o">(</span><span class="no">DEV1</span><span class="o">);</span>
+        <span class="nc">DeviceRecord</span> <span class="n">record</span> <span class="o">=</span> <span class="n">retrieveDeviceRecord</span><span class="o">(</span><span class="n">handle</span><span class="o">);</span>
+        <span class="n">pauseDevice</span><span class="o">(</span><span class="n">handle</span><span class="o">);</span> 
+        <span class="n">clearDeviceWorkQueue</span><span class="o">(</span><span class="n">handle</span><span class="o">);</span> 
+        <span class="n">closeDevice</span><span class="o">(</span><span class="n">handle</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+    <span class="kd">private</span> <span class="nc">DeviceHandle</span> <span class="nf">getHandle</span><span class="o">(</span><span class="nc">DeviceID</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="o">...</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">DeviceShutDownError</span><span class="o">(</span><span class="s">"Xử lý không hợp lệ cho: "</span> <span class="o">+</span> <span class="n">id</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span> 
+        <span class="o">...</span>
+    <span class="o">}</span>
+    <span class="o">...</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Để ý xem nó sạch hơn bao nhiêu. Đây không chỉ là vấn đề thẩm mỹ. Mã này tốt hơn vì hai mối quan tâm không bị chồng chéo, thuật toán <strong>ShutDown</strong> và <strong>xử lý lỗi</strong> giờ đã được tách biệt. Bạn có thể xem xét từng vấn đề đó và hiểu chúng một cách độc lập.</p>
+<h2 id="trước-tiên-viết-khối-try-catch-finally-của-bạn">Trước tiên viết khối Try-Catch-Finally của bạn</h2>
+<p>Một trong những điều thú vị nhất về các ngoại lệ là chúng xác định phạm vi trong chương trình của bạn. Khi bạn thực thi mã trong phần <strong>try</strong> của câu lệnh <strong>try-catch-finally</strong>, bạn đang nói rằng việc thực thi có thể xẩy ra lỗi tại bất kỳ thời điểm nào và sau đó mã trong <strong>catch</strong> sẽ được thực thi.</p>
+
+<p>Theo một cách nào đó, các khối <strong>try</strong> giống như các giao dịch. <strong>catch</strong> đảm bảo để chương trình của bạn ở trạng thái không bị gián đoạn, bởi bất kể điều gì xảy ra trong <strong>try</strong>. Vì lý do này, bạn nên bắt đầu bằng câu lệnh <strong>try-catch-final</strong> khi bạn viết mã, nó có thể đưa ra các ngoại lệ. Điều này giúp bạn xác định người dùng mã đó sẽ mong đợi điều gì khi xẩy ra lỗi với mã được thực thi trong <strong>try</strong>.</p>
+
+<p>Hãy xem một ví dụ. Chúng ta cần viết một số mã truy cập tệp và đọc một số đối tượng được <strong>serialized</strong>.
+Chúng ta bắt đầu với <strong>unit test</strong> cho thấy rằng chúng ta sẽ nhận được một ngoại lệ khi tệp không tồn tại:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Test</span><span class="o">(</span><span class="n">expected</span> <span class="o">=</span> <span class="nc">StorageException</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">retrieveSectionShouldThrowOnInvalidFileName</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">sectionStore</span><span class="o">.</span><span class="na">retrieveSection</span><span class="o">(</span><span class="s">"Tập tin không hợp lệ"</span><span class="o">);</span> 
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Việc kiểm tra thúc đẩy chúng ta tạo ra hàm này:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">RecordedGrip</span><span class="o">&gt;</span> <span class="nf">retrieveSection</span><span class="o">(</span><span class="nc">String</span> <span class="n">sectionName</span><span class="o">)</span> <span class="o">{</span> 
+    <span class="c1">// Fake return cho đến khi chúng ta có một triển khai thực sự</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">RecordedGrip</span><span class="o">&gt;();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Thử nghiệm của chúng ta không thành công vì nó không có ngoại lệ. Tiếp theo, chúng ta thay đổi triển khai để nó cố gắng truy cập một tệp không hợp lệ. Thao tác này đưa ra một ngoại lệ:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">RecordedGrip</span><span class="o">&gt;</span> <span class="nf">retrieveSection</span><span class="o">(</span><span class="nc">String</span> <span class="n">sectionName</span><span class="o">)</span> <span class="o">{</span> 
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="nc">FileInputStream</span> <span class="n">stream</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">FileInputStream</span><span class="o">(</span><span class="n">sectionName</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">StorageException</span><span class="o">(</span><span class="s">"Lỗi truy xuất"</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span> 
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">RecordedGrip</span><span class="o">&gt;();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Chúng ta hiện đã vượt qua bài kiểm tra vì đã phát hiện ra ngoại lệ. Tại thời điểm này, chúng ta có thể tham khảo lại. Chúng ta có thể thu hẹp loại ngoại lệ mà chúng ta <strong>catch</strong> được để phù hợp với loại thực sự được đưa ra từ phương thức khởi tạo của <strong>FileInputStream</strong>: <strong>FileNotFoundException</strong>:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">RecordedGrip</span><span class="o">&gt;</span> <span class="nf">retrieveSection</span><span class="o">(</span><span class="nc">String</span> <span class="n">sectionName</span><span class="o">)</span> <span class="o">{</span> 
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="nc">FileInputStream</span> <span class="n">stream</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">FileInputStream</span><span class="o">(</span><span class="n">sectionName</span><span class="o">);</span>
+        <span class="n">stream</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">FileNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">StorageException</span><span class="o">(</span><span class="err">"</span><span class="nc">Lỗi</span> <span class="n">truy</span> <span class="n">xuất</span><span class="err">”</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span> 
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">RecordedGrip</span><span class="o">&gt;();</span> 
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Bây giờ chúng ta đã xác định phạm vi với cấu trúc <strong>try-catch</strong>, chúng ta có thể sử dụng TDD để xây dựng phần còn lại của logic mà chúng ta cần. Logic đó sẽ được thêm vào giữa quá trình tạo <strong>FileInputStream</strong> và <strong>close</strong>, và có thể giả vờ rằng không có gì sai.</p>
+
+<p>Cố gắng viết các bài kiểm tra buộc xảy ra các trường hợp ngoại lệ, sau đó thêm hành vi vào trình xử lý của bạn để điều chỉnh các bài kiểm tra của bạn. Điều này sẽ khiến bạn phải xây dựng phạm vi giao dịch của khối <strong>try</strong> trước và sẽ giúp bạn duy trì bản chất giao dịch của phạm vi đó.</p>
+<h2 id="sử-dụng-unchecked-exceptions">Sử dụng Unchecked Exceptions</h2>
+<p>Cuộc tranh luận đã kết thúc. Trong nhiều năm, các lập trình viên Java đã tranh luận về lợi ích và mối quan hệ của các <strong>checked exceptions</strong>. Khi các <strong>checked exceptions</strong> được giới thiệu trong phiên bản Java đầu tiên, chúng dường như là một ý tưởng tuyệt vời. Hàm của mọi phương thức sẽ liệt kê tất cả các ngoại lệ mà nó có thể chuyển cho trình gọi của nó. Hơn nữa, những ngoại lệ này là một phần của loại phương pháp. Mã của bạn thực sự sẽ không biên dịch nếu hàm không khớp với những gì mã của bạn đã viết.</p>
+
+<p>Vào thời điểm đó, chúng ta nghĩ rằng các <strong>checked exceptions</strong> là một ý tưởng tuyệt vời; và tất nhiên, chúng có thể mang lại <em>một số</em> lợi ích. Tuy nhiên, rõ ràng là giờ đây chúng không còn cần thiết để phát triển phần mềm. C# không có các <strong>checked exceptions</strong> và bất chấp mọi nỗ lực, C++ cũng không. Python hay Ruby cũng vậy. Tuy nhiên, có thể viết phần mềm bằng tất cả các ngôn ngữ này. Do đó, chúng ta phải <strong>quyết định - thực sự - liệu</strong> các <strong>checked exceptions</strong> có xứng đáng với cái giá của chúng hay không.</p>
+<h3 id="định-nghĩa-lớp-exception-theo-nhu-cầu-của-người-gọi">Định nghĩa lớp Exception theo nhu cầu của người gọi</h3>
+<p>Giá bao nhiêu? Giá của các trường hợp <strong>checked exceptions</strong> là vi phạm nguyên tắc Mở/Đóng. Nếu bạn ném một <strong>checked exceptions</strong> từ một phương thức trong mã của bạn và lệnh <strong>catch</strong> ở ba mức trên, *bạn phải khai báo ngoại lệ đó trong signature của mỗi phương thức giữa bạn và lệnh <strong>catch</strong>. Điều này có nghĩa là một thay đổi ở cấp thấp của phần mềm có thể buộc phải thay đổi signature ở nhiều cấp cao hơn. Các mô-đun đã thay đổi phải được xây dựng lại và triển khai lại, mặc dù không có gì họ quan tâm đến đã thay đổi.</p>
+
+<p>Xem xét hệ thống phân cấp gọi của một hệ thống lớn. Các hàm ở trên cùng gọi các hàm bên dưới chúng, gọi tiếp các hàm khác bên dưới chúng, vv… Bây giờ, giả sử một trong những hàm cấp thấp nhất được sửa đổi theo cách mà nó phải đưa ra một ngoại lệ. Nếu ngoại lệ đó được chọn, thì hàm phải thêm một mệnh đề <strong>throws</strong>. Nhưng điều này có nghĩa là mọi hàm gọi hàm đã sửa đổi cũng phải được sửa đổi để bắt được ngoại lệ mới hoặc để nối mệnh đề <strong>throws</strong> thích hợp vào chữ ký của nó. vv… Kết quả thực là một loạt các thay đổi hoạt động theo cách của chúng từ mức thấp nhất của phần mềm đến mức cao nhất! Tính năng đóng gói bị phá vỡ bởi vì tất cả các hàm trong đường dẫn của một lần ném phải biết về chi tiết của ngoại lệ cấp thấp đó. Vì mục đích của các ngoại lệ là cho phép bạn xử lý lỗi ở khoảng cách xa, thật đáng tiếc khi các <strong>checked exceptions</strong> phá vỡ tính đóng gói theo cách này.</p>
+
+<p><strong>checked exceptions</strong> đôi khi có thể hữu ích nếu bạn đang viết thư viện quan trọng: Bạn phải <strong>catch</strong> chúng. Nhưng trong phát triển ứng dụng nói chung, chi phí phụ thuộc lớn hơn lợi ích mà nó đem lại.</p>
+
+<h2 id="cung-cấp-ngữ-cảnh-có-ngoại-lệ">Cung cấp ngữ cảnh có ngoại lệ</h2>
+<p>Mỗi ngoại lệ mà bạn đưa ra phải cung cấp đủ ngữ cảnh để xác định nguồn và vị trí của lỗi. Trong Java, bạn có thể lấy dấu vết ngăn xếp từ bất kỳ ngoại lệ nào; tuy nhiên, dấu vết ngăn xếp không thể cho bạn biết mục đích của hoạt động không thành công.</p>
+
+<p>Tạo thông báo lỗi đầy đủ thông tin và chuyển chúng cùng với các ngoại lệ của bạn. Đề cập đến hoạt động không thành công và loại lỗi. Nếu bạn đang logging ứng dụng của mình, hãy chuyển đủ thông tin để có thể ghi lại lỗi trong lần <strong>catch</strong> của bạn.</p>
+
+<h2 id="xác-định-các-loại-ngoại-lệ-theo-nhu-cầu-của-người-gọi">Xác định các loại ngoại lệ theo nhu cầu của người gọi</h2>
+<p>Có nhiều cách phân loại lỗi. Chúng ta có thể phân loại chúng theo nguồn của chúng: Chúng đến từ thành phần này hay thành phần khác? Hoặc loại của chúng: Chúng bị lỗi thiết bị, lỗi mạng, hoặc lỗi lập trình? Tuy nhiên, khi chúng ta xác định các lớp ngoại lệ trong một ứng dụng, mối quan tâm quan trọng nhất của chúng ta là <strong>cách chúng được bắt</strong>.</p>
+
+<p>Hãy xem một ví dụ về phân loại ngoại lệ kém. Đây là câu lệnh <strong>try-catch-finally</strong> cho lệnh gọi thư viện của bên thứ ba. Nó bao gồm tất cả các ngoại lệ mà các cuộc gọi có thể ném ra:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nc">ACMEPort</span> <span class="n">port</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ACMEPort</span><span class="o">(</span><span class="mi">12</span><span class="o">);</span>
+    <span class="k">try</span> <span class="o">{</span> 
+        <span class="n">port</span><span class="o">.</span><span class="na">open</span><span class="o">();</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">DeviceResponseException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> 
+        <span class="n">reportPortError</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">log</span><span class="o">(</span><span class="s">"Device response exception"</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">ATM1212UnlockedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> 
+        <span class="n">reportPortError</span><span class="o">(</span><span class="n">e</span><span class="o">);</span> 
+        <span class="n">logger</span><span class="o">.</span><span class="na">log</span><span class="o">(</span><span class="s">"Unlock exception"</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">GMXError</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> 
+        <span class="n">reportPortError</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">log</span><span class="o">(</span><span class="s">"Device response exception"</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span> 
+        <span class="o">...</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+<p>Tuyên bố đó chứa đựng rất nhiều sự trùng lặp và chúng ta không nên ngạc nhiên. Trong hầu hết các tình huống xử lý ngoại lệ, công việc mà chúng ta thực hiện tương đối chuẩn, bất kể nguyên nhân thực tế là gì. Chúng ta phải ghi lại một lỗi và đảm bảo rằng chúng ta có thể tiếp tục.</p>
+
+<p>Trong trường hợp này, bởi vì chúng ta biết rằng công việc chúng ta đang làm gần như giống nhau bất kể ngoại lệ xảy ra là gì, chúng ta có thể đơn giản hóa mã của mình đáng kể bằng cách gói API mà chúng ta đang gọi và đảm bảo rằng nó trả về một loại ngoại lệ chung:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nc">LocalPort</span> <span class="n">port</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">LocalPort</span><span class="o">(</span><span class="mi">12</span><span class="o">);</span> 
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">port</span><span class="o">.</span><span class="na">open</span><span class="o">();</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">PortDeviceFailure</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">reportError</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">log</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+        <span class="o">...</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+<p>Lớp <strong>LocalPort</strong> của chúng ta chỉ là một trình bao bọc đơn giản giúp bắt và dịch các ngoại lệ được ném bởi lớp <strong>ACMEPort</strong>:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LocalPort</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">ACMEPort</span> <span class="n">innerPort</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">LocalPort</span><span class="o">(</span><span class="kt">int</span> <span class="n">portNumber</span><span class="o">)</span> <span class="o">{</span> 
+        <span class="n">innerPort</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ACMEPort</span><span class="o">(</span><span class="n">portNumber</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">open</span><span class="o">()</span> <span class="o">{</span> 
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">innerPort</span><span class="o">.</span><span class="na">open</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">DeviceResponseException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">PortDeviceFailure</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">ATM1212UnlockedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">PortDeviceFailure</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">GMXError</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">PortDeviceFailure</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span> 
+    <span class="o">}</span>
+    <span class="o">...</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Các trình gói như chúng ta đã xác định cho <strong>ACMEPort</strong> có thể rất hữu ích. Trên thực tế, gói các API của bên thứ ba là một phương pháp hay nhất. Khi bạn bọc một API của bên thứ ba, bạn giảm thiểu sự phụ thuộc của mình vào nó: Bạn có thể chọn chuyển sang một thư viện khác trong tương lai mà không cần thay đổi nhiều. Gói cũng giúp bạn dễ dàng bắt chước các cuộc gọi của bên thứ ba hơn khi bạn đang kiểm tra mã của riêng mình.</p>
+
+<p>Một lợi thế cuối cùng của gói là bạn không bị ràng buộc với các lựa chọn thiết kế API của một nhà cung cấp cụ thể. Bạn có thể xác định một API mà bạn cảm thấy thoải mái. Trong ví dụ trước, chúng ta đã xác định một loại ngoại lệ duy nhất cho lỗi thiết bị <strong>port</strong> và nhận thấy rằng chúng ta có thể viết mã sạch hơn nhiều.</p>
+
+<p>Thường thì một lớp ngoại lệ duy nhất là tốt cho một vùng mã cụ thể. Thông tin được gửi với ngoại lệ có thể phân biệt các lỗi. Chỉ sử dụng các lớp khác nhau nếu đôi khi bạn muốn bắt một ngoại lệ và cho phép ngoại lệ khác đi qua.</p>
+
+<h2 id="xác-định-dòng-chảy-bình-thường">Xác định dòng chảy bình thường</h2>
+<p><img src="../assets/image/chap07_image02.png" alt="Image tilte_2" /></p>
+
+<p>Nếu bạn làm theo lời khuyên trong phần trước, bạn sẽ có một sự tách biệt tốt giữa logic nghiệp vụ và việc xử lý lỗi của bạn. Phần lớn mã của bạn sẽ bắt đầu trông giống như một thuật toán không trang trí. Tuy nhiên, quá trình thực hiện việc này đẩy khả năng phát hiện lỗi ra rìa chương trình của bạn. Bạn bọc các API bên ngoài để bạn có thể đưa ra các ngoại lệ của riêng mình và bạn xác định một trình xử lý phía trên mã của mình để bạn có thể đối phó với bất kỳ tính toán nào bị hủy bỏ. Hầu hết thời gian đây là một cách tiếp cận tuyệt vời, nhưng có một số lúc bạn có thể không muốn nó xẩy ra.</p>
+
+<p>Hãy xem một ví dụ. Dưới đây là một mã khó hiểu tính tổng các chi phí trong ứng dụng thanh toán:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">try</span> <span class="o">{</span>
+        <span class="nc">MealExpenses</span> <span class="n">expenses</span> <span class="o">=</span> <span class="n">expenseReportDAO</span><span class="o">.</span><span class="na">getMeals</span><span class="o">(</span><span class="n">employee</span><span class="o">.</span><span class="na">getID</span><span class="o">());</span> 
+        <span class="n">m_total</span> <span class="o">+=</span> <span class="n">expenses</span><span class="o">.</span><span class="na">getTotal</span><span class="o">();</span>
+    <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="nc">MealExpensesNotFound</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> 
+        <span class="n">m_total</span> <span class="o">+=</span> <span class="n">getMealPerDiem</span><span class="o">();</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+<p>Trong nghiệp vụ này, nếu các bữa ăn tiêu tốn nhiều chi phí, chúng sẽ trở thành một phần của tổng số. Nếu không, nhân viên sẽ nhận được một khoản tiền <strong>công tác phí</strong> cho ngày hôm đó. Ngoại lệ làm lộn xộn logic. Sẽ tốt hơn nếu chúng ta không phải giải quyết trường hợp đặc biệt? Mã của chúng ta sẽ trông đơn giản hơn nhiều. Nó sẽ trông như thế này:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nc">MealExpenses</span> <span class="n">expenses</span> <span class="o">=</span> <span class="n">expenseReportDAO</span><span class="o">.</span><span class="na">getMeals</span><span class="o">(</span><span class="n">employee</span><span class="o">.</span><span class="na">getID</span><span class="o">());</span> 
+    <span class="n">m_total</span> <span class="o">+=</span> <span class="n">expenses</span><span class="o">.</span><span class="na">getTotal</span><span class="o">();</span>
+</code></pre></div></div>
+<p>Chúng ta có thể làm cho mã đơn giản như vậy không? Nó chỉ ra rằng chúng ta có thể. Chúng ta có thể thay đổi <strong>ExpenseReportDAO</strong> để nó luôn trả về một đối tượng <strong>MealExpense</strong>. Nếu không có chi phí bữa ăn, nó trả về đối tượng <strong>MealExpense</strong> trả về <strong>công tác phí</strong> là tổng của nó:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">PerDiemMealExpenses</span> <span class="kd">implements</span> <span class="nc">MealExpenses</span> <span class="o">{</span> 
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getTotal</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// trả lại công tác phí mặc định </span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Đây được gọi là MẪU TRƯỜNG HỢP ĐẶC BIỆT [Fowler]. Bạn tạo một lớp hoặc cấu hình một đối tượng để nó xử lý một trường hợp đặc biệt cho bạn. Khi bạn làm như vậy, mã khách hàng không phải đối phó với các hành vi đặc biệt. Hành vi đó được gói gọn trong đối tượng trường hợp đặc biệt.</p>
+<h2 id="đừng-trả-về-null">Đừng trả về Null</h2>
+<p>Tôi nghĩ rằng bất kỳ cuộc thảo luận nào về xử lý lỗi cũng nên đề cập đến những việc làm mà dẫn đến lỗi. Đầu tiên trong danh sách: <strong>trả về null</strong>. Tôi không thể đếm được số lượng các ứng dụng mà tôi đã thấy trong đó gần như mọi dòng đều là lệnh kiểm tra <strong>null</strong>. Đây là một mã ví dụ:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerItem</span><span class="o">(</span><span class="nc">Item</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span> 
+    <span class="k">if</span> <span class="o">(</span><span class="n">item</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">ItemRegistry</span> <span class="n">registry</span> <span class="o">=</span> <span class="n">peristentStore</span><span class="o">.</span><span class="na">getItemRegistry</span><span class="o">();</span> 
+        <span class="k">if</span> <span class="o">(</span><span class="n">registry</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="nc">Item</span> <span class="n">existing</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="na">getItem</span><span class="o">(</span><span class="n">item</span><span class="o">.</span><span class="na">getID</span><span class="o">());</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">existing</span><span class="o">.</span><span class="na">getBillingPeriod</span><span class="o">().</span><span class="na">hasRetailOwner</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">existing</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="n">item</span><span class="o">);</span> 
+            <span class="o">}</span>
+        <span class="o">}</span> 
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Nếu bạn làm việc trong một cơ sở mã với mã như thế này, nó có thể không tệ đối với bạn, nhưng nó thật sự là sự thiếu trách nhiệm! Khi chúng ta trả về <strong>null</strong>, về cơ bản chúng ta đang tự tạo ra công việc cho chính bản thân mình đồng thời cũng để cho người gọi hàm phải giải quyết thêm vấn đề. Thử tưởng tượng người gọi hàm quên kiểm tra <strong>null</strong> một lần, ứng dụng ngay lập tức sẽ xẩy ra lỗi và tất nhiên không ai mong muốn điều đó cả.</p>
+
+<p>Bạn có nhận thấy là không có kiểm tra <strong>null</strong> trong dòng thứ hai của câu lệnh <strong>if</strong> lồng nhau đó không? Điều gì sẽ xảy ra trong khi chạy nếu <strong>persistentStore</strong> null? Chúng ta đã có một <strong>NullPointerException</strong> trong khi chạy và ai đó đang bắt <strong>NullPointerException</strong> ở cấp cao nhất, hoặc họ không làm vậy. Dù thế nào thì nó cũng rất tệ. Vậy chính xác thì bạn nên làm gì để đáp lại một <strong>NullPointerException</strong> được ném ra từ sâu bên trong ứng dụng của bạn?</p>
+
+<p>Có thể dễ dàng nói rằng vấn đề với đoạn mã trên là nó thiếu kiểm tra <strong>null</strong>, nhưng trên thực tế, vấn đề là nó xảy ra <em>quá nhiều</em>. Nếu bạn muốn trả về <strong>null</strong> từ một phương thức, hãy xem xét việc ném một ngoại lệ hoặc trả về một đối tượng ĐẶC BIỆT để thay thế. Nếu bạn đang gọi một phương thức trả về <strong>null</strong> từ một API của bên thứ ba, hãy xem xét gói phương thức đó bằng một phương thức ném ngoại lệ hoặc trả về một đối tượng đặc biệt.</p>
+
+<p>Trong nhiều trường hợp, các đối tượng trường hợp đặc biệt là một biện pháp khắc phục dễ dàng. Hãy tưởng tượng rằng bạn có mã như thế này:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Employee</span><span class="o">&gt;</span> <span class="n">employees</span> <span class="o">=</span> <span class="n">getEmployees</span><span class="o">();</span> 
+    <span class="k">if</span> <span class="o">(</span><span class="n">employees</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="nc">Employee</span> <span class="n">e</span> <span class="o">:</span> <span class="n">employees</span><span class="o">)</span> <span class="o">{</span> 
+            <span class="n">totalPay</span> <span class="o">+=</span> <span class="n">e</span><span class="o">.</span><span class="na">getPay</span><span class="o">();</span>
+        <span class="o">}</span> 
+    <span class="o">}</span>
+</code></pre></div></div>
+<p>Bây giờ, <strong>getEmployees</strong> có thể trả về <strong>null</strong>, nhưng có nhất thiết phải vậy không? Nếu chúng ta thay đổi <strong>getEmployees</strong> để nó trả về một danh sách rỗng (danh sách không có phần tử nào) thay vì trả về <strong>null</strong>, chúng ta có thể xóa mã kiểm tra <strong>null</strong>:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Employee</span><span class="o">&gt;</span> <span class="n">employees</span> <span class="o">=</span> <span class="n">getEmployees</span><span class="o">();</span> 
+    <span class="k">for</span><span class="o">(</span><span class="nc">Employee</span> <span class="n">e</span> <span class="o">:</span> <span class="n">employees</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">totalPay</span> <span class="o">+=</span> <span class="n">e</span><span class="o">.</span><span class="na">getPay</span><span class="o">();</span> 
+    <span class="o">}</span>
+</code></pre></div></div>
+<p>May mắn thay, Java có <strong>Collections.emptyList()</strong> và nó trả về một danh sách bất biến được xác định trước mà chúng ta có thể sử dụng cho mục đích này:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Employee</span><span class="o">&gt;</span> <span class="nf">getEmployees</span><span class="o">()</span> <span class="o">{</span> 
+    <span class="k">if</span><span class="o">(</span> <span class="o">..</span> <span class="n">không</span> <span class="n">có</span> <span class="n">employees</span> <span class="o">..</span> <span class="o">)</span>
+        <span class="k">return</span> <span class="nc">Collections</span><span class="o">.</span><span class="na">emptyList</span><span class="o">();</span> 
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Nếu bạn viết mã theo cách này, bạn sẽ giảm thiểu cơ hội xuất hiện <strong>NullPointerExceptions</strong> và mã của bạn sẽ sạch hơn.</p>
+<h2 id="đừng-truyền-null">Đừng truyền Null</h2>
+<p>Trả về <strong>null</strong> từ các phương thức là không tốt, nhưng truyền <strong>null</strong> vào các phương thức thì còn tệ hơn. Trừ khi bạn đang làm việc với một API yêu cầu bạn truyền vào <strong>null</strong>, còn đâu bạn nên tránh truyền <strong>null</strong> trong mã của mình bất cứ khi nào có thể.</p>
+
+<p>Hãy xem một ví dụ để biết tại sao. Đây là một phương pháp đơn giản để tính toán một số liệu cho hai điểm:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MetricsCalculator</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">xProjection</span><span class="o">(</span><span class="nc">Point</span> <span class="n">p1</span><span class="o">,</span> <span class="nc">Point</span> <span class="n">p2</span><span class="o">)</span> <span class="o">{</span> 
+        <span class="k">return</span> <span class="o">(</span><span class="n">p2</span><span class="o">.</span><span class="na">x</span> <span class="err">–</span> <span class="n">p1</span><span class="o">.</span><span class="na">x</span><span class="o">)</span> <span class="o">*</span> <span class="mf">1.5</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="o">...</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+<p>Điều gì xảy ra khi ai đó truyền <strong>null</strong> làm đối số cho hàm này?</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">calculator</span><span class="o">.</span><span class="na">xProjection</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Point</span><span class="o">(</span><span class="mi">12</span><span class="o">,</span> <span class="mi">13</span><span class="o">));</span>
+</code></pre></div></div>
+<p>Tất nhiên, chúng ta sẽ nhận được một <strong>NullPointerException</strong>.<br />
+Vậy, làm thế nào chúng ta có thể sửa chữa nó? Chúng ta có thể tạo một loại ngoại lệ mới và <strong>throw</strong> nó:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MetricsCalculator</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">xProjection</span><span class="o">(</span><span class="nc">Point</span> <span class="n">p1</span><span class="o">,</span> <span class="nc">Point</span> <span class="n">p2</span><span class="o">)</span> <span class="o">{</span> 
+        <span class="k">if</span><span class="o">(</span><span class="n">p1</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">p2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="nf">InvalidArgumentException</span><span class="o">(</span><span class="s">"Invalid argument for MetricsCalculator.xProjection"</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="o">(</span><span class="n">p2</span><span class="o">.</span><span class="na">x</span> <span class="err">–</span> <span class="n">p1</span><span class="o">.</span><span class="na">x</span><span class="o">)</span> <span class="o">*</span> <span class="mf">1.5</span><span class="o">;</span> 
+    <span class="o">}</span>  
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Tốt hơn chưa? Nó có thể tốt hơn một chút so với <strong>NullPointerException</strong>, nhưng hãy nhớ rằng, chúng ta phải xác định một trình xử lý cho <strong>InvalidArgumentException</strong>. Người xử lý phải làm gì? Có bất kỳ hướng đi nào tốt hơn không?
+Có một sự thay thế khác. Chúng ta có thể sử dụng một tập hợp các <strong>assertions</strong> để xác nhận:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MetricsCalculator</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">xProjection</span><span class="o">(</span><span class="nc">Point</span> <span class="n">p1</span><span class="o">,</span> <span class="nc">Point</span> <span class="n">p2</span><span class="o">)</span> <span class="o">{</span> 
+        <span class="k">assert</span> <span class="n">p1</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">:</span> <span class="s">"p1 should not be null"</span><span class="o">;</span> 
+        <span class="k">assert</span> <span class="n">p2</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">:</span> <span class="s">"p2 should not be null"</span><span class="o">;</span> 
+        <span class="k">return</span> <span class="o">(</span><span class="n">p2</span><span class="o">.</span><span class="na">x</span> <span class="err">–</span> <span class="n">p1</span><span class="o">.</span><span class="na">x</span><span class="o">)</span> <span class="o">*</span> <span class="mf">1.5</span><span class="o">;</span>
+    <span class="o">}</span> 
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Đó là một tài liệu tốt, nhưng nó không giải quyết được vấn đề. Nếu ai đó truyền vào giá trị <strong>null</strong>, chúng ta sẽ vẫn gặp lỗi trong khi chạy chương trình.<br />
+Trong hầu hết các ngôn ngữ lập trình, không có cách nào tốt để đối phó với giá trị <strong>null</strong> do người gọi vô tình truyền qua. Cách tiếp cận hợp lý là cấm truyền vào <strong>null</strong> theo mặc định. Khi bạn làm như vậy, bạn có thể viết mã với nhận định rằng giá trị <strong>null</strong> trong danh sách đối số đầu vào là dấu hiệu của một vấn đề và kết thúc với ít lỗi hơn.</p>
+<h2 id="phần-kết-luận">Phần kết luận</h2>
+<p>Mã sạch có thể đọc được, nhưng nó cũng cần phải mạnh mẽ. Đây không phải là những mục tiêu xung đột. Chúng ta có thể viết mã sạch và mạnh mẽ nếu chúng ta thấy việc xử lý lỗi là một mối quan tâm riêng biệt, một thứ có thể xem là độc lập với logic chính của chúng ta. Ở mức độ mà chúng ta có thể làm được điều đó, chúng ta có thể lập luận về nó một cách độc lập và chúng ta có thể đạt được những bước tiến lớn trong khả năng bảo trì mã của chúng ta.</p>
+<h2 id="thư-mục">Thư mục</h2>
+
+  </div><a class="u-url" href="/clean-code/chaper-07" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/clean-code/chaper-06" class="prev-post">← Chương 6 - Đối tượng và cấu trúc dữ liệu</a>
+      
+      
+        <a href="/clean-code/chaper-08" class="next-post">Chương 8 - Ranh giới →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

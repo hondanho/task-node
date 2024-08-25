@@ -1,0 +1,2661 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-08-25T21:56:03+07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">I’m here</title><subtitle>The latest tips and news from the hondanho
+</subtitle><author><name>hondanho</name></author><entry><title type="html">Proxy Pattern</title><link href="http://localhost:4000/design-pattern/structural-patterns/proxy" rel="alternate" type="text/html" title="Proxy Pattern" /><published>2024-08-23T00:00:00+07:00</published><updated>2024-08-23T00:00:00+07:00</updated><id>http://localhost:4000/design-pattern/structural-patterns/proxy</id><content type="html" xml:base="http://localhost:4000/design-pattern/structural-patterns/proxy"><![CDATA[<h2 id="khái-niệm">Khái Niệm</h2>
+
+<p>Trong lĩnh vực phần mềm, một trong những thách thức là làm thế nào để quản lý truy cập đến các nguồn lực và dịch vụ một cách hiệu quả. Đây là nơi mà Proxy Pattern, một phương pháp thiết kế phổ biến, trở nên rất hữu ích. Nó không chỉ giúp điều chỉnh quyền truy cập mà còn cung cấp các tính năng bổ sung như khởi tạo khi cần (lazy initialization), bảo mật, và ghi nhật ký, mà không cần thay đổi đối tượng ban đầu.</p>
+
+<h3 id="tổng-quan">Tổng quan</h3>
+
+<ul>
+  <li>
+    <p><strong>Định Nghĩa của Pattern:</strong> Proxy Pattern tạo ra một đại diện, hay còn gọi là ‘proxy’, để quản lý việc truy cập vào một đối tượng khác. Điều này giúp kiểm soát cách đối tượng này được dùng và truy cập trong hệ thống.</p>
+  </li>
+  <li>
+    <p><strong>Mục Đích:</strong> Mẫu thiết kế này rất hữu ích để kiểm soát hoặc mở rộng chức năng của một đối tượng mà không cần phải sửa đổi mã nguồn gốc của nó. Nó thường được dùng trong việc quản lý tài nguyên, cải thiện bảo mật và tăng hiệu suất.</p>
+  </li>
+  <li>
+    <p><strong>Ý Tưởng Cốt Lõi:</strong> Proxy Pattern chủ yếu là việc tạo ra một lớp trung gian, hay ‘proxy’, giúp quản lý truy cập một cách chặt chẽ đến đối tượng gốc. Nó không chỉ kiểm soát quyền truy cập mà còn cung cấp cơ hội để cải thiện hiệu suất và bảo mật thông qua các phương pháp như khởi tạo khi cần và kiểm soát truy cập.</p>
+  </li>
+</ul>
+
+<h2 id="đặt-vấn-đề">Đặt Vấn Đề</h2>
+
+<p>Tưởng tượng bạn đang xây dựng một hệ thống thư viện số cho việc lưu trữ và truy cập các tài liệu quan trọng. Ban đầu, hệ thống này chỉ đơn giản gồm các chức năng cơ bản như tìm kiếm tài liệu (<code class="language-plaintext highlighter-rouge">DocumentSearch</code>) và xem tài liệu (<code class="language-plaintext highlighter-rouge">DocumentViewer</code>).</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class DigitalLibrarySystem {
+        +searchDocument()
+        +viewDocument()
+    }
+
+    class DocumentSearch {
+        +search()
+    }
+
+    class DocumentViewer {
+        +view()
+    }
+
+    DigitalLibrarySystem --&gt; DocumentSearch : uses
+    DigitalLibrarySystem --&gt; DocumentViewer : uses
+</code></pre>
+
+<p>Khi hệ thống phát triển, bạn muốn thêm vào các tính năng như kiểm soát quyền truy cập dựa trên vai trò người dùng, tải tài liệu từ các nguồn ngoại tuyến, và giám sát việc sử dụng tài liệu. Điều này dẫn đến việc phải phát triển thêm nhiều lớp và dịch vụ mới, làm tăng độ phức tạp của hệ thống.</p>
+
+<h3 id="khó-khăn-và-vấn-đề">Khó Khăn và Vấn Đề</h3>
+<ul>
+  <li><strong>Hiệu Suất</strong>: Tải tài liệu lớn hoặc từ nguồn ngoại tuyến có thể làm chậm hệ thống, đặc biệt khi nhiều người dùng cùng truy cập.</li>
+  <li><strong>Bảo Mật</strong>: Kiểm soát quyền truy cập và bảo vệ thông tin nhạy cảm trở nên khó khăn và phức tạp.</li>
+  <li><strong>Quản Lý Tài Nguyên</strong>: Theo dõi và giám sát việc sử dụng tài liệu đòi hỏi cơ chế phức tạp và tốn kém tài nguyên hệ thống.</li>
+</ul>
+
+<pre><code class="language-mermaid">classDiagram
+    class DigitalLibrarySystem {
+        +searchDocument()
+        +viewDocument()
+        +loadDocument()
+        +checkAccess()
+        +monitorUsage()
+    }
+
+    class DocumentSearch {
+        +search()
+    }
+
+    class DocumentViewer {
+        +view()
+    }
+
+    class DocumentLoader {
+        +load()
+    }
+
+    class AccessControl {
+        +checkPermission()
+    }
+
+    class UsageMonitor {
+        +monitor()
+    }
+
+    DigitalLibrarySystem --&gt; DocumentSearch : uses
+    DigitalLibrarySystem --&gt; DocumentViewer : uses
+    DigitalLibrarySystem --&gt; DocumentLoader : uses
+    DigitalLibrarySystem --&gt; AccessControl : uses
+    DigitalLibrarySystem --&gt; UsageMonitor : uses
+</code></pre>
+
+<p>Khi không sử dụng Proxy Pattern, mỗi tương tác với hệ thống - từ tìm kiếm đến xem và tải tài liệu - có thể trở nên chậm chạp và không an toàn. Việc xử lý trực tiếp mọi yêu cầu cũng làm tăng khả năng quá tải hệ thống và gặp phải các vấn đề bảo mật.</p>
+
+<h2 id="giải-pháp">Giải pháp</h2>
+
+<p>Để tối ưu hóa hệ thống thư viện số đang ngày càng phức tạp và đa năng, việc áp dụng Proxy Pattern là một giải pháp hữu hiệu. Proxy Pattern giúp kiểm soát tương tác với hệ thống, nâng cao hiệu suất, và tăng cường bảo mật. Dưới đây là cách thức triển khai Proxy Pattern:</p>
+
+<ol>
+  <li>
+    <p><strong>Tạo Proxy Classes</strong>: Các lớp proxy như <code class="language-plaintext highlighter-rouge">DocumentLoaderProxy</code>, <code class="language-plaintext highlighter-rouge">AccessControlProxy</code>, và <code class="language-plaintext highlighter-rouge">UsageMonitorProxy</code> được thiết kế để kiểm soát và quản lý quyền truy cập đến các tài nguyên. Các lớp này hoạt động như trung gian, xử lý các tác vụ phức tạp và nhạy cảm.</p>
+  </li>
+  <li>
+    <p><strong>Cải Thiện Hiệu Suất và Bảo Mật</strong>: Các lớp Proxy có thể cache dữ liệu, thực hiện xác thực, và giám sát quyền truy cập. Điều này giúp giảm thiểu tải không cần thiết và tăng tốc độ xử lý, đồng thời bảo vệ thông tin nhạy cảm.</p>
+  </li>
+  <li>
+    <p><strong>Đơn Giản Hóa Quy Trình</strong>: Việc sử dụng Proxy giúp giảm độ phức tạp trong việc quản lý các chức năng của hệ thống, tạo điều kiện thuận lợi cho việc mở rộng và bảo trì.</p>
+  </li>
+</ol>
+
+<p>Sơ đồ sau đây minh họa cách thức các Proxy được tích hợp và hoạt động trong hệ thống:</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class DigitalLibrarySystem {
+        +searchDocument()
+        +viewDocument()
+    }
+
+    class DocumentSearch {
+        +search()
+    }
+
+    class DocumentViewer {
+        +view()
+    }
+
+    class DocumentLoaderProxy {
+        +load()
+    }
+
+    class AccessControlProxy {
+        +checkPermission()
+    }
+
+    class UsageMonitorProxy {
+        +monitor()
+    }
+
+    DigitalLibrarySystem --&gt; DocumentSearch : uses
+    DigitalLibrarySystem --&gt; DocumentViewer : uses
+    DocumentViewer --&gt; DocumentLoaderProxy : uses
+    DocumentLoaderProxy --&gt; AccessControlProxy : uses
+    AccessControlProxy --&gt; UsageMonitorProxy : uses
+</code></pre>
+
+<p>Trong sơ đồ này, <code class="language-plaintext highlighter-rouge">DigitalLibrarySystem</code> tương tác trực tiếp với <code class="language-plaintext highlighter-rouge">DocumentSearch</code> và <code class="language-plaintext highlighter-rouge">DocumentViewer</code>. Khi cần tải và xem tài liệu, <code class="language-plaintext highlighter-rouge">DocumentViewer</code> sẽ thông qua <code class="language-plaintext highlighter-rouge">DocumentLoaderProxy</code>. Proxy này tiếp tục giao tiếp với <code class="language-plaintext highlighter-rouge">AccessControlProxy</code> để kiểm tra quyền truy cập và <code class="language-plaintext highlighter-rouge">UsageMonitorProxy</code> để theo dõi sử dụng, đảm bảo quá trình này được thực hiện một cách an toàn và hiệu quả.</p>
+
+<h2 id="cấu-trúc">Cấu Trúc</h2>
+
+<pre><code class="language-mermaid">classDiagram
+    class Subject {
+        &lt;&lt;interface&gt;&gt;
+        +Request()
+    }
+
+    class RealSubject {
+        +Request()
+    }
+
+    class Proxy {
+        -realSubject RealSubject
+        +Request()
+    }
+
+    class Client {
+    }
+
+    Subject &lt;|.. RealSubject : implements
+    Subject &lt;|.. Proxy : implements
+    Proxy --&gt; RealSubject : references
+    Client --&gt; Subject : accesses
+</code></pre>
+
+<p><strong>Sơ đồ</strong>:</p>
+<ul>
+  <li><strong>Subject</strong>: Đây là interface mà cả RealSubject và Proxy đều triển khai. Nó định nghĩa phương thức <code class="language-plaintext highlighter-rouge">Request()</code> cần được thực thi.</li>
+  <li><strong>RealSubject</strong>: Lớp thực sự thực hiện logic của phương thức <code class="language-plaintext highlighter-rouge">Request()</code>. Đây là lớp mà Proxy sẽ đại diện hoặc “ủy quyền”.</li>
+  <li><strong>Proxy</strong>: Lớp này duy trì một tham chiếu đến đối tượng RealSubject và cũng triển khai interface Subject. Nó có thể kiểm soát hoặc bổ sung hành vi trước hoặc sau khi chuyển yêu cầu đến RealSubject.</li>
+  <li><strong>Client</strong>: Lớp này sử dụng đối tượng Subject, không biết rằng nó thực sự đang tương tác với Proxy của RealSubject.</li>
+</ul>
+
+<p><strong>Tổ chức và Tương tác</strong>:</p>
+<ul>
+  <li>Trong Proxy Pattern, Client tương tác với đối tượng thông qua interface Subject, cho phép sử dụng Proxy thay thế cho RealSubject.</li>
+  <li>Proxy nhận yêu cầu từ Client và có thể thực hiện một số tác vụ như truy cập kiểm soát, caching, hoặc lazy initialization trước hoặc sau khi chuyển yêu cầu đến RealSubject.</li>
+  <li>Nếu Proxy quyết định chuyển tiếp yêu cầu, nó gọi phương thức <code class="language-plaintext highlighter-rouge">Request()</code> của đối tượng RealSubject.</li>
+  <li>Sự sắp xếp này cho phép thêm lớp trung gian giữa Client và RealSubject mà không làm thay đổi hợp đồng interface, đảm bảo sự linh hoạt và khả năng mở rộng của code.</li>
+</ul>
+
+<h2 id="ví-dụ-áp-dụng-decorator-pattern">Ví dụ áp dụng Decorator Pattern</h2>
+
+<p>Proxy Pattern là một pattern thuộc nhóm Structural Design Patterns, giúp cung cấp một đại lý hoặc người đại diện để kiểm soát việc truy cập vào đối tượng gốc. Trong ví dụ này, chúng ta sẽ xem xét một tình huống trong đó Proxy Pattern được sử dụng để quản lý việc tải và hiển thị video. <code class="language-plaintext highlighter-rouge">ProxyVideo</code> đóng vai trò là proxy cho <code class="language-plaintext highlighter-rouge">RealVideo</code>. Khi một client yêu cầu xem video thông qua <code class="language-plaintext highlighter-rouge">ProxyVideo</code>, nó sẽ kiểm tra xem video đã được tải hay chưa và quyết định có cần tải video đó không. Điều này giúp tiết kiệm tài nguyên bằng cách tránh tải lại video đã có sẵn.</p>
+
+<h3 id="sơ-đồ">Sơ đồ</h3>
+
+<pre><code class="language-mermaid">  classDiagram
+      class Video {
+          &lt;&lt;interface&gt;&gt;
+          +showVideo()
+      }
+      class RealVideo {
+          +url String
+          +showVideo()
+      }
+      class ProxyVideo {
+          -realVideo RealVideo
+          +url String
+          +showVideo()
+      }
+      Video &lt;|.. RealVideo
+      Video &lt;|.. ProxyVideo
+</code></pre>
+
+<h3 id="ví-dụ-code">Ví dụ Code</h3>
+
+<p>Video.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">interface</span> <span class="nc">Video</span> <span class="p">{</span>
+    <span class="k">fun</span> <span class="nf">showVideo</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>RealVideo.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">RealVideo</span> <span class="p">:</span> <span class="nc">Video</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="py">url</span> <span class="p">:</span> <span class="nc">String</span>
+
+    <span class="k">constructor</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nc">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">url</span> <span class="p">=</span> <span class="n">url</span>
+        <span class="nf">println</span><span class="p">(</span><span class="s">"Video loaded: ${this.url}"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">showVideo</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">println</span><span class="p">(</span><span class="s">"Video Showed: ${this.url}"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>ProxyVideo.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">ProxyVideo</span> <span class="p">:</span> <span class="nc">Video</span> <span class="p">{</span>
+
+
+
+    <span class="k">private</span> <span class="kd">var</span> <span class="py">realVideo</span> <span class="p">:</span> <span class="nc">RealVideo</span> <span class="p">?</span> <span class="p">=</span> <span class="k">null</span>
+    <span class="k">private</span> <span class="kd">var</span> <span class="py">url</span><span class="p">:</span> <span class="nc">String</span>
+
+    <span class="k">constructor</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nc">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">url</span> <span class="p">=</span> <span class="n">url</span>
+    <span class="p">}</span>
+
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">showVideo</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">realVideo</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">realVideo</span> <span class="p">=</span> <span class="nc">RealVideo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nf">println</span><span class="p">(</span><span class="s">"Video already exits:${this.url}"</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">realVideo</span><span class="o">?.</span><span class="nf">showVideo</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>main.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fun</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="nc">Array</span><span class="p">&lt;</span><span class="nc">String</span><span class="p">&gt;)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="py">proxyVideo</span> <span class="p">:</span> <span class="nc">ProxyVideo</span>
+    <span class="n">proxyVideo</span> <span class="p">=</span> <span class="nc">ProxyVideo</span><span class="p">(</span><span class="s">"hoclaptrinh.mp4"</span><span class="p">)</span>
+    <span class="n">proxyVideo</span><span class="p">.</span><span class="nf">showVideo</span><span class="p">()</span>
+    <span class="nf">println</span><span class="p">()</span>
+    <span class="n">proxyVideo</span><span class="p">.</span><span class="nf">showVideo</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Kết quả</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Video loaded: hoclaptrinh.mp4
+Video Showed: hoclaptrinh.mp4
+
+Video already exits:hoclaptrinh.mp4
+Video Showed: hoclaptrinh.mp4
+
+Process finished with exit code 0
+</code></pre></div></div>
+
+<p>Dựa trên cấu trúc của phần viết về Flyweight Pattern, dưới đây là cách áp dụng tương tự cho Proxy Pattern:</p>
+
+<h2 id="khi-nào-áp-dụng-mẫu-proxy">Khi nào áp dụng mẫu Proxy</h2>
+
+<p>Mẫu Proxy phù hợp trong các tình huống mà việc truy cập trực tiếp vào một đối tượng không phải là lựa chọn tối ưu, hoặc cần có thêm các lớp trung gian để quản lý hoặc bổ sung chức năng cho đối tượng đó. Dưới đây là một số tình huống cụ thể:</p>
+
+<ol>
+  <li>
+    <p><strong>Kiểm Soát Truy cập</strong>: Khi bạn muốn kiểm soát hoặc hạn chế quyền truy cập vào một đối tượng, Proxy Pattern có thể đóng vai trò như một bức tường lửa. Điều này thường thấy trong việc quản lý quyền truy cập đối với đối tượng nhạy cảm hoặc quan trọng.</p>
+  </li>
+  <li>
+    <p><strong>Lười Biếng Tải Đối tượng (Lazy Loading)</strong>: Đối với việc tải các đối tượng lớn hoặc tốn kém về tài nguyên, việc sử dụng Proxy Pattern giúp trì hoãn quá trình này cho đến khi thực sự cần thiết. Điều này giúp tăng hiệu suất và tiết kiệm tài nguyên.</p>
+  </li>
+  <li>
+    <p><strong>Tạo Log và Điều khiển Quyền truy cập</strong>: Khi cần theo dõi hoặc ghi lại các hoạt động truy cập đối với một đối tượng, sử dụng Proxy giúp bạn dễ dàng thêm chức năng này mà không làm thay đổi đối tượng gốc.</p>
+  </li>
+  <li>
+    <p><strong>Tối ưu Hóa Hiệu suất và Bộ nhớ</strong>: Trong các ứng dụng đòi hỏi tối ưu hóa về hiệu suất và bộ nhớ, như trong trường hợp các đối tượng cần tải dữ liệu từ mạng, Proxy Pattern có thể giúp giảm bớt tải trọng bằng cách cache hoặc trì hoãn việc tải dữ liệu.</p>
+  </li>
+  <li>
+    <p><strong>Chức năng Bổ sung hoặc Sửa đổi</strong>: Khi muốn thêm hoặc sửa đổi chức năng của một đối tượng mà không làm thay đổi mã nguồn của đối tượng đó, Proxy Pattern cung cấp một cách hiệu quả để thực hiện điều này.</p>
+  </li>
+</ol>
+
+<p>Proxy Pattern không nên sử dụng khi không cần quản lý, kiểm soát hoặc bổ sung chức năng cho đối tượng, hoặc khi việc thêm một lớp trung gian làm tăng độ phức tạp không cần thiết cho ứng dụng. Trong những trường hợp này, việc sử dụng trực tiếp đối tượng gốc có thể là lựa chọn tốt hơn.</p>]]></content><author><name>hondanho</name></author><category term="design-pattern/structural-patterns" /><summary type="html"><![CDATA[Khái Niệm]]></summary></entry><entry><title type="html">Giới thiệu Design Pattern</title><link href="http://localhost:4000/design-pattern/intro" rel="alternate" type="text/html" title="Giới thiệu Design Pattern" /><published>2024-08-23T00:00:00+07:00</published><updated>2024-08-23T00:00:00+07:00</updated><id>http://localhost:4000/design-pattern/intro</id><content type="html" xml:base="http://localhost:4000/design-pattern/intro"><![CDATA[<h2 id="định-nghĩa-design-pattern">Định nghĩa Design Pattern</h2>
+
+<p>Design Pattern là một mô hình thiết kế được sử dụng để giải quyết một vấn đề cụ thể trong lập trình. Nó cung cấp một giải pháp đã được kiểm nghiệm và tối ưu hóa, giúp các lập trình viên tiết kiệm thời gian và công sức khi phát triển phần mềm</p>
+
+<h2 id="lịch-sử-ra-đời-và-phát-triển">Lịch sử ra đời và phát triển</h2>
+
+<p>Design Pattern được khai sinh vào những năm 1970 với sự phát triển của lập trình hướng đối tượng (OOP). Kể từ đó, nó đã trở thành một phần quan trọng trong quá trình phát triển phần mềm.</p>
+
+<p>Năm 1994, ba lập trình viên Erich Gamma, Richard Helm, Ralph Johnson và John Vlissides đã xuất bản cuốn sách “Design Patterns: Elements Of Resuable Object - Oriented Software”. Cuốn sách này đã trở thành một trong những tài liệu tham khảo quan trọng nhất về Design Pattern.</p>
+
+<p>Trong những năm gần đây, Design Pattern tiếp tục được phát triển và mở rộng. Ngày càng có nhiều Design Pattern mới được giới thiệu, phù hợp với các yêu cầu mới của lâp trình.</p>
+
+<h2 id="ý-nghĩa-và-lợi-ích-của-design-pattern">Ý nghĩa và lợi ích của Design Pattern</h2>
+
+<p>Design Pattern mang lại nhiều ý nghĩa và lợi ích cho lập trình, bao gồm:</p>
+
+<ul>
+  <li><strong>Giúp giải quyết vấn đề một cách hiệu quả và tối ưu:</strong> Design Pattern cung cấp các giải pháp đã được kiểm nghiệm và tối ưu hóa, giúp các lập trình viên giải quyết các vấn đề một cách nhanh chóng và hiêu quả.</li>
+  <li><strong>Tăng tính tái sử dụng của code:</strong> Design Pattern giúp các lập trình viên tái sử dụng code đã có, từ đó giảm thiểu thời gian và công ức phát triển phần mềm.</li>
+  <li><strong>Tăng tính bảo trì và bảo dưỡng của phần mềm:</strong> Design Pattern giúp phần mềm dễ dàng bảo trì và bảo dưỡng hơn.</li>
+  <li><strong>Tăng tính dể hiểu và dễ đọc của code:</strong> Design Pattern giúp code dễ hiểu và dễ đọc hơn, giúp việc công tác giữa các lập trình viên trở nên dễ dàng hơn.</li>
+</ul>
+
+<p>Design Pattern là một kỹ thuật nâng cao của OOP, nó cực kì quan trọng trong lập trình. Nó mang lại nhiều ý nghĩa và lợi ích cho lập trình, giúp các lập trình viên phát triển phần mềm hiệu quả hơn.</p>
+
+<h1 id="2-phân-loại-design-pattern">2. Phân loại Design Pattern</h1>
+
+<h2 id="creational-design-patterns">Creational Design Patterns</h2>
+
+<p>Creational Design Patterns liên quan tới việc khởi tạo đối tượng. Nhóm pattern này cung cấp các cơ chế tạo đối tượng một cách linh hoạt và phù hợp với bối cảnh sử dụng. Một số pattern phổ biến:</p>
+
+<ul>
+  <li><a href="2.1%20Singleton.md">Singleton</a>, <a href="2.3%20Factory%20Method.md">Factory Method</a>, <a href="2.4%20Abstract%20Factory.md">Abstract Factory</a>, <a href="2.2%20Builder.md">Builder</a>, <a href="2.5%20Prototype.md">Prototype</a></li>
+</ul>
+
+<p>Sử dụng Creational Patterns giúp tạo ra các đối tượng một cách linh hoạt, dễ dàng thay đổi và tối ưu hóa bộ nhớ.</p>
+<h2 id="structural-design-patterns">Structural Design Patterns</h2>
+
+<p>Structural Patterns liên quan tới cấu trúc và mối quan hệ giữa các lớp, đối tượng. Nhóm này giúp xây dựng cấu trúc phần mềm dễ thay đổi và bảo trì. Một số pattern:</p>
+
+<ul>
+  <li><a href="3.1%20Adapter.md">Adapter</a>, <a href="3.2%20Bridge.md">Bridge</a>, <a href="3.4%20Composite.md">Composite</a>, <a href="3.5%20Decorator.md">Decorator</a>, <a href="3.6%20Facade.md">Facade</a>, <a href="3.7%20Flyweight.md">Flyweight</a>, <a href="3.8%20Proxy.md">Proxy</a></li>
+</ul>
+
+<p>Sử dụng Structural Patterns giúp xây dựng hệ thống linh hoạt, dễ mở rộng và tối ưu hóa bộ nhớ.</p>
+
+<h2 id="behavioral-design-patterns">Behavioral Design Patterns</h2>
+
+<p>Behavioral Patterns liên quan tới hành vi giao tiếp giữa các đối tượng. Nhóm này giúp định nghĩa rõ ràng mối quan hệ giữa các object. Một số pattern:</p>
+
+<ul>
+  <li><a href="4.1%20Chain%20of%20Responsibility.md">Chain of Responsibility</a>, <a href="4.2%20Command.md">Command</a>, <a href="4.3%20Iterator.md">Iterator</a>, <a href="4.4%20Mediator.md">Mediator</a>, <a href="4.5%20Memento.md">Memento</a>, <a href="4.6%20Observer.md">Observer</a>, <a href="4.7%20State.md">State</a>, <a href="4.8%20Strategy.md">Strategy</a>, <a href="4.9%20Template%20Method.md">Template Method</a>, <a href="4.10%20Visitor.md">Visitor</a></li>
+</ul>
+
+<p>Sử dụng Behavioral Patterns giúp tạo hệ thống linh hoạt, dễ thay đổi và tối ưu hóa hiệu suất.</p>
+
+<h1 id="3-sử-dụng-design-pattern">3. Sử dụng Design Pattern</h1>
+
+<h2 id="nguyên-tắc-và-phương-pháp-áp-dụng-design-pattern">Nguyên tắc và phương pháp áp dụng Design Pattern</h2>
+
+<h3 id="nguyên-tắc">Nguyên Tắc</h3>
+
+<p>Để áp dụng Design Pattern hiệu quả, các lập trinh viên cần nắm được các nguyên tắc và phương pháp sau đây:</p>
+
+<ul>
+  <li>
+    <p><strong>Nguyên tắc đầu tiên là phải hiểu rõ vấn đề cần giải quyết:</strong> Trước khi áp dụng Design Pattern, các lập trinh viên cần hiểu rõ vấn đề cần giải quyết là gì. Từ đó, họ có thể lựa chọn được Design Pattern phù hợp nhất.</p>
+  </li>
+  <li>
+    <p><strong>Nguyên tắc thứ hai là phải hiểu rõ Design Pattern:</strong> Các lập trình viên cần hiểu rõ bản chất và cách hoạt động của Design Pattern. Từ đó, họ có thể áp dụng Design Pattern một cách chính xác và hiệu quả.</p>
+  </li>
+  <li>
+    <p><strong>Nguyên tắc thứ ba là phải linh hoạt trong việc áp dụng Design Pattern:</strong> Không phải lúc nào cũng có thể áp dụng Design Pattern một cách cứng nhắc. Các lập trình viên cần linh hoạt trong việc áp dụng Design Pattern để phù hợp với nhu cầu cụ thể của dự án.</p>
+  </li>
+</ul>
+
+<h3 id="phương-pháp">Phương pháp</h3>
+
+<ul>
+  <li>
+    <p><strong>Phương pháp trực tiếp:</strong> Phương pháp này áp dụng Design Pattern một cách trực tiếp, không cần thay đổi cấu trúc của code.</p>
+  </li>
+  <li>
+    <p><strong>Phương pháp gián tiếp:</strong> Phương pháp này sử dụng các thư viện hoặc framework để áp dụng Design Pattern.</p>
+  </li>
+</ul>
+
+<h2 id="lợi-ích-của-việc-sử-dụng-design-pattern-trong-phát-triển-phần-mềm">Lợi ích của việc sử dụng Design Pattern trong phát triển phần mềm</h2>
+
+<ul>
+  <li><strong>Giúp giải quyết vấn đề một cách hiệu quả và tối ưu:</strong> Design Pattern cung cấp các giải pháp đã được kiểm nghiệm và tối ưu hoá, giúp các lập trình viên giải quyết các vấn đề một cách nhanh chóng và hiệu quả hơn.</li>
+  <li><strong>Tăng tính tái sử dụng của code:</strong> Design Pattern giúp các lập trình viên tái sử dụng code đã có, từ đó giảm thiểu thời gian và công sức phát triển phần mềm.</li>
+  <li><strong>Tăng tính linh hoạt và mở rộng của phần mềm:</strong> Design Pattern giúp phần mềm linh hoạt và dễ dàng mở rộng khi có nhu cầu thay đổi.</li>
+  <li><strong>Tăng tính bảo trì và bảo dưỡng của phần mềm:</strong> Design Pattern giúp phền mềm dễ dàng bảo trì và bảo dưỡng hơn.</li>
+  <li><strong>Tăng tính dễ hiểu và dễ đọc của code:</strong> Design Pattern giúp code dễ hiểu và dễ đọc hơn, giúp việc công tá giữa các lập trình viên trở nên dễ dàng.</li>
+</ul>
+
+<h2 id="lưu-ý-khi-áp-dụng-design-pattern">Lưu ý khi áp dụng Design Pattern</h2>
+
+<p>Khi áp dụng Design Pattern, các lập trình viên cần lưu ý những điểm sau:</p>
+
+<ul>
+  <li><strong>Không nên áp dụng Design Pattern một cách cứng nhắc:</strong> Design Pattern là một giải pháp tổng thể, không phải là một giải pháp hoàn hảo. Các lập trình viên cần linh hoạt trong việc áp dụng Design Pattern để phù hợp với nhu cầu cụ thể của dự án.</li>
+  <li><strong>Không nên làm dụng Design Pattern:</strong> Design pattern không phải là một giải pháp cho mọi vấn đề. Các lập trình viên chỉ nên áp dụng Design Pattern khi nó thực sự cần thiết.</li>
+  <li><strong>Cần có thời gian để học hỏi và nghiên cứu Design Pattern:</strong> Design Pattern là một kỹ thuật phức tạp, cần có thời gian để học hỏi và nghiên cứu. Các lập trình viên không nên vội vàng áp dụng Design Pattern mà không hiểu rõ bản chất và cách hoạt động của nó.</li>
+</ul>]]></content><author><name>hondanho</name></author><category term="design-pattern" /><summary type="html"><![CDATA[Định nghĩa Design Pattern]]></summary></entry><entry><title type="html">Flyweight Pattern</title><link href="http://localhost:4000/design-pattern/structural-patterns/flyweight" rel="alternate" type="text/html" title="Flyweight Pattern" /><published>2024-08-23T00:00:00+07:00</published><updated>2024-08-23T00:00:00+07:00</updated><id>http://localhost:4000/design-pattern/structural-patterns/flyweight</id><content type="html" xml:base="http://localhost:4000/design-pattern/structural-patterns/flyweight"><![CDATA[<h2 id="khái-niệm">Khái Niệm</h2>
+
+<p>Khi làm việc với các hệ thống phần mềm lớn và phức tạp, việc quản lý hiệu quả bộ nhớ và tài nguyên là vô cùng quan trọng. Đây là nơi mà mẫu thiết kế Flyweight, một mẫu thiết kế cấu trúc, thể hiện vai trò của mình. Flyweight Pattern giúp giảm bớt lượng bộ nhớ cần thiết cho ứng dụng bằng cách chia sẻ những đối tượng tương tự nhau đến mức tối đa.</p>
+
+<h3 id="tổng-quan">Tổng quan</h3>
+
+<ul>
+  <li>
+    <p><strong>Định Nghĩa của Pattern:</strong> Flyweight Pattern là một mẫu thiết kế sử dụng chia sẻ để hỗ trợ một lượng lớn đối tượng nhỏ mà không làm giảm hiệu suất. Mẫu này giúp giảm thiểu việc sử dụng bộ nhớ bằng cách chia sẻ càng nhiều trạng thái giữa các đối tượng càng tốt.</p>
+  </li>
+  <li>
+    <p><strong>Mục Đích:</strong> Mẫu thiết kế này hữu ích khi cần tạo ra một số lượng lớn đối tượng nhỏ trong một hệ thống, nơi mà việc sử dụng bộ nhớ và tài nguyên là một vấn đề cần được xem xét kỹ lưỡng.</p>
+  </li>
+  <li>
+    <p><strong>Ý Tưởng Cốt Lõi:</strong> Flyweight Pattern tập trung vào việc tạo ra các đối tượng “flyweight” mà chia sẻ trạng thái chung để giảm thiểu việc sử dụng bộ nhớ. Trong mô hình này, mỗi đối tượng flyweight đều có thể đại diện cho nhiều đối tượng khác, giúp tiết kiệm tài nguyên mà không ảnh hưởng đến tính toàn vẹn và hiệu suất của ứng dụng.</p>
+  </li>
+</ul>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p>Hãy tưởng tượng bạn đang phát triển một trò chơi trực tuyến đa người chơi (MMO) với một thế giới rộng lớn, nơi người chơi có thể tương tác với nhau và môi trường xung quanh. Trong trò chơi này, có hàng ngàn đối tượng khác nhau như nhân vật, vật phẩm, quái vật, và các yếu tố môi trường (cây, đá, nhà cửa).</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class GameWorld {
+        +renderCharacters()
+        +renderItems()
+        +renderMonsters()
+        +renderEnvironment()
+    }
+
+    class Character {
+        +render()
+    }
+
+    class Item {
+        +render()
+    }
+
+    class Monster {
+        +render()
+    }
+
+    class EnvironmentObject {
+        +render()
+    }
+
+    GameWorld --&gt; Character : contains
+    GameWorld --&gt; Item : contains
+    GameWorld --&gt; Monster : contains
+    GameWorld --&gt; EnvironmentObject : contains
+</code></pre>
+
+<p>Ban đầu, mỗi đối tượng trong trò chơi này được xử lý như một thực thể riêng biệt. Mỗi nhân vật, vật phẩm, quái vật, và yếu tố môi trường đều có bộ dữ liệu riêng, bao gồm hình ảnh, vị trí, và trạng thái. Điều này làm cho hệ thống yêu cầu một lượng lớn bộ nhớ và tài nguyên xử lý để duy trì trạng thái và hiển thị của hàng ngàn đối tượng cùng một lúc.</p>
+
+<ul>
+  <li>Các nhân vật có thể chia sẻ nhiều thuộc tính chung như hình dáng cơ bản, bộ kỹ năng, và trang bị.</li>
+  <li>Vật phẩm và quái vật cũng tương tự, với nhiều đặc điểm chung nhưng lại được biểu diễn như các đối tượng độc lập.</li>
+  <li>Các yếu tố môi trường như cây cối, đá, và nhà cửa có thể xuất hiện nhiều lần trong trò chơi, nhưng mỗi lần lại được tải như một đối tượng riêng.</li>
+</ul>
+
+<p>Vấn đề này gây ra sự chậm trễ trong quá trình tải trò chơi và cả trong lúc chơi, ảnh hưởng đến trải nghiệm người chơi. Đặc biệt trong môi trường MMO, nơi sự mượt mà và phản hồi nhanh là yếu tố quan trọng, việc tối ưu hóa hiệu suất và bộ nhớ trở thành một yêu cầu cấp thiết.</p>
+
+<p>Đây chính là lúc Flyweight Pattern có thể được áp dụng. Mẫu thiết kế này giúp tối ưu hóa việc sử dụng bộ nhớ bằng cách chia sẻ các đối tượng có thuộc tính chung, giảm bớt số lượng đối tượng cần tải và quản lý. Điều này không chỉ giúp tăng cường hiệu suất mà còn cải thiện trải nghiệm người chơi, đặc biệt trong một môi trường trực tuyến đa người chơi.</p>
+
+<h2 id="giải-pháp">Giải pháp</h2>
+
+<p>Để giải quyết những thách thức trong quản lý trò chơi trực tuyến đa người chơi, việc sử dụng Flyweight Pattern là một lựa chọn hợp lý. Mô hình này tập trung vào việc tối ưu hóa bộ nhớ và hiệu suất bằng cách chia sẻ các đối tượng chung giữa nhiều thực thể. Cách thức áp dụng Flyweight Pattern như sau:</p>
+
+<ol>
+  <li>
+    <p><strong>Xác định Đối tượng Flyweight</strong>: Phân tích và xác định những phần thông tin có thể được chia sẻ giữa các đối tượng. Trong trò chơi MMO, điều này có thể bao gồm dữ liệu về hình ảnh, animations, bản đồ, đặc điểm của nhân vật, vật phẩm, và yếu tố môi trường.</p>
+  </li>
+  <li>
+    <p><strong>Tạo Flyweight Factory</strong>: Xây dựng một <code class="language-plaintext highlighter-rouge">GameFlyweightFactory</code> để quản lý việc tạo và tái sử dụng các đối tượng Flyweight. Factory này sẽ cung cấp một cách để lấy hoặc tạo đối tượng Flyweight dựa trên các thông tin cần thiết.</p>
+  </li>
+  <li>
+    <p><strong>Áp dụng Flyweight trong Game World</strong>: Trong lớp <code class="language-plaintext highlighter-rouge">GameWorld</code>, thay vì tạo ra hàng ngàn thực thể riêng lẻ, sử dụng <code class="language-plaintext highlighter-rouge">GameFlyweightFactory</code> để tạo hoặc lấy các đối tượng Flyweight. Điều này giúp giảm lượng bộ nhớ cần thiết và tối ưu hóa hiệu suất khi hiển thị và quản lý các đối tượng trong trò chơi.</p>
+  </li>
+</ol>
+
+<pre><code class="language-mermaid">classDiagram
+    class GameWorld {
+        +renderWorld()
+    }
+
+    class GameFlyweightFactory {
+        +getCharacterFlyweight()
+        +getItemFlyweight()
+        +getMonsterFlyweight()
+        +getEnvironmentObjectFlyweight()
+    }
+
+    class CharacterFlyweight {
+        +render()
+    }
+
+    class ItemFlyweight {
+        +render()
+    }
+
+    class MonsterFlyweight {
+        +render()
+    }
+
+    class EnvironmentObjectFlyweight {
+        +render()
+    }
+
+    GameWorld --&gt; GameFlyweightFactory : uses
+    GameFlyweightFactory --&gt; CharacterFlyweight : creates
+    GameFlyweightFactory --&gt; ItemFlyweight : creates
+    GameFlyweightFactory --&gt; MonsterFlyweight : creates
+    GameFlyweightFactory --&gt; EnvironmentObjectFlyweight : creates
+</code></pre>
+
+<p>Sơ đồ trên minh họa cách <code class="language-plaintext highlighter-rouge">GameFlyweightFactory</code> được tích hợp vào <code class="language-plaintext highlighter-rouge">GameWorld</code>, giúp giảm bớt việc tạo và quản lý đối tượng riêng biệt cho mỗi thực thể trong trò chơi. Mô hình này không chỉ giúp giảm thiểu lượng bộ nhớ cần thiết mà còn tối ưu hóa quá trình xử lý, mang lại trải nghiệm mượt mà và hiệu quả hơn cho người chơi.</p>
+
+<h2 id="cấu-trúc">Cấu trúc</h2>
+
+<pre><code class="language-mermaid">classDiagram
+    class Flyweight {
+      &lt;&lt;interface&gt;&gt;
+      -IntrinsicState
+      +Operation(extrinsicState)
+    }
+
+    class ConcreteFlyweight {
+      -IntrinsicState
+      +Operation(extrinsicState)
+    }
+
+    class UnsharedConcreteFlyweight {
+      -AllState
+      +Operation(extrinsicState)
+    }
+
+    class FlyweightFactory {
+      -Flyweights
+      +GetFlyweight(key)
+    }
+
+    class Client {
+      -FlyweightFactory
+    }
+
+    Flyweight &lt;|-- ConcreteFlyweight : implements
+    Flyweight &lt;|-- UnsharedConcreteFlyweight : implements
+    FlyweightFactory o-- Flyweight : creates/manages
+    Client --&gt; FlyweightFactory : uses
+</code></pre>
+
+<p><strong>Sơ đồ</strong>:</p>
+<ul>
+  <li><strong>Flyweight</strong>: Lớp này chứa trạng thái bên trong (intrinsic) không đổi.</li>
+  <li><strong>ConcreteFlyweight</strong>: Lớp con của Flyweight, cài đặt trạng thái bên trong.</li>
+  <li><strong>UnsharedConcreteFlyweight</strong>: Không phải lúc nào cũng cần thiết, dùng cho trạng thái bên ngoài (extrinsic) có thể thay đổi.</li>
+  <li><strong>FlyweightFactory</strong>: Tạo và quản lý các đối tượng Flyweight, đảm bảo rằng flyweights được chia sẻ một cách hiệu quả.</li>
+  <li><strong>Client</strong>: Sử dụng các đối tượng Flyweight thông qua FlyweightFactory.</li>
+</ul>
+
+<p><strong>Tổ chức và Tương tác</strong>:</p>
+<ul>
+  <li>Trong Flyweight Pattern, các đối tượng Flyweight được tạo và quản lý bởi FlyweightFactory. Factory đảm bảo rằng các đối tượng được tái sử dụng thay vì tạo mới mỗi lần cần thiết, qua đó giảm bộ nhớ và chi phí tạo đối tượng.</li>
+  <li>Client tương tác với Flyweight thông qua FlyweightFactory. Khi một Client yêu cầu một Flyweight, Factory kiểm tra xem đối tượng đó đã tồn tại hay chưa. Nếu có, nó sẽ trả về đối tượng hiện có; nếu không, nó sẽ tạo một đối tượng mới.</li>
+  <li>Trong khi Flyweight chứa trạng thái bên trong không đổi, Client có thể truyền trạng thái bên ngoài vào Flyweight trong thời gian thực thi. Điều này cho phép cùng một đối tượng Flyweight được sử dụng trong các bối cảnh khác nhau với trạng thái bên ngoài khác nhau.</li>
+</ul>
+
+<h2 id="ví-dụ-áp-dụng-flyweight-pattern">Ví dụ áp dụng Flyweight Pattern</h2>
+
+<p>Flyweight Pattern giúp giảm bớt lượng bộ nhớ sử dụng bằng cách chia sẻ càng nhiều dữ liệu càng tốt giữa các đối tượng tương tự. Trong ví dụ về việc thiết kế một trò chơi với nhiều cây cối, thay vì tạo một đối tượng riêng biệt cho mỗi cây, chúng ta sẽ tạo ra một số lượng nhỏ các đối tượng Flyweight chứa trạng thái chung (như loại cây, kích thước, màu sắc) và sử dụng chúng để biểu diễn nhiều cây khác nhau trong trò chơi bằng cách thay đổi vị trí và một số thuộc tính riêng biệt không chia sẻ.</p>
+
+<pre><code class="language-mermaid">        classDiagram
+class TreeFactory {
+        -treeTypes Map
+        +getTreeType(name, color, texture) TreeType
+}
+class TreeType {
+        +draw(canvas, x, y)
+}
+class Tree {
+        -x int
+        -y int
+        -treeType TreeType
+        +draw(canvas)
+}
+class Client {
+        -treeFactory TreeFactory
+        +operation()
+}
+
+    TreeFactory --&gt; TreeType : creates and manages
+            Client --&gt; TreeFactory : uses
+            Tree --&gt; TreeType : uses
+</code></pre>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+
+<span class="c1">// Flyweight Factory</span>
+<span class="kd">class</span> <span class="nc">TreeFactory</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">TreeType</span><span class="o">&gt;</span> <span class="n">treeTypes</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;&gt;();</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="nc">TreeType</span> <span class="nf">getTreeType</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="nc">String</span> <span class="n">color</span><span class="o">,</span> <span class="nc">String</span> <span class="n">texture</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">TreeType</span> <span class="n">result</span> <span class="o">=</span> <span class="n">treeTypes</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">result</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TreeType</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">color</span><span class="o">,</span> <span class="n">texture</span><span class="o">);</span>
+            <span class="n">treeTypes</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Flyweight</span>
+<span class="kd">class</span> <span class="nc">TreeType</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">color</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">texture</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">TreeType</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="nc">String</span> <span class="n">color</span><span class="o">,</span> <span class="nc">String</span> <span class="n">texture</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">color</span> <span class="o">=</span> <span class="n">color</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">texture</span> <span class="o">=</span> <span class="n">texture</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">(</span><span class="nc">String</span> <span class="n">canvas</span><span class="o">,</span> <span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Drawing %s tree at (%d, %d) on %s%n"</span><span class="o">,</span> <span class="n">name</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">canvas</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Client code</span>
+<span class="kd">class</span> <span class="nc">Tree</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">x</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">y</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">TreeType</span> <span class="n">treeType</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Tree</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">,</span> <span class="nc">TreeType</span> <span class="n">treeType</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">treeType</span> <span class="o">=</span> <span class="n">treeType</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">(</span><span class="nc">String</span> <span class="n">canvas</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">treeType</span><span class="o">.</span><span class="na">draw</span><span class="o">(</span><span class="n">canvas</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Forest</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">TreeType</span> <span class="n">mapleTreeType</span> <span class="o">=</span> <span class="nc">TreeFactory</span><span class="o">.</span><span class="na">getTreeType</span><span class="o">(</span><span class="s">"Maple"</span><span class="o">,</span> <span class="s">"Green"</span><span class="o">,</span> <span class="s">"Smooth"</span><span class="o">);</span>
+
+        <span class="nc">Tree</span> <span class="n">tree1</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Tree</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="n">mapleTreeType</span><span class="o">);</span>
+        <span class="nc">Tree</span> <span class="n">tree2</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Tree</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="n">mapleTreeType</span><span class="o">);</span>
+        <span class="c1">// ... more trees</span>
+
+        <span class="n">tree1</span><span class="o">.</span><span class="na">draw</span><span class="o">(</span><span class="s">"Canvas1"</span><span class="o">);</span>
+        <span class="n">tree2</span><span class="o">.</span><span class="na">draw</span><span class="o">(</span><span class="s">"Canvas2"</span><span class="o">);</span>
+        <span class="c1">// ... draw more trees</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Trong ví dụ này, TreeFactory tạo và quản lý các đối tượng TreeType (Flyweight). Các đối tượng Tree sẽ sử dụng các TreeType này để vẽ chúng lên “canvas”, nhưng mỗi đối tượng Tree vẫn có thể có vị trí riêng (x, y).</p>
+
+<h2 id="khi-nào-áp-dụng-mẫu-flyweight">Khi nào áp dụng mẫu Flyweight</h2>
+
+<p>Mẫu Flyweight được sử dụng hiệu quả nhất trong các tình huống mà một ứng dụng cần tạo ra một lượng lớn đối tượng với các trạng thái tương tự nhau. Điều này thường xảy ra trong các ứng dụng có các đối tượng đồ họa hoặc môi trường mạng, nơi việc tái sử dụng đối tượng có thể giảm đáng kể chi phí về bộ nhớ và cải thiện hiệu suất.</p>
+
+<ol>
+  <li>
+    <p><strong>Tối ưu hóa Bộ nhớ</strong>: Khi ứng dụng của bạn phải xử lý hàng ngàn hoặc hàng triệu đối tượng có trạng thái không thay đổi, dùng chung các thuộc tính có thể giúp tiết kiệm đáng kể bộ nhớ.</p>
+  </li>
+  <li>
+    <p><strong>Tái sử dụng Đối tượng</strong>: Trong trường hợp có nhu cầu tái sử dụng đối tượng thay vì tạo mới, Flyweight là lựa chọn lý tưởng. Điều này đặc biệt có ích trong các ứng dụng đòi hỏi hiệu suất cao và thời gian phản hồi nhanh.</p>
+  </li>
+  <li>
+    <p><strong>Phân tách Trạng thái Nội tại và Ngoại tại</strong>: Nếu bạn có thể phân biệt được trạng thái nội tại (không thay đổi) và trạng thái ngoại tại (thay đổi) của đối tượng, mẫu Flyweight cho phép bạn chia sẻ trạng thái nội tại giữa nhiều đối tượng, trong khi vẫn quản lý trạng thái ngoại tại một cách độc lập.</p>
+  </li>
+  <li>
+    <p><strong>Cải thiện Hiệu suất trong Môi trường Có Hạn chế về Tài nguyên</strong>: Trong các môi trường có hạn chế về tài nguyên như thiết bị di động hoặc hệ thống nhúng, việc sử dụng mẫu Flyweight có thể cải thiện hiệu suất bằng cách giảm bớt gánh nặng cho bộ nhớ và CPU.</p>
+  </li>
+</ol>
+
+<p>Flyweight ít phù hợp khi các đối tượng trong ứng dụng của bạn có trạng thái độc lập và khác biệt rõ ràng, hoặc khi việc tiết kiệm bộ nhớ không phải là mối quan tâm chính. Trong những tình huống như vậy, việc áp dụng Flyweight có thể không đem lại lợi ích đáng kể và thậm chí còn làm tăng độ phức tạp của mã nguồn.</p>]]></content><author><name>hondanho</name></author><category term="design-pattern/structural-patterns" /><summary type="html"><![CDATA[Khái Niệm]]></summary></entry><entry><title type="html">Structural Patterns Intro</title><link href="http://localhost:4000/design-pattern/structural-patterns/intro" rel="alternate" type="text/html" title="Structural Patterns Intro" /><published>2024-08-23T00:00:00+07:00</published><updated>2024-08-23T00:00:00+07:00</updated><id>http://localhost:4000/design-pattern/structural-patterns/intro</id><content type="html" xml:base="http://localhost:4000/design-pattern/structural-patterns/intro"><![CDATA[<p>Structural Patterns liên quan đến cấu trúc và mối quan hệ giữa các lớp và đối tượng nhằm tạo ra cấu trúc phần mềm dễ thay đổi và bảo trì hơn.</p>
+
+<p>Các Pattern thuộc nhóm này gồm:</p>
+
+<h2 id="adapter"><a href="3.1%20Adapter.md">Adapter</a></h2>
+
+<p>Cho phép giao tiếp giữa các interface không tương thích</p>
+
+<h2 id="bridge"><a href="3.2%20Bridge.md">Bridge</a></h2>
+
+<p>Tách rời một lớp phức tạp thành hai phần riêng biệt: trừu tượng và triển khai.</p>
+
+<h2 id="composite"><a href="3.3%20Composite.md">Composite</a></h2>
+
+<p>Tạo ra cấu trúc cây để biểu diễn mối quan hệ whole-part giữa các đối tượng.</p>
+
+<h2 id="decorator"><a href="3.4%20Decorator.md">Decorator</a></h2>
+
+<p>Dynamically thêm chức năng mới cho đối tượng mà không ảnh hưởng đến các đối tượng khác.</p>
+
+<h2 id="facade"><a href="3.5%20Facade.md">Facade</a></h2>
+
+<p>Cung cấp một giao diện đơn giản cho một nhóm các lớp phức tạp.</p>
+
+<h2 id="flyweight"><a href="3.6%20Flyweight.md">Flyweight</a></h2>
+
+<p>Sử dụng chia sẻ để hỗ trợ tao hàng loạt các đối tượng hiệu quả hơn.</p>
+
+<h2 id="proxy"><a href="3.7%20Proxy.md">Proxy</a></h2>
+
+<p>Đại diện cho một đối tượng khác để kiểm soát truy cập vào đối tượng đó.</p>
+
+<p>Các Pattern này giải quyết vấn đề cấu trúc và mối quan hệ giữa các thành phần trong phần mềm để tối ưu hóa tính linh hoạt, bảo trì và tái sử dụng.</p>]]></content><author><name>hondanho</name></author><category term="design-pattern/structural-patterns" /><summary type="html"><![CDATA[Structural Patterns liên quan đến cấu trúc và mối quan hệ giữa các lớp và đối tượng nhằm tạo ra cấu trúc phần mềm dễ thay đổi và bảo trì hơn.]]></summary></entry><entry><title type="html">Facade</title><link href="http://localhost:4000/design-pattern/structural-patterns/facade" rel="alternate" type="text/html" title="Facade" /><published>2024-08-23T00:00:00+07:00</published><updated>2024-08-23T00:00:00+07:00</updated><id>http://localhost:4000/design-pattern/structural-patterns/facade</id><content type="html" xml:base="http://localhost:4000/design-pattern/structural-patterns/facade"><![CDATA[<h2 id="khái-niệm">Khái Niệm</h2>
+
+<p>Khi làm việc với các hệ thống phần mềm lớn và phức tạp, việc cung cấp một giao diện đơn giản cho người dùng là một yếu tố quan trọng để đảm bảo sự tiện lợi và dễ dàng trong quá trình sử dụng. Đây chính là nơi Facade Pattern, một mẫu thiết kế cấu trúc phổ biến, thể hiện vai trò của mình. Facade Pattern giúp tạo ra một giao diện đơn giản cho một hệ thống phức tạp, giống như cách một “mặt tiền” che giấu sự rối ren và phức tạp bên trong.</p>
+
+<h3 id="tổng-quan">Tổng quan</h3>
+
+<ul>
+  <li>
+    <p><strong>Định Nghĩa của Pattern:</strong> Facade Pattern cung cấp một giao diện đơn giản để tương tác với một hệ thống phức tạp, giúp che giấu sự phức tạp và các chi tiết kỹ thuật không cần thiết khỏi người dùng.</p>
+  </li>
+  <li>
+    <p><strong>Mục Đích:</strong> Mẫu thiết kế này hữu ích khi cần cung cấp một giao diện đơn giản cho các hệ thống lớn và phức tạp, giúp người dùng dễ dàng tương tác mà không cần hiểu sâu về chi tiết bên trong.</p>
+  </li>
+  <li>
+    <p><strong>Ý Tưởng Cốt Lõi:</strong> Facade Pattern tạo ra một lớp “mặt tiền” đơn giản, qua đó tất cả các yêu cầu từ phía người dùng đều được chuyển hướng một cách gọn gàng và hiệu quả. Qua đó, người dùng có thể tương tác với hệ thống một cách dễ dàng hơn mà không cần lo lắng về các chi tiết phức tạp bên trong.</p>
+  </li>
+</ul>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p>Hãy tưởng tượng bạn đang phát triển một hệ thống quản lý rạp chiếu phim. Ban đầu, hệ thống chỉ cần quản lý các chức năng cơ bản như hiển thị danh sách phim đang chiếu và đặt vé. Bạn sử dụng các lớp như <code class="language-plaintext highlighter-rouge">MovieListing</code> để quản lý danh sách phim và <code class="language-plaintext highlighter-rouge">TicketBooking</code> để xử lý việc đặt vé.</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class CinemaSystem {
+        +listMovies()
+        +bookTicket()
+    }
+
+    class MovieListing {
+        +getMovies()
+    }
+
+    class TicketBooking {
+        +bookTicket()
+    }
+
+    CinemaSystem --&gt; MovieListing : uses
+    CinemaSystem --&gt; TicketBooking : uses
+</code></pre>
+
+<p>Khi nhu cầu ngày càng tăng, hệ thống cần tích hợp thêm nhiều chức năng phức tạp như quản lý ghế ngồi, thanh toán trực tuyến, thông báo qua email hoặc SMS, và quản lý ưu đãi thành viên. Điều này dẫn đến việc phát triển thêm nhiều lớp và dịch vụ mới: <code class="language-plaintext highlighter-rouge">SeatManagement</code>, <code class="language-plaintext highlighter-rouge">PaymentService</code>, <code class="language-plaintext highlighter-rouge">NotificationService</code>, và <code class="language-plaintext highlighter-rouge">MembershipService</code>.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">SeatManagement</code> để quản lý ghế ngồi.</li>
+  <li><code class="language-plaintext highlighter-rouge">PaymentService</code> để xử lý các giao dịch thanh toán.</li>
+  <li><code class="language-plaintext highlighter-rouge">NotificationService</code> để gửi thông báo.</li>
+  <li><code class="language-plaintext highlighter-rouge">MembershipService</code> để quản lý các ưu đãi cho thành viên.</li>
+</ul>
+
+<pre><code class="language-mermaid">classDiagram
+    class CinemaSystem {
+        +listMovies()
+        +bookTicket()
+        +selectSeats()
+        +processPayment()
+        +sendNotification()
+        +manageMembership()
+    }
+
+    class MovieListing {
+        +getMovies()
+    }
+
+    class TicketBooking {
+        +bookTicket()
+    }
+
+    class SeatManagement {
+        +selectSeat()
+        +reserveSeat()
+    }
+
+    class PaymentService {
+        +processPayment()
+    }
+
+    class NotificationService {
+        +sendEmail()
+        +sendSMS()
+    }
+
+    class MembershipService {
+        +applyDiscount()
+        +accumulatePoints()
+    }
+
+    CinemaSystem --&gt; MovieListing : uses
+    CinemaSystem --&gt; TicketBooking : uses
+    CinemaSystem --&gt; SeatManagement : uses
+    CinemaSystem --&gt; PaymentService : uses
+    CinemaSystem --&gt; NotificationService : uses
+    CinemaSystem --&gt; MembershipService : uses
+</code></pre>
+
+<p>Với sự phát triển này, hệ thống trở nên phức tạp và khó quản lý. Người dùng, đặc biệt là nhân viên rạp chiếu phim, phải đối mặt với quy trình phức tạp khi thực hiện từng công việc như đặt vé, chọn ghế, xác nhận thanh toán, và gửi thông báo. Sự phức tạp này không chỉ làm tăng khả năng sai sót mà còn làm giảm hiệu quả và tốc độ phục vụ.</p>
+
+<p>Ban đầu, giao diện người dùng chỉ cần làm quen với hai chức năng chính: <code class="language-plaintext highlighter-rouge">MovieListing</code> và <code class="language-plaintext highlighter-rouge">TicketBooking</code>. Khi thêm chức năng mới, người dùng phải học cách sử dụng nhiều hệ thống con hơn, mỗi hệ thống có giao diện và cách thức hoạt động khác nhau.</p>
+
+<p>Quy trình làm việc trở nên phức tạp hơn với các bước đặt vé, chọn ghế, thanh toán, gửi thông báo, và áp dụng ưu đãi thành viên. Mỗi giao dịch yêu cầu tương tác với nhiều hệ thống con, tăng khả năng xảy ra sai sót và làm giảm tốc độ phục vụ. Điều này cũng làm tăng khó khăn trong quản lý và bảo trì hệ thống, đồng thời yêu cầu đào tạo và hỗ trợ nhân viên một cách liên tục.</p>
+
+<p>Tóm lại, sự phức tạp tăng lên không chỉ ảnh hưởng đến người dùng cuối mà còn đặt gánh nặng lên nhân viên và quản lý hệ thống. Đây chính là thách thức mà Facade Pattern có thể giải quyết, giúp đơn giản hóa quy trình bằng cách cung cấp một giao diện thống nhất, giảm thiểu sự phức tạp và cải thiện hiệu quả tổng thể của hệ thống.</p>
+
+<h2 id="giái-pháp">Giái pháp</h2>
+
+<p>Để giải quyết những thách thức trong quản lý rạp chiếu phim, chúng ta có thể sử dụng Facade Pattern. Mô hình này tạo ra một giao diện đơn giản, giúp truy cập dễ dàng vào các hệ thống phụ trợ khác nhau, giảm bớt sự phức tạp và nâng cao trải nghiệm người dùng. Cách thức áp dụng Facade Pattern như sau:</p>
+
+<ol>
+  <li>
+    <p><strong>Tạo Lớp Facade</strong>: Chúng ta xây dựng một lớp <code class="language-plaintext highlighter-rouge">CinemaFacade</code>, hoạt động như một trung tâm liên kết, điều phối các tương tác giữa người dùng và chức năng của hệ thống.</p>
+  </li>
+  <li>
+    <p><strong>Tích Hợp Dịch Vụ</strong>: <code class="language-plaintext highlighter-rouge">CinemaFacade</code> sẽ kết nối với các dịch vụ như <code class="language-plaintext highlighter-rouge">MovieListing</code>, <code class="language-plaintext highlighter-rouge">TicketBooking</code>, <code class="language-plaintext highlighter-rouge">SeatManagement</code>, <code class="language-plaintext highlighter-rouge">PaymentService</code>, <code class="language-plaintext highlighter-rouge">NotificationService</code>, và <code class="language-plaintext highlighter-rouge">MembershipService</code>. Mục đích là che giấu những chi tiết kỹ thuật phức tạp, cung cấp một giao diện sử dụng đơn giản cho người dùng.</p>
+  </li>
+  <li>
+    <p><strong>Đơn Giản Hóa Giao Diện Người Dùng</strong>: Người dùng không cần phải hiểu sâu về từng hệ thống phụ trợ. Thay vào đó, họ chỉ cần tương tác với <code class="language-plaintext highlighter-rouge">CinemaFacade</code>. Ví dụ, khi đặt vé, người dùng chỉ cần sử dụng một phương thức trên <code class="language-plaintext highlighter-rouge">CinemaFacade</code>, và các bước như chọn ghế, thanh toán, thông báo sẽ được tự động xử lý bên trong.</p>
+  </li>
+</ol>
+
+<pre><code class="language-mermaid">classDiagram
+    class CinemaFacade {
+        +listMovies()
+        +bookCompleteTicket()
+    }
+
+    class MovieListing {
+        +getMovies()
+    }
+
+    class TicketBooking {
+        +bookTicket()
+    }
+
+    class SeatManagement {
+        +selectSeat()
+    }
+
+    class PaymentService {
+        +processPayment()
+    }
+
+    class NotificationService {
+        +sendNotification()
+    }
+
+    class MembershipService {
+        +applyDiscount()
+    }
+
+    CinemaFacade --&gt; MovieListing : uses
+    CinemaFacade --&gt; TicketBooking : uses
+    CinemaFacade --&gt; SeatManagement : uses
+    CinemaFacade --&gt; PaymentService : uses
+    CinemaFacade --&gt; NotificationService : uses
+    CinemaFacade --&gt; MembershipService : uses
+</code></pre>
+
+<p>Sơ đồ trên đây minh họa cách <code class="language-plaintext highlighter-rouge">CinemaFacade</code> tích hợp vào hệ thống, đơn giản hóa quy trình làm việc và tạo điều kiện thuận lợi cho người dùng. Mô hình này không chỉ làm giảm độ phức tạp mà còn tăng hiệu quả hoạt động của hệ thống, giảm thiểu lỗi và cải thiện tốc độ phục vụ.</p>
+
+<h2 id="cấu-trúc">Cấu Trúc</h2>
+
+<pre><code class="language-mermaid">classDiagram
+    class Facade {
+        +operation()
+    }
+    class Subsystem1 {
+        +operation1()
+    }
+    class Subsystem2 {
+        +operation2()
+    }
+    class Subsystem3 {
+        +operation3()
+    }
+    class Client
+    
+    Client --&gt; Facade: uses
+    Facade --&gt; Subsystem1: delegates
+    Facade --&gt; Subsystem2: delegates
+    Facade --&gt; Subsystem3: delegates
+</code></pre>
+
+<h3 id="các-thành-phần">Các Thành Phần</h3>
+
+<ol>
+  <li>
+    <p><strong>Facade</strong>: Một lớp duy nhất đóng vai trò là giao diện chính cho hệ thống con phức tạp. Facade biết chức năng nào của hệ thống con cần được kích hoạt để xử lý yêu cầu.</p>
+  </li>
+  <li>
+    <p><strong>Hệ thống con (Subsystems)</strong>: Các lớp cấu thành hệ thống, mỗi lớp cung cấp chức năng đặc biệt. Chúng có thể làm việc độc lập hoặc tương tác với nhau.</p>
+  </li>
+</ol>
+
+<h3 id="tổ-chức-và-tương-tác">Tổ Chức và Tương Tác</h3>
+
+<ul>
+  <li><strong>Facade</strong> cung cấp một giao diện đơn giản đến một hoặc nhiều hệ thống con phức tạp. Khi một yêu cầu đến từ client, Facade sẽ xác định xem cần kích hoạt chức năng nào từ hệ thống con để xử lý yêu cầu đó.</li>
+  <li><strong>Hệ thống con</strong> không biết về sự tồn tại của Facade; chúng xử lý các nhiệm vụ được giao mà không cần biết liệu yêu cầu đến từ Facade hay trực tiếp từ client.</li>
+  <li>Facade có thể chọn một hoặc nhiều chức năng từ mỗi hệ thống con để hoàn thành yêu cầu, giúp giảm sự phức tạp và tương tác trực tiếp mà client cần thực hiện với hệ thống.</li>
+</ul>
+
+<h2 id="ví-dụ-áp-dụng-facede">Ví dụ áp dụng Facede</h2>
+
+<p>Trong ví dụ này, chúng ta xem xét một ứng dụng mua sắm trực tuyến, nơi mà người dùng cần thực hiện nhiều bước để mua một sản phẩm: đăng nhập, thanh toán, vận chuyển, và nhận thông báo. Mỗi bước này được xử lý bởi một service riêng biệt (LoginService, PayService, ShipService, NotiService). ShopFacade được tạo ra như một lớp facade, cung cấp một phương thức đơn giản để xử lý tất cả các bước này, giúp người dùng không cần trực tiếp tương tác với từng service.</p>
+
+<h3 id="sơ-đồ">Sơ đồ</h3>
+
+<pre><code class="language-mermaid">classDiagram
+    class ShopFacade {
+        +buyProductByMoMoWithGrabShipping(String name)
+        +buyProductByPayPalWithNinjaVanShipping(String name)
+    }
+    class LoginService {
+        +loginFB(String userName)
+        +loginYoutube(String userName)
+        +loginGithub(String userName)
+    }
+    class PayService {
+        +payByPayPal()
+        +payByMoMo()
+        +payByDebitCash()
+    }
+    class ShipService {
+        +nowShip()
+        +grabShip()
+        +ninjaVanShip()
+    }
+    class NotiService {
+        +NotificationSMS()
+        +NotificationGmail()
+    }
+
+    ShopFacade --&gt; LoginService
+    ShopFacade --&gt; PayService
+    ShopFacade --&gt; ShipService
+    ShopFacade --&gt; NotiService
+
+</code></pre>
+
+<p>Sơ đồ này thể hiện mối quan hệ giữa ShopFacade và các service khác nhau. ShopFacade đóng vai trò trung gian, gọi đến các phương thức cần thiết của các service khác.</p>
+
+<h4 id="ví-dụ-code">Ví dụ Code</h4>
+
+<p>LoginService.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoginService</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">loginFB</span><span class="o">(</span><span class="nc">String</span> <span class="n">userName</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">userName</span> <span class="o">+</span> <span class="s">"Login Facebook"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">loginYoutube</span><span class="o">(</span><span class="nc">String</span> <span class="n">userName</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">userName</span> <span class="o">+</span> <span class="s">"Login Youtube"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">loginGithub</span><span class="o">(</span><span class="nc">String</span> <span class="n">userName</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">userName</span> <span class="o">+</span> <span class="s">"Login Github"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>PayService.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">PayService</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">payByPayPal</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Pay by PayPal"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">payByMoMo</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Pay by MoMo"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">payByDebitCash</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Pay by Debit Cash"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>ShipService.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ShipService</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">nowShip</span><span class="o">()</span>
+    <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Now Ship"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">grabShip</span><span class="o">()</span>
+    <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Grab Ship"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">ninjaVanShip</span><span class="o">()</span>
+    <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Ninja Van Ship"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>NotiService.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">NotiService</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">NotificationSMS</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Notification SMS"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">NotificationGmail</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Notification Gmail"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>ShopFacade.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ShopFacade</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="nc">LoginService</span> <span class="n">loginService</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">PayService</span> <span class="n">payService</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">ShipService</span> <span class="n">shipService</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">NotiService</span> <span class="n">notiService</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">ShopFacade</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">loginService</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">LoginService</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">payService</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">PayService</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">shipService</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ShipService</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">notiService</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">NotiService</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">buyProductByMoMoWithGrabShipping</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">loginService</span><span class="o">.</span><span class="na">loginFB</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="n">payService</span><span class="o">.</span><span class="na">payByMoMo</span><span class="o">();</span>
+        <span class="n">shipService</span><span class="o">.</span><span class="na">grabShip</span><span class="o">();</span>
+        <span class="n">notiService</span><span class="o">.</span><span class="na">NotificationSMS</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">buyProductByPayPalWithNinjaVanShipping</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">loginService</span><span class="o">.</span><span class="na">loginGithub</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="n">payService</span><span class="o">.</span><span class="na">payByPayPal</span><span class="o">();</span>
+        <span class="n">shipService</span><span class="o">.</span><span class="na">ninjaVanShip</span><span class="o">();</span>
+        <span class="n">notiService</span><span class="o">.</span><span class="na">NotificationGmail</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Demo.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Demo</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">ShopFacade</span> <span class="n">shopFacade</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ShopFacade</span><span class="o">();</span>
+        <span class="n">shopFacade</span><span class="o">.</span><span class="na">buyProductByMoMoWithGrabShipping</span><span class="o">(</span><span class="s">"Nick"</span><span class="o">);</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+        <span class="n">shopFacade</span><span class="o">.</span><span class="na">buyProductByPayPalWithNinjaVanShipping</span><span class="o">(</span><span class="s">"Nick"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Kết quả</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NickLogin Facebook
+Pay by MoMo
+Grab Ship
+Notification SMS
+
+NickLogin Github
+Pay by PayPal
+Ninja Van Ship
+Notification Gmail
+</code></pre></div></div>
+
+<h2 id="khi-nào-áp-dụng">Khi nào áp dụng</h2>
+
+<p>Mẫu Facade đặc biệt hữu ích trong các tình huống mà một hệ thống rất phức tạp hoặc khó hiểu do có số lượng lớn các lớp phụ thuộc hoặc dựa trên mã legacy. Trong những trường hợp như vậy, Facade có thể cung cấp một giao diện đơn giản cho một lượng lớn mã, che giấu sự phức tạp của nó. Điều này đặc biệt có lợi khi có nhiều điểm nhập vào hệ thống phụ, và những điểm nhập này dễ bị lạm dụng bởi mã client. Mẫu này ít hữu dụng hơn khi hệ thống phần mềm đã được modular hóa tốt hoặc khi client cần sử dụng một phần lớn chức năng của hệ thống phụ một cách trực tiếp, vì Facade có thể trở nên thừa thãi hoặc quá hạn chế trong những tình huống như vậy.</p>]]></content><author><name>hondanho</name></author><category term="design-pattern/structural-patterns" /><summary type="html"><![CDATA[Khái Niệm]]></summary></entry><entry><title type="html">Composite Pattern</title><link href="http://localhost:4000/design-pattern/structural-patterns/composite" rel="alternate" type="text/html" title="Composite Pattern" /><published>2024-08-23T00:00:00+07:00</published><updated>2024-08-23T00:00:00+07:00</updated><id>http://localhost:4000/design-pattern/structural-patterns/composite</id><content type="html" xml:base="http://localhost:4000/design-pattern/structural-patterns/composite"><![CDATA[<h2 id="giới-thiệu">Giới thiệu</h2>
+
+<h3 id="định-nghĩa-pattern">Định nghĩa Pattern</h3>
+<p>Composite Pattern là một mẫu thiết kế thuộc nhóm cấu trúc, được sử dụng để tổ chức các đối tượng vào một cấu trúc cây. Mẫu thiết kế này tạo ra một hệ thống phân cấp cho phép người dùng xử lý các đối tượng đơn lẻ và tổ hợp của chúng một cách thống nhất.</p>
+
+<h3 id="mục-đích">Mục đích</h3>
+<p>Mục đích chính của Composite Pattern là đơn giản hóa quá trình làm việc với các cấu trúc phức tạp bằng cách cho phép client tương tác với các đối tượng đơn lẻ và tổ hợp theo cùng một cách. Điều này giúp giảm thiểu sự phức tạp khi quản lý và tương tác với cấu trúc cây, làm cho mã nguồn dễ bảo trì và mở rộng hơn.</p>
+
+<h3 id="ý-tưởng-chính-của-pattern">Ý tưởng chính của Pattern</h3>
+<p>Ý tưởng cốt lõi của Composite Pattern nằm ở việc cung cấp một interface chung cho cả hai loại đối tượng: đơn lẻ và tổ hợp. Interface này cho phép client tương tác với mỗi đối tượng một cách riêng lẻ hoặc nhóm các đối tượng lại với nhau như một thể thống nhất mà không cần quan tâm đến đặc điểm nội tại của chúng. Kết quả là, client có thể thêm, xóa hoặc thay đổi các đối tượng trong cấu trúc cây một cách linh hoạt mà không cần viết lại code hoặc hiểu biết sâu sắc về cấu trúc nội bộ.</p>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p>Khi sử Composite Pattern bạn phải chắc chắn rằng mô hình ứng dụng của bạn có thể biểu hiện bằng sơ đồ cây.</p>
+
+<p>Ví dụ như sau: Trong việc lưu trữ trong máy tính có hai dạng chính: <code class="language-plaintext highlighter-rouge">Folder</code> và <code class="language-plaintext highlighter-rouge">File</code>. Một <code class="language-plaintext highlighter-rouge">Folder</code> thì có thể chứa nhiều <code class="language-plaintext highlighter-rouge">Folder</code> và <code class="language-plaintext highlighter-rouge">File</code>. Có thể một trong <code class="language-plaintext highlighter-rouge">Folder</code> chỉ chứa <code class="language-plaintext highlighter-rouge">File</code> và trong <code class="language-plaintext highlighter-rouge">File</code> thì chứa nội dụng.</p>
+
+<pre><code class="language-mermaid">graph TB
+    id1(Folder)
+    id2(Folder)
+    id3(Folder)
+    id4(File)
+    id5(File)
+    id6(File)
+    id7(File)
+    id1 --&gt; id2
+    id1 --&gt; id3
+    id1 --&gt; id4
+    id2 --&gt; id5
+    id3 --&gt; id6
+    id3 --&gt; id7
+
+    subgraph traditional_approach
+    id1 --&gt; id2
+    id2 --&gt; id5
+    id1 --&gt; id4
+    id1 --&gt; id3
+    id3 --&gt; id6
+    id3 --&gt; id7
+    end
+</code></pre>
+
+<p>Giờ giả sử ta cần tìm tất cả File trong một Folder. Thử cách tiếp cận thông thường là ta sẽ mở từng Folder con ra và đếm xem co bao nhiêu File vào Folder tiếp theo đếm tiếp. Nhưng trong lập trình nó không hề đơn giản như việc bạn chỉ cần chạy một dòng for. Bạn phải biết trước loại  File và Folder mà sẽ duyệt và mực đồ lòng vào nhau. Tất cả điều đó làm cho cách tiếp cận này trở nên khó khăn hơn.</p>
+
+<h2 id="giải-pháp">Giải pháp</h2>
+
+<p>Chúng ta sẽ sử chung Composite Pattern để thực hiện công việc với Folder và File bằng cách tạo một interrface chung với một phương thức count(Đếm)</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class Component {
+        +count() int
+    }
+
+    class File {
+        +count() int
+    }
+
+    class Folder {
+        +List~Component~ children
+        +count() int
+        +add(component Component) void
+        +remove(component Component) void
+    }
+
+    Component &lt;|-- File: is a
+    Component &lt;|-- Folder: is a
+    Folder "1" *-- "*" Component: contains
+</code></pre>
+
+<p>Cái này hoạt động như sau. Đối với File thì chỉ trả về cộng một, Đối với Folder thì nó sẽ duyệt từng item trong Folder đó, bắt từng item đếm sau cùng tới lượt nó tổng hợp lại và trả về tổng số của Folder. Nếu một các item là Folder thì sao? Thì nó sẽ bắt Folder con đó đi đếm các thành item nằm trong Folder con và trả về tổng số.</p>
+
+<p>Nói đến đây các bạn sẽ nói, ô đây là “Rùa Em” (Đệ Quy). Nhưng với Composite nó sẽ có hiệu quả gì ? Nó sẽ giúp bạn làm việc với các thành phần một cách dể dàng, chỉ cần thông qua interface mà không phải xử lý rác rối sâu đến bên trong. Nhưng lời kêu gọi của bạn sẽ được xử lý chạy dần xuống theo cấu trúc cây.</p>
+
+<h2 id="cấu-trúc">Cấu Trúc</h2>
+
+<pre><code class="language-mermaid">classDiagram
+  class Component {
+    +operation()
+  }
+
+  class Leaf {
+    +operation()
+  }
+
+  class Composite {
+    -children List
+    +operation()
+    +add(Component)
+    +remove(Component)
+    +getChild(int)
+  }
+
+  Component &lt;|-- Leaf : Is a
+  Component &lt;|-- Composite : Is a
+  Composite "1" *-- "many" Component : Contains
+
+  class Component {
+      &lt;&lt;interface&gt;&gt;
+      +operation()
+  }
+</code></pre>
+
+<ul>
+  <li><strong>Component</strong>: interface chung, mô ta các phương thức chung của thành phần trong cây.</li>
+  <li><strong>Leaf</strong>:  Đây là thành phần cơ bản của cây, nó không có các node con.</li>
+  <li><strong>Composite</strong>: lưu trữ tập hợp các Leaf và cài đặt các phương thức của Component.</li>
+</ul>
+
+<h2 id="cách-triển-khai">Cách triển khai</h2>
+
+<h3 id="bước-1-xây-dựng-component"><strong>Bước 1: Xây dựng Component</strong></h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Component</span> <span class="o">{</span>
+    <span class="kd">protected</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+    
+    <span class="kd">public</span> <span class="nf">Component</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+    
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="nc">Component</span> <span class="n">component</span><span class="o">);</span>
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">(</span><span class="nc">Component</span> <span class="n">component</span><span class="o">);</span>
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">display</span><span class="o">(</span><span class="kt">int</span> <span class="n">depth</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="bước-2-xây-dựng-leaf"><strong>Bước 2: Xây dựng Leaf</strong></h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Leaf</span> <span class="kd">extends</span> <span class="nc">Component</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">Leaf</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="nc">Component</span> <span class="n">component</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Không thực hiện bất cứ điều gì</span>
+    <span class="o">}</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">(</span><span class="nc">Component</span> <span class="n">component</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Không thực hiện bất cứ điều gì</span>
+    <span class="o">}</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">display</span><span class="o">(</span><span class="kt">int</span> <span class="n">depth</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"-"</span><span class="o">.</span><span class="na">repeat</span><span class="o">(</span><span class="n">depth</span><span class="o">)</span> <span class="o">+</span> <span class="n">name</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="bước-3-xây-dựng-composite"><strong>Bước 3: Xây dựng Composite</strong></h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Composite</span> <span class="kd">extends</span> <span class="nc">Component</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Component</span><span class="o">&gt;</span> <span class="n">children</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+
+    <span class="kd">public</span> <span class="nf">Composite</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="nc">Component</span> <span class="n">component</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">children</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">component</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">(</span><span class="nc">Component</span> <span class="n">component</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">children</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">component</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">display</span><span class="o">(</span><span class="kt">int</span> <span class="n">depth</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"-"</span><span class="o">.</span><span class="na">repeat</span><span class="o">(</span><span class="n">depth</span><span class="o">)</span> <span class="o">+</span> <span class="n">name</span><span class="o">);</span>
+        <span class="k">for</span> <span class="o">(</span><span class="nc">Component</span> <span class="n">component</span> <span class="o">:</span> <span class="n">children</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">component</span><span class="o">.</span><span class="na">display</span><span class="o">(</span><span class="n">depth</span> <span class="o">+</span> <span class="mi">2</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="bước-4-sử-dụng-mẫu-composite"><strong>Bước 4: Sử dụng mẫu Composite</strong></h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Composite</span> <span class="n">root</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Composite</span><span class="o">(</span><span class="s">"root"</span><span class="o">);</span>
+        <span class="n">root</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Leaf</span><span class="o">(</span><span class="s">"Leaf A"</span><span class="o">));</span>
+        <span class="n">root</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Leaf</span><span class="o">(</span><span class="s">"Leaf B"</span><span class="o">));</span>
+        
+        <span class="nc">Composite</span> <span class="n">comp</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Composite</span><span class="o">(</span><span class="s">"Composite X"</span><span class="o">);</span>
+        <span class="n">comp</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Leaf</span><span class="o">(</span><span class="s">"Leaf XA"</span><span class="o">));</span>
+        <span class="n">comp</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Leaf</span><span class="o">(</span><span class="s">"Leaf XB"</span><span class="o">));</span>
+        
+        <span class="n">root</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">comp</span><span class="o">);</span>
+        
+        <span class="n">root</span><span class="o">.</span><span class="na">display</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Kết quả:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-root
+--Leaf A
+--Leaf B
+--Composite X
+---Leaf XA
+---Leaf XB
+</code></pre></div></div>
+
+<h2 id="ví-dụ-áp-dụng-composite-pattern">Ví dụ áp dụng Composite Pattern</h2>
+
+<p>Chúng ta làm ví dụ ở trên nhưng thay đối một ít là ta sẽ xem tổng folder có size bao nhiêu</p>
+
+<p>FileComponent.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">interface</span> <span class="nc">FileComponent</span> <span class="p">{</span>
+    <span class="k">fun</span> <span class="nf">showProperty</span><span class="p">()</span>
+    <span class="k">fun</span> <span class="nf">size</span><span class="p">()</span> <span class="p">:</span> <span class="nc">Long</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>FileLeaf.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">FileLeaf</span> <span class="p">:</span> <span class="nc">FileComponent</span> <span class="p">{</span>
+
+    <span class="k">private</span> <span class="kd">var</span> <span class="py">name</span><span class="p">:</span><span class="nc">String</span>
+    <span class="k">private</span> <span class="kd">var</span> <span class="py">size</span><span class="p">:</span><span class="nc">Long</span>
+
+    <span class="k">constructor</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nc">String</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nc">Long</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">name</span> <span class="p">=</span> <span class="n">name</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">size</span> <span class="p">=</span> <span class="n">size</span>
+    <span class="p">}</span>
+
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">showProperty</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nc">System</span><span class="p">.</span><span class="k">out</span><span class="p">.</span><span class="nf">println</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">size</span><span class="p">():</span> <span class="nc">Long</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">size</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>FolderComposite.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">FolderComposite</span> <span class="p">:</span> <span class="nc">FileComponent</span><span class="p">{</span>
+
+    <span class="k">private</span> <span class="kd">var</span> <span class="py">files</span><span class="p">:</span> <span class="nc">List</span><span class="p">&lt;</span><span class="nc">FileComponent</span><span class="p">&gt;</span>
+
+    <span class="k">constructor</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="nc">List</span><span class="p">&lt;</span><span class="nc">FileComponent</span><span class="p">&gt;)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">files</span> <span class="p">=</span> <span class="n">files</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">showProperty</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">file</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="n">files</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">file</span><span class="p">.</span><span class="nf">showProperty</span><span class="p">()</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">size</span><span class="p">():</span> <span class="nc">Long</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="py">total</span> <span class="p">:</span> <span class="nc">Long</span> <span class="p">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">file</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="n">files</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">total</span> <span class="p">+=</span> <span class="n">file</span><span class="p">.</span><span class="nf">size</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">total</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Kết quả</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>file 1
+file 2
+file 3
+Total Size: 27
+</code></pre></div></div>
+
+<h2 id="so-sánh-composite-pattern">So sánh Composite Pattern</h2>
+
+<h3 id="1-composite-vs-adapter">1. Composite vs Adapter:</h3>
+
+<ul>
+  <li><strong>Composite</strong>: Được sử dụng để biểu diễn và quản lý một nhóm đối tượng như một đối tượng đơn lẻ.</li>
+  <li><strong>Adapter</strong>: Được sử dụng để cho phép hai interfaces không tương thích có thể làm việc cùng nhau mà không cần phải sửa đổi bất kỳ lớp nào.</li>
+</ul>
+
+<h3 id="2-composite-vs-decorator">2. Composite vs Decorator:</h3>
+
+<ul>
+  <li><strong>Composite</strong>: Tập trung vào việc tạo ra cấu trúc dạng cây, nơi một nhóm đối tượng và đối tượng đơn lẻ có thể được xử lý theo cùng một cách.</li>
+  <li><strong>Decorator</strong>: Mục tiêu là mở rộng chức năng của một đối tượng mà không cần sửa đổi chúng.</li>
+</ul>
+
+<h3 id="3-composite-vs-facade">3. Composite vs Facade:</h3>
+
+<ul>
+  <li><strong>Composite</strong>: Xây dựng một cấu trúc dạng cây và làm việc với một nhóm đối tượng giống như một đối tượng duy nhất.</li>
+  <li><strong>Facade</strong>: Cung cấp một giao diện đơn giản hoá cho một hệ thống phức tạp, giúp giảm sự phức tạp của việc gọi đến các API hoặc hệ thống phức tạp.</li>
+</ul>
+
+<h3 id="4-composite-vs-proxy">4. Composite vs Proxy:</h3>
+
+<ul>
+  <li><strong>Composite</strong>: Biểu diễn và quản lý một nhóm đối tượng dưới dạng cấu trúc cây.</li>
+  <li><strong>Proxy</strong>: Đại diện cho một đối tượng khác và kiểm soát việc truy cập đến đối tượng đó, thường được sử dụng để điều khiển quyền truy cập hoặc tối ưu hóa việc tạo đối tượng.</li>
+</ul>
+
+<h3 id="kết-luận">Kết luận</h3>
+
+<p>Composite Pattern là một mẫu thiết kế hữu ích để xây dựng và quản lý cấu trúc phân cấp dưới dạng cây của các đối tượng. Nó cho phép chúng ta làm việc với một nhóm đối tượng như một đối tượng đơn lẻ, mang lại khả năng tổ chức và quản lý phân cấp một cách linh hoạt và thuận tiện.</p>
+
+<h4 id="ưu-điểm">Ưu điểm:</h4>
+<ul>
+  <li><strong>Tích hợp Mạnh</strong>: Composite Pattern giúp tích hợp các đối tượng vào một cấu trúc dạng cây một cách dễ dàng.</li>
+  <li><strong>Linh Hoạt</strong>: Cho phép bạn thêm, xóa hoặc sửa đổi các đối tượng trong cấu trúc một cách linh hoạt mà không làm ảnh hưởng đến toàn bộ cấu trúc.</li>
+  <li><strong>Tính Nhất quán</strong>: Cấu trúc được xây dựng dưới dạng cây giúp việc làm việc với đối tượng đơn lẻ và nhóm đối tượng trở nên nhất quán.</li>
+</ul>
+
+<h4 id="nhược-điểm">Nhược điểm:</h4>
+<ul>
+  <li><strong>Quá mức Tổng quát</strong>: Có thể tạo ra quá nhiều lớp và đối tượng nếu mẫu được sử dụng không cẩn thận.</li>
+</ul>
+
+<h4 id="hướng-dẫn-sử-dụng">Hướng dẫn sử dụng:</h4>
+<ul>
+  <li><strong>Nên sử dụng khi</strong>:
+    <ul>
+      <li>Bạn muốn biểu diễn và quản lý một nhóm đối tượng dưới dạng cấu trúc cây.</li>
+      <li>Cần làm việc với các đối tượng và nhóm đối tượng theo cùng một cách.</li>
+      <li>Muốn cung cấp một giao diện chung cho cả đối tượng đơn lẻ và nhóm đối tượng.</li>
+    </ul>
+  </li>
+  <li><strong>Không nên sử dụng khi</strong>:
+    <ul>
+      <li>Không có nhu cầu xây dựng cấu trúc dạng cây hoặc quản lý các đối tượng dưới dạng phân cấp.</li>
+      <li>Cấu trúc dạng cây có thể trở nên quá phức tạp và không cần thiết cho ứng dụng của bạn.</li>
+    </ul>
+  </li>
+</ul>]]></content><author><name>hondanho</name></author><category term="design-pattern/structural-patterns" /><summary type="html"><![CDATA[Giới thiệu]]></summary></entry><entry><title type="html">Decorator Pattern</title><link href="http://localhost:4000/design-pattern/structural-patterns/decorator" rel="alternate" type="text/html" title="Decorator Pattern" /><published>2024-08-23T00:00:00+07:00</published><updated>2024-08-23T00:00:00+07:00</updated><id>http://localhost:4000/design-pattern/structural-patterns/decorator</id><content type="html" xml:base="http://localhost:4000/design-pattern/structural-patterns/decorator"><![CDATA[<h2 id="khái-niệm">Khái Niệm</h2>
+
+<p>Trong lập trình, việc mở rộng chức năng của một hệ thống mà không làm rối loạn cấu trúc hiện có là một thách thức đáng kể. <strong>Decorator Pattern</strong>, một trong những mẫu thiết kế cấu trúc quan trọng, xuất hiện như một giải pháp linh hoạt cho vấn đề này. Pattern này cho phép chúng ta “trang trí” thêm hành vi cho đối tượng mà không cần thay đổi cấu trúc nội tại của chúng, hỗ trợ mở rộng chức năng mà vẫn tuân thủ nguyên tắc đóng mở (Open/Closed Principle).</p>
+
+<h3 id="tổng-quan">Tổng quan</h3>
+
+<ul>
+  <li>
+    <p><strong>Định Nghĩa của Pattern</strong>: Decorator Pattern cho phép thêm các tính năng mới cho một đối tượng thông qua một lớp trang trí, mà không cần sửa đổi lớp đó.</p>
+  </li>
+  <li>
+    <p><strong>Mục Đích</strong>: Mẫu thiết kế này hữu ích khi cần mở rộng chức năng đối tượng mà không ảnh hưởng đến các đối tượng khác.</p>
+  </li>
+  <li>
+    <p><strong>Ý Tưởng Cốt Lõi</strong>: Bằng cách sử dụng thành phần (composition), Decorator Pattern thêm “vỏ bọc” cho đối tượng cơ bản, cung cấp hành vi thêm vào và có thể thay đổi tại runtime.</p>
+  </li>
+</ul>
+
+<h2 id="đặt-vấn-đề">Đặt Vấn Đề</h2>
+
+<p>Hãy tưởng tượng bạn có một lớp Notifier, chuyên trách gửi thông báo qua email. Khi người dùng muốn thêm tính năng thông báo qua SMS, Facebook, và thậm chí là Slack, việc tiếp tục tạo thêm và kế thừa từ lớp Notifier ban đầu dường như là một giải pháp đơn giản.</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class Notifier {
+        +sendMail()
+    }
+
+    class SMSNotifier {
+        +sendSMS()
+    }
+
+    class FacebookNotifier {
+        +sendFacebookMessage()
+    }
+
+    class SlackNotifier {
+        +sendSlackMessage()
+    }
+
+    Notifier &lt;|-- SMSNotifier
+    Notifier &lt;|-- FacebookNotifier
+    Notifier &lt;|-- SlackNotifier
+</code></pre>
+
+<p>Tuy nhiên, khi nhu cầu thông báo trở nên đa dạng và phức tạp hơn, việc quản lý số lượng lớn các lớp con trở nên khó khăn và không hiệu quả. Đặc biệt là khi người dùng cần kết hợp nhiều hình thức thông báo cùng một lúc, cấu trúc mã nguồn có thể trở nên cồng kềnh và khó bảo trì.</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class Notifier {
+        +send()
+    }
+
+    class MailNotifier {
+        +send()
+    }
+
+    class SMSNotifier {
+        +send()
+    }
+
+    class FacebookNotifier {
+        +send()
+    }
+
+    class SlackNotifier {
+        +send()
+    }
+
+    class SMSFacebookNotifier {
+        +send()
+    }
+
+    class SMSSlackNotifier {
+        +send()
+    }
+
+    class FacebookSlackNotifier {
+        +send()
+    }
+
+    class SMSFacebookSlackNotifier {
+        +send()
+    }
+
+    Notifier &lt;|-- MailNotifier
+    Notifier &lt;|-- SMSNotifier
+    Notifier &lt;|-- FacebookNotifier
+    Notifier &lt;|-- SlackNotifier
+    Notifier &lt;|-- SMSFacebookNotifier
+    Notifier &lt;|-- SMSSlackNotifier
+    Notifier &lt;|-- FacebookSlackNotifier
+    Notifier &lt;|-- SMSFacebookSlackNotifier
+</code></pre>
+
+<p>Đây là lúc mà Decorator Pattern trở nên quan trọng và thiết thực. Pattern này cho phép chúng ta “trang trí” các đối tượng với các chức năng mới mà không cần phải thay đổi cấu trúc nội tại của chúng, mang lại sự linh hoạt và dễ dàng mở rộng mà không làm ảnh hưởng đến các thành phần khác trong hệ thống.</p>
+
+<h2 id="giải-pháp">Giải pháp</h2>
+
+<p>Để giải quyết vấn đề mở rộng chức năng một cách hiệu quả, Decorator Pattern cung cấp một giải pháp linh hoạt. Thay vì tạo ra một loạt các lớp con, mỗi lớp với một chức năng cụ thể, chúng ta có thể sử dụng mô hình “trang trí” này để bổ sung chức năng mới.</p>
+
+<p>Xét về trường hợp thêm chức năng SMS, Decorator Pattern cho phép chúng ta “bọc” đối tượng <code class="language-plaintext highlighter-rouge">Notifier</code> ban đầu trong một lớp <code class="language-plaintext highlighter-rouge">NotifierDecorator</code>, sau đó thêm một lớp <code class="language-plaintext highlighter-rouge">SMSDecorator</code> bổ sung chức năng gửi SMS. <code class="language-plaintext highlighter-rouge">SMSDecorator</code> sẽ không thay thế lớp <code class="language-plaintext highlighter-rouge">Notifier</code> gốc mà là mở rộng chức năng của nó. Khi phương thức <code class="language-plaintext highlighter-rouge">send()</code> được gọi trên <code class="language-plaintext highlighter-rouge">SMSDecorator</code>, nó sẽ thực hiện cả hành động gửi email thông qua <code class="language-plaintext highlighter-rouge">Notifier</code> gốc cùng với việc gửi tin nhắn SMS mới được thêm vào.</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class Notifier {
+        +send()
+    }
+
+    class NotifierDecorator {
+        -wrappedNotifier Notifier
+        +send()
+    }
+
+    class SMSDecorator {
+        -wrappedNotifier NotifierDecorator
+        +send()
+    }
+
+    Notifier &lt;|-- NotifierDecorator : Decorates
+    NotifierDecorator &lt;|-- SMSDecorator : Decorates
+</code></pre>
+
+<p>Mô hình này không chỉ đơn giản hóa quá trình quản lý mã nguồn bằng cách giảm thiểu số lượng lớp cần phải xử lý, mà còn cung cấp sự linh hoạt để dễ dàng thêm hoặc bớt các “vỏ bọc” mà không ảnh hưởng tới hệ thống hiện có.</p>
+
+<p>Hãy xem xét một ví dụ cụ thể về việc áp dụng Decorator Pattern:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Interface chung cho tất cả các thông báo</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Notifier</span> <span class="o">{</span>
+    <span class="kt">void</span> <span class="nf">send</span><span class="o">(</span><span class="nc">String</span> <span class="n">message</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="c1">// Lớp cơ bản thực hiện việc gửi thông báo qua email</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">EmailNotifier</span> <span class="kd">implements</span> <span class="nc">Notifier</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">send</span><span class="o">(</span><span class="nc">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Gửi thông báo qua email</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Decorator cơ bản</span>
+<span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">NotifierDecorator</span> <span class="kd">implements</span> <span class="nc">Notifier</span> <span class="o">{</span>
+    <span class="kd">protected</span> <span class="nc">Notifier</span> <span class="n">wrappedNotifier</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">NotifierDecorator</span><span class="o">(</span><span class="nc">Notifier</span> <span class="n">notifier</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">wrappedNotifier</span> <span class="o">=</span> <span class="n">notifier</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">send</span><span class="o">(</span><span class="nc">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">wrappedNotifier</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Thêm chức năng gửi SMS vào thông báo</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SMSDecorator</span> <span class="kd">extends</span> <span class="nc">NotifierDecorator</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">SMSDecorator</span><span class="o">(</span><span class="nc">Notifier</span> <span class="n">notifier</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">notifier</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">send</span><span class="o">(</span><span class="nc">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="n">message</span><span class="o">);</span> <span class="c1">// Gửi email</span>
+        <span class="c1">// Thêm mã để gửi SMS ở đây</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Trong ví dụ trên, chúng ta tạo ra một <code class="language-plaintext highlighter-rouge">SMSDecorator</code> mới từ <code class="language-plaintext highlighter-rouge">EmailNotifier</code> và bổ sung chức năng gửi tin nhắn SMS. Khi một thông báo cần được gửi, <code class="language-plaintext highlighter-rouge">SMSDecorator</code> sẽ gọi cả hai phương thức <code class="language-plaintext highlighter-rouge">send()</code> - từ <code class="language-plaintext highlighter-rouge">EmailNotifier</code> và từ mã SMS được thêm vào. Như vậy, Decorator Pattern không chỉ giải quyết vấn đề mở rộng mà còn giữ cho cấu trúc mã nguồn gọn gàng và dễ quản lý.</p>
+
+<p>Sự linh hoạt mà Decorator Pattern cung cấp là một trong những lợi ích chính của nó. Bạn không chỉ có thể thêm các chức năng mới một cách dễ dàng mà còn có thể xóa bỏ hoặc thay thế chúng mà không cần phải sửa đổi các lớp đã tồn tại. Điều này làm giảm đáng kể nguy cơ phá vỡ hệ thống hiện tại khi mở rộng hoặc cập nhật chức năng.</p>
+
+<p>Tuy nhiên, việc áp dụng Decorator Pattern cũng đòi hỏi phải cân nhắc một cách cẩn thận. Mỗi “vỏ bọc” mới thêm vào có thể làm tăng độ phức tạp của quá trình debug và theo dõi mã nguồn, đặc biệt là khi có nhiều lớp trang trí được áp dụng cùng một lúc. Đồng thời, cần phải đảm bảo rằng mọi thành viên trong đội ngũ phát triển đều hiểu rõ về pattern này để có thể sử dụng nó một cách hiệu quả.</p>
+
+<h3 id="cấu-trúc-decorator-pattern">Cấu Trúc Decorator Pattern</h3>
+
+<pre><code class="language-mermaid">classDiagram
+  class Component {
+    +operation()
+  }
+
+  class ConcreteComponent {
+    +operation()
+  }
+
+  class Decorator {
+    -component : Component
+    +operation()
+  }
+
+  class ConcreteDecoratorA {
+    +operation()
+  }
+
+  class ConcreteDecoratorB {
+    +operation()
+  }
+
+  Component &lt;|.. ConcreteComponent
+  Component &lt;|.. Decorator
+  Decorator &lt;|-- ConcreteDecoratorA
+  Decorator &lt;|-- ConcreteDecoratorB
+  Decorator "1" *-- "1" Component : contains
+</code></pre>
+
+<ol>
+  <li>
+    <p><strong>Component</strong>: Đây là interface chung cho tất cả đối tượng, cả cơ bản và trang trí, trong mẫu này. Nó quy định các phương thức chung cần có.</p>
+  </li>
+  <li>
+    <p><strong>ConcreteComponent</strong>: Đây là lớp triển khai interface <code class="language-plaintext highlighter-rouge">Component</code>. Nó định nghĩa một đối tượng cơ bản có thể có chức năng được “trang trí” bởi Decorators.</p>
+  </li>
+  <li>
+    <p><strong>Decorator</strong>: Lớp trung gian này nắm giữ một tham chiếu đến một đối tượng <code class="language-plaintext highlighter-rouge">Component</code> và cung cấp giao diện tương tự như <code class="language-plaintext highlighter-rouge">Component</code>. Mục đích của nó là để kế thừa từ lớp <code class="language-plaintext highlighter-rouge">Component</code> và mở rộng chức năng của nó.</p>
+  </li>
+  <li>
+    <p><strong>ConcreteDecorator</strong>: Những lớp này thực hiện việc trang trí cụ thể. Mỗi <code class="language-plaintext highlighter-rouge">ConcreteDecorator</code> thêm các chức năng hoặc trách nhiệm mới cho <code class="language-plaintext highlighter-rouge">Component</code> mà nó trang trí.</p>
+  </li>
+</ol>
+
+<p>Các thành phần này tương tác với nhau như sau: <code class="language-plaintext highlighter-rouge">ConcreteComponent</code> là đối tượng cơ bản được trang trí. <code class="language-plaintext highlighter-rouge">Decorator</code> chứa một tham chiếu đến <code class="language-plaintext highlighter-rouge">Component</code> và định nghĩa giao diện phù hợp với <code class="language-plaintext highlighter-rouge">Component</code>. <code class="language-plaintext highlighter-rouge">ConcreteDecorator</code> thực hiện các phương thức của <code class="language-plaintext highlighter-rouge">Decorator</code> và thêm chức năng mới. Khi một phương thức trong <code class="language-plaintext highlighter-rouge">Decorator</code> được gọi, nó chuyển tiếp yêu cầu đến đối tượng <code class="language-plaintext highlighter-rouge">Component</code> mà nó trang trí, có thể thực hiện thêm các hành động trước hoặc sau khi chuyển tiếp yêu cầu.</p>
+
+<p>Cấu trúc này giúp tạo ra các đối tượng với chức năng mở rộng một cách linh hoạt, mà không làm thay đổi cấu trúc nội tại hoặc mã nguồn của đối tượng gốc.</p>
+
+<h3 id="ví-dụ-áp-dụng-decorator-pattern">Ví dụ Áp Dụng Decorator Pattern</h3>
+
+<p>Hãy xem xét một ví dụ khác về Decorator Pattern, lần này trong một ngữ cảnh khác: một ứng dụng quản lý cà phê. Trong ví dụ này, chúng ta có một lớp cơ bản <code class="language-plaintext highlighter-rouge">Coffee</code> cùng với một số lớp trang trí (decorators) như <code class="language-plaintext highlighter-rouge">MilkDecorator</code>, <code class="language-plaintext highlighter-rouge">SugarDecorator</code>, và <code class="language-plaintext highlighter-rouge">WhipDecorator</code> để thêm các thành phần khác nhau vào cà phê.</p>
+
+<p>Cấu trúc cơ bản của <code class="language-plaintext highlighter-rouge">Coffee</code> được xác định như sau:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">interface</span> <span class="nc">Coffee</span> <span class="o">{</span>
+    <span class="nc">String</span> <span class="nf">getDescription</span><span class="o">();</span>
+    <span class="kt">double</span> <span class="nf">getCost</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">SimpleCoffee</span> <span class="kd">implements</span> <span class="nc">Coffee</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">"Simple Coffee"</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getCost</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="mf">2.0</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Chúng ta tiếp tục với việc tạo các lớp trang trí:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">CoffeeDecorator</span> <span class="kd">implements</span> <span class="nc">Coffee</span> <span class="o">{</span>
+    <span class="kd">protected</span> <span class="nc">Coffee</span> <span class="n">decoratedCoffee</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">CoffeeDecorator</span><span class="o">(</span><span class="nc">Coffee</span> <span class="n">coffee</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">decoratedCoffee</span> <span class="o">=</span> <span class="n">coffee</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">decoratedCoffee</span><span class="o">.</span><span class="na">getDescription</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getCost</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">decoratedCoffee</span><span class="o">.</span><span class="na">getCost</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">MilkDecorator</span> <span class="kd">extends</span> <span class="nc">CoffeeDecorator</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">MilkDecorator</span><span class="o">(</span><span class="nc">Coffee</span> <span class="n">coffee</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">coffee</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()</span> <span class="o">+</span> <span class="s">", Milk"</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getCost</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">getCost</span><span class="o">()</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">SugarDecorator</span> <span class="kd">extends</span> <span class="nc">CoffeeDecorator</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">SugarDecorator</span><span class="o">(</span><span class="nc">Coffee</span> <span class="n">coffee</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">coffee</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()</span> <span class="o">+</span> <span class="s">", Sugar"</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getCost</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">getCost</span><span class="o">()</span> <span class="o">+</span> <span class="mf">0.2</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Cuối cùng, chúng ta sử dụng Decorator Pattern để tạo một ly cà phê theo yêu cầu:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CoffeeShop</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Coffee</span> <span class="n">myCoffee</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SimpleCoffee</span><span class="o">();</span>
+        <span class="n">myCoffee</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MilkDecorator</span><span class="o">(</span><span class="n">myCoffee</span><span class="o">);</span>
+        <span class="n">myCoffee</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SugarDecorator</span><span class="o">(</span><span class="n">myCoffee</span><span class="o">);</span>
+
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Description: "</span> <span class="o">+</span> <span class="n">myCoffee</span><span class="o">.</span><span class="na">getDescription</span><span class="o">());</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Cost: $"</span> <span class="o">+</span> <span class="n">myCoffee</span><span class="o">.</span><span class="na">getCost</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Kết quả:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Description: Simple Coffee, Milk, Sugar
+Cost: $2.7
+</code></pre></div></div>
+
+<p>Trong ví dụ này, Decorator Pattern cho phép chúng ta thêm hoặc thay đổi chức năng của các đối tượng <code class="language-plaintext highlighter-rouge">Coffee</code> mà không cần thay đổi cấu trúc của lớp cơ bản. Điều này cung cấp sự linh hoạt tối đa trong việc tạo ra các biến thể của sản phẩm mà không phải viết lại mã nguồn hay tạo ra nhiều lớp con khác nhau.</p>
+<h2 id="so-sánh">So sánh</h2>
+
+<h3 id="điểm-nổi-bật-và-điểm-tương-đồng">Điểm nổi bật và Điểm tương đồng</h3>
+
+<ul>
+  <li>
+    <p>Decorator Pattern nổi bật với khả năng mở rộng chức năng của một đối tượng mà không cần sửa đổi lớp gốc. Điều này tạo nên sự linh hoạt đáng kể so với các pattern cấu trúc khác như Singleton hay Factory, mà lại không làm thay đổi cấu trúc tổng thể của hệ thống. Decorator cho phép thêm tính năng mới một cách động mà không cần phụ thuộc vào sự kế thừa, giảm thiểu rủi ro phá vỡ OCP (Open-Closed Principle).</p>
+  </li>
+  <li>
+    <p>Tương tự như Strategy Pattern, Decorator cũng cung cấp tính năng mở rộng, nhưng khác ở chỗ Strategy thay đổi hành vi thông qua việc truyền đối tượng chiến lược vào lớp context, trong khi Decorator thêm chức năng bằng cách “bọc” lớp gốc bằng lớp Decorator. Cả hai đều tuân theo nguyên tắc “composition over inheritance” nhưng với các mục tiêu khác nhau.</p>
+  </li>
+</ul>
+
+<h3 id="khi-nào-áp-dụng">Khi nào Áp dụng</h3>
+
+<ul>
+  <li>
+    <p>Decorator Pattern phù hợp nhất khi bạn cần thêm tính năng cho đối tượng một cách linh hoạt và có thể tháo rời. Nó thích hợp trong các trường hợp cần mở rộng chức năng của một lớp mà không muốn ảnh hưởng đến các đối tượng khác từ cùng một lớp. Nó cũng rất hữu ích trong việc áp dụng nguyên tắc Single Responsibility, khi mỗi Decorator chỉ thêm một chức năng cụ thể.</p>
+  </li>
+  <li>
+    <p>Trong thực tế, khi bạn muốn thay đổi hành vi của một đối tượng tại runtime hoặc khi việc sử dụng kế thừa tạo ra một lượng lớn các lớp con không cần thiết và phức tạp, Decorator là một lựa chọn sáng suốt. Điều này làm cho nó trở nên lý tưởng trong các ứng dụng với yêu cầu cao về sự linh hoạt và mở rộng, như trong các ứng dụng giao diện người dùng hoặc khi xử lý các quy trình với nhiều biến thể.</p>
+  </li>
+</ul>
+
+<h3 id="kết-luận">Kết luận</h3>
+
+<p>Decorator Pattern là một công cụ mạnh mẽ trong việc mở rộng chức năng của các đối tượng mà không cần thay đổi lớp gốc, giúp tuân thủ nguyên tắc Open-Closed. Nó phù hợp nhất khi cần thêm tính năng vào đối tượng một cách linh hoạt, đặc biệt trong các hệ thống mà sự mở rộng liên tục là cần thiết. Tuy nhiên, cần thận trọng để không làm dư thừa hoặc quá phức tạp hóa hệ thống bằng cách sử dụng quá nhiều decorators. Khi cân nhắc sử dụng Decorator Pattern, hãy xem xét mục tiêu cụ thể của dự án và so sánh với các pattern khác như Strategy hoặc Composite để chọn lựa phương án phù hợp nhất cho tình huống cụ thể của bạn.</p>]]></content><author><name>hondanho</name></author><category term="design-pattern/structural-patterns" /><summary type="html"><![CDATA[Khái Niệm]]></summary></entry><entry><title type="html">Bridge Pattern</title><link href="http://localhost:4000/design-pattern/structural-patterns/bridge" rel="alternate" type="text/html" title="Bridge Pattern" /><published>2024-08-23T00:00:00+07:00</published><updated>2024-08-23T00:00:00+07:00</updated><id>http://localhost:4000/design-pattern/structural-patterns/bridge</id><content type="html" xml:base="http://localhost:4000/design-pattern/structural-patterns/bridge"><![CDATA[<h2 id="giới-thiệu">Giới thiệu</h2>
+
+<h3 id="định-nghĩa-pattern">Định nghĩa Pattern</h3>
+
+<p>Bridge Pattern là một mẫu thiết kế thuộc loại cấu trúc. Nó giúp tách rời abstraction (lớp trừu tượng) và implementation (lớp thực thi) ra khỏi nhau, giúp cả hai có thể thay đổi và phát triển một cách độc lập, không làm ảnh hưởng đến nhau.</p>
+
+<h3 id="mục-đích">Mục đích</h3>
+
+<ul>
+  <li>Tách biệt abstraction khỏi implementation để cả hai có thể thay đổi mà không ảnh hưởng đến nhau.</li>
+  <li>Khắc phục vấn đề kết hợp giữa lớp cha và lớp con, giúp giảm sự phức tạp trong thiết kế và giúp mở rộng mã nguồn một cách linh hoạt hơn.</li>
+  <li>Cung cấp khả năng thay thế và tái sử dụng implementation mà không cần sửa đổi code của lớp trừu tượng.</li>
+</ul>
+
+<h3 id="ý-tưởng-chính-của-pattern">Ý tưởng chính của Pattern</h3>
+
+<p>Ý tưởng chính của Bridge Pattern là sử dụng “cầu nối” giữa abstraction và implementation. Thay vì một lớp trừu tượng kiểm soát và mở rộng từ một lớp cụ thể (lớp thực thi), mẫu thiết kế này đề xuất việc tạo ra một interface (cầu nối) giữa chúng. Khi cần mở rộng chức năng, bạn có thể thêm vào phía abstraction mà không ảnh hưởng đến phía implementation và ngược lại. Nhờ có “cầu nối” này, việc thay đổi và phát triển mã nguồn trở nên linh hoạt và ít gặp rủi ro hơn.</p>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p>Hãy tưởng tượng bạn có một lớp <code class="language-plaintext highlighter-rouge">Vehicle</code> với hai subclass là <code class="language-plaintext highlighter-rouge">BicycleBike</code> và <code class="language-plaintext highlighter-rouge">MotorBike</code>. Bây giờ, bạn muốn mở rộng tính năng bằng cách thêm màu sắc cho mỗi loại phương tiện, và bạn tạo ra hai thuộc tính là <code class="language-plaintext highlighter-rouge">Red</code> và <code class="language-plaintext highlighter-rouge">Blue</code>. Với cách tiếp cận này, bạn sẽ phải tạo ra tổng cộng bốn lớp con như <code class="language-plaintext highlighter-rouge">BlueBicycleBike</code> và <code class="language-plaintext highlighter-rouge">RedMotorBike</code>.</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class Vehicle {
+    }
+
+    class BicycleBike {
+    }
+    class MotorBike {
+    }
+
+    class Red {
+    }
+    class Blue {
+    }
+
+    class BlueBicycleBike {
+    }
+    class RedBicycleBike {
+    }
+    class BlueMotorBike {
+    }
+    class RedMotorBike {
+    }
+
+    Vehicle &lt;|-- BicycleBike
+    Vehicle &lt;|-- MotorBike
+
+    BicycleBike &lt;|-- BlueBicycleBike
+    BicycleBike &lt;|-- RedBicycleBike
+    MotorBike &lt;|-- BlueMotorBike
+    MotorBike &lt;|-- RedMotorBike
+
+    Red &lt;--o BlueBicycleBike
+    Red &lt;--o RedBicycleBike
+    Blue &lt;--o BlueMotorBike
+    Blue &lt;--o RedMotorBike
+
+</code></pre>
+
+<p>Khi bạn muốn thêm một loại phương tiện hoặc một màu sắc mới, bạn sẽ cần tạo thêm nhiều lớp con, làm cho hệ thống trở nên phức tạp và khó kiểm soát.</p>
+
+<h2 id="giải-pháp">Giải pháp</h2>
+
+<p>Vấn đề ở đây là chúng ta đang cố gắng tích hợp quá nhiều tính năng vào một lớp trừu tượng, trong khi mỗi tính năng đều có tiềm năng phát triển theo hướng riêng biệt.</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class Vehicle {
+      +Color color
+      +void manage()
+    }
+
+    class Color {
+      +void bePainted()
+    }
+
+    class BicycleBike {
+      +void manage()
+    }
+
+    class MotorBike {
+      +void manage()
+    }
+
+    class Red {
+      +void bePainted()
+    }
+
+    class Blue {
+      +void bePainted()
+    }
+
+    Vehicle &lt;|-- BicycleBike: is a
+    Vehicle &lt;|-- MotorBike: is a
+    Vehicle "1" *-- "1" Color: has a
+    Color &lt;|-- Red: is a
+    Color &lt;|-- Blue: is a
+</code></pre>
+
+<p>Bridge Pattern giải quyết vấn đề này bằng cách tách biệt lớp trừu tượng (abstraction) và các đối tượng thực thi (implementation), sau đó kết nối chúng lại với nhau thông qua một “cầu” (bridge). Trong ví dụ này, một phương tiện sẽ có một thuộc tính màu sắc, tạo ra mối quan hệ “has-a” (có một) thay vì “is-a” (là một).</p>
+
+<h2 id="cấu-trúc">Cấu Trúc</h2>
+
+<pre><code class="language-mermaid">classDiagram
+    class Abstraction {
+        +Implementor implementor
+        +operation() void
+    }
+
+    class Implementor {
+        +operationImpl() void
+    }
+
+    class ConcreteImplementorA {
+        +operationImpl() void
+    }
+
+    class ConcreteImplementorB {
+        +operationImpl() void
+    }
+
+    class RefinedAbstraction {
+        +operation() void
+    }
+
+    Abstraction &lt;|-- RefinedAbstraction: is a
+    Abstraction "1" *-- "1" Implementor: has a
+    Implementor &lt;|-- ConcreteImplementorA: is a
+    Implementor &lt;|-- ConcreteImplementorB: is a
+</code></pre>
+
+<ol>
+  <li><strong>The Abstraction</strong> (<code class="language-plaintext highlighter-rouge">Abstraction</code>): Lớp cơ sở cung cấp mức độ trừu tượng cho việc quản lý các công việc do các đối tượng cụ thể thực hiện (Implementation).</li>
+  <li><strong>The Implementation</strong> (<code class="language-plaintext highlighter-rouge">Implementor</code>): Giao diện định nghĩa các tác vụ cần thiết cho lớp trừu tượng. Đây thường là một giao diện xác định các tác vụ cần thiết cho lớp trừu tượng.</li>
+  <li><strong>Concrete Implementations</strong> (<code class="language-plaintext highlighter-rouge">ConcreteImplementor</code>): Các lớp này chứa logic cụ thể và thực hiện các tác vụ được định nghĩa bởi <code class="language-plaintext highlighter-rouge">Implementor</code>.</li>
+  <li><strong>Refined Abstractions</strong> (<code class="language-plaintext highlighter-rouge">RefinedAbstraction</code>): Các lớp con của <code class="language-plaintext highlighter-rouge">Abstraction</code> thực hiện và mở rộng các phương thức được xác định trong lớp <code class="language-plaintext highlighter-rouge">Abstraction</code>.</li>
+</ol>
+
+<h2 id="cách-triển-khai">Cách triển khai</h2>
+
+<h3 id="bước-1-xác-định-abstraction-và-implementation">Bước 1: Xác định Abstraction và Implementation</h3>
+
+<p>Đầu tiên, ta cần phân biệt giữa abstractions (trừu tượng) và implementations (thực thi).</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Abstraction</span>
+<span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Shape</span> <span class="o">{</span>
+    <span class="kd">protected</span> <span class="nc">Color</span> <span class="n">color</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Shape</span><span class="o">(</span><span class="nc">Color</span> <span class="n">color</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">color</span> <span class="o">=</span> <span class="n">color</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="c1">// Implementation</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Color</span> <span class="o">{</span>
+    <span class="kt">void</span> <span class="nf">applyColor</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="bước-2-mở-rộng-abstraction">Bước 2: Mở rộng Abstraction</h3>
+
+<p>Chúng ta có thể mở rộng abstraction để tạo ra các phân lớp khác nhau.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Circle</span> <span class="kd">extends</span> <span class="nc">Shape</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">Circle</span><span class="o">(</span><span class="nc">Color</span> <span class="n">color</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">color</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">"Draw Circle in "</span><span class="o">);</span>
+        <span class="n">color</span><span class="o">.</span><span class="na">applyColor</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Square</span> <span class="kd">extends</span> <span class="nc">Shape</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">Square</span><span class="o">(</span><span class="nc">Color</span> <span class="n">color</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">color</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">"Draw Square in "</span><span class="o">);</span>
+        <span class="n">color</span><span class="o">.</span><span class="na">applyColor</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="bước-3-cung-cấp-các-implementations-cụ-thể">Bước 3: Cung cấp các Implementations cụ thể</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RedColor</span> <span class="kd">implements</span> <span class="nc">Color</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">applyColor</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Red color."</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">BlueColor</span> <span class="kd">implements</span> <span class="nc">Color</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">applyColor</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Blue color."</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="bước-4-sử-dụng-bridge-pattern">Bước 4: Sử dụng Bridge Pattern</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BridgePatternDemo</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Shape</span> <span class="n">redCircle</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Circle</span><span class="o">(</span><span class="k">new</span> <span class="nc">RedColor</span><span class="o">());</span>
+        <span class="nc">Shape</span> <span class="n">blueSquare</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Square</span><span class="o">(</span><span class="k">new</span> <span class="nc">BlueColor</span><span class="o">());</span>
+
+        <span class="n">redCircle</span><span class="o">.</span><span class="na">draw</span><span class="o">();</span>
+        <span class="n">blueSquare</span><span class="o">.</span><span class="na">draw</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Khi chạy đoạn mã trên, kết quả sẽ là:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Draw Circle in Red color.
+Draw Square in Blue color.
+</code></pre></div></div>
+
+<h2 id="ví-dụ-áp-dụng-bridge-pattern">Ví dụ áp dụng Bridge Pattern</h2>
+
+<p><img src="Images/Untitled%20Diagram.png" alt="" /></p>
+
+<p>Để hiểu rõ hơn về cách Bridge Pattern hoạt động, hãy xem xét ví dụ về một hệ thống ngân hàng cung cấp các loại tài khoản khác nhau:</p>
+
+<p><strong>Account.java</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Account</span> <span class="o">{</span>
+    <span class="kt">void</span> <span class="nf">openAccount</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>CheckingAccount.java</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CheckingAccount</span> <span class="kd">implements</span> <span class="nc">Account</span><span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">openAccount</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Opening a Checking Account!"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>TutorialAccount.java</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TutorialAccount</span> <span class="kd">implements</span> <span class="nc">Account</span><span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">openAccount</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Please select your language"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>Bank.java</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Bank</span> <span class="o">{</span>
+    <span class="kd">protected</span> <span class="nc">Account</span> <span class="n">account</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Bank</span><span class="o">(</span><span class="nc">Account</span> <span class="n">account</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">account</span> <span class="o">=</span> <span class="n">account</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">openAccount</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>MMBank.java</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MMBank</span> <span class="kd">extends</span> <span class="nc">Bank</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="nf">MMBank</span><span class="o">(</span><span class="nc">Account</span> <span class="n">account</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">account</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">openAccount</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Welcome to MMBank"</span><span class="o">);</span>
+        <span class="n">account</span><span class="o">.</span><span class="na">openAccount</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>TPBank.java</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TPBank</span>
+
+ <span class="kd">extends</span> <span class="nc">Bank</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="nf">TPBank</span><span class="o">(</span><span class="nc">Account</span> <span class="n">account</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">account</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">openAccount</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Welcome to TPBank"</span><span class="o">);</span>
+        <span class="n">account</span><span class="o">.</span><span class="na">openAccount</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>demo.java</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">demo</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Bank</span> <span class="n">tpBank</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TPBank</span><span class="o">(</span><span class="k">new</span> <span class="nc">TutorialAccount</span><span class="o">());</span>
+        <span class="n">tpBank</span><span class="o">.</span><span class="na">openAccount</span><span class="o">();</span>
+
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+
+        <span class="nc">Bank</span> <span class="n">mmBank</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MMBank</span><span class="o">(</span><span class="k">new</span> <span class="nc">CheckingAccount</span><span class="o">());</span>
+        <span class="n">mmBank</span><span class="o">.</span><span class="na">openAccount</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Kết quả khi chạy chương trình:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Welcome to TPBank
+Please select your language
+
+Welcome to MMBank
+Opening a Checking Account!
+</code></pre></div></div>
+
+<p>Như bạn thấy trong ví dụ trên, <code class="language-plaintext highlighter-rouge">Bank</code> là một lớp trừu tượng kết hợp với interface <code class="language-plaintext highlighter-rouge">Account</code>. Các lớp cụ thể như <code class="language-plaintext highlighter-rouge">TPBank</code> và <code class="language-plaintext highlighter-rouge">MMBank</code> kế thừa từ lớp <code class="language-plaintext highlighter-rouge">Bank</code> và quyết định cách họ muốn mở tài khoản dựa trên loại tài khoản cụ thể (như <code class="language-plaintext highlighter-rouge">CheckingAccount</code> hoặc <code class="language-plaintext highlighter-rouge">TutorialAccount</code>). Nhờ sử dụng Bridge Pattern, chúng ta có thể mở rộng cả hai hệ thống (loại ngân hàng và loại tài khoản) một cách độc lập mà không làm ảnh hưởng đến nhau.</p>
+
+<h2 id="so-sánh">So sánh</h2>
+
+<h3 id="1-bridge-vs-adapter">1. Bridge vs Adapter:</h3>
+
+<ul>
+  <li><strong>Bridge</strong>: Như chúng ta đã biết, mục tiêu chính của Bridge Pattern là tách rời abstraction (trừu tượng) ra khỏi implementation (thực thi) của nó, giúp cho cả hai có thể thay đổi độc lập.</li>
+  <li><strong>Adapter</strong>: Mẫu thiết kế này cho phép các đối tượng với interfaces không tương thích có thể làm việc cùng nhau thông qua một lớp trung gian.</li>
+</ul>
+
+<h3 id="2-bridge-vs-composite">2. Bridge vs Composite:</h3>
+
+<ul>
+  <li><strong>Bridge</strong>: Tách rời abstraction và implementation để chúng phát triển độc lập.</li>
+  <li><strong>Composite</strong>: Cung cấp một cách để bạn có thể làm việc với các đối tượng đơn lẻ hoặc với nhóm các đối tượng theo cùng một cách.</li>
+</ul>
+
+<h3 id="3-bridge-vs-decorator">3. Bridge vs Decorator:</h3>
+
+<ul>
+  <li><strong>Bridge</strong>: Phân tách interface (trừu tượng) và thực thi, cho phép chúng thay đổi độc lập.</li>
+  <li><strong>Decorator</strong>: Thêm các trách nhiệm cho đối tượng mà không cần sửa đổi chúng, giữ nguyên interface của đối tượng và thêm chức năng mở rộng.</li>
+</ul>
+
+<h3 id="4-bridge-vs-facade">4. Bridge vs Facade:</h3>
+
+<ul>
+  <li><strong>Bridge</strong>: Đảm bảo tính linh hoạt giữa abstraction và implementation bằng cách tách chúng ra.</li>
+  <li><strong>Facade</strong>: Cung cấp một giao diện đơn giản hoá cho một hệ thống con, giúp giảm sự phức tạp khi giao tiếp với các hệ thống phức tạp.</li>
+</ul>
+
+<h3 id="5-bridge-vs-proxy">5. Bridge vs Proxy:</h3>
+
+<ul>
+  <li><strong>Bridge</strong>: Tập trung vào việc tách rời và linh hoạt giữa abstractions và implementations.</li>
+  <li><strong>Proxy</strong>: Cung cấp một đại diện cho một đối tượng khác, kiểm soát việc truy cập đến đối tượng gốc.</li>
+</ul>
+
+<h2 id="kết-luận">Kết luận</h2>
+
+<p>Bridge Pattern là một mẫu thiết kế hiệu quả giúp tách rời các khía cạnh trừu tượng và thực thi của một lớp, giúp chúng có thể thay đổi và phát triển một cách độc lập. Điều này không chỉ giúp giảm thiểu sự phức tạp khi mở rộng hệ thống mà còn cung cấp khả năng linh hoạt hơn trong việc quản lý và mở rộng code.</p>]]></content><author><name>hondanho</name></author><category term="design-pattern/structural-patterns" /><summary type="html"><![CDATA[Giới thiệu]]></summary></entry><entry><title type="html">Adapter Pattern</title><link href="http://localhost:4000/design-pattern/structural-patterns/adapter" rel="alternate" type="text/html" title="Adapter Pattern" /><published>2024-08-23T00:00:00+07:00</published><updated>2024-08-23T00:00:00+07:00</updated><id>http://localhost:4000/design-pattern/structural-patterns/adapter</id><content type="html" xml:base="http://localhost:4000/design-pattern/structural-patterns/adapter"><![CDATA[<h2 id="giới-thiệu">Giới thiệu</h2>
+
+<h3 id="định-nghĩa">Định nghĩa</h3>
+
+<p>Adapter Pattern là một mẫu thiết kế thuộc loại cấu trúc (Structural Patterns) . Nó giúp kết nối giữa hai interface không tương thích sao cho chúng có thể làm việc cùng nhau mà không cần sửa đổi. Để thực hiện điều này, Adapter Pattern sử dụng một lớp trung gian (gọi là adapter) để chuyển đổi interface của lớp này thành một interface khác.</p>
+
+<h3 id="mục-đích">Mục đích:</h3>
+
+<ul>
+  <li>Giúp kết nối giữa các đối tượng hoặc hệ thống với nhau mà không cần phải sửa đổi chúng, dựa trên nguyên tắc “kết nối chứ không là để sửa đổi”.</li>
+  <li>Tích hợp hoặc kết nối các hệ thống có sẵn, thư viện, modules có giao diện không tương thích.</li>
+  <li>Cung cấp một giải pháp linh hoạt để mở rộng và tái sử dụng mã nguồn.</li>
+</ul>
+
+<h3 id="ý-tưởng-chính-của-pattern">Ý tưởng chính của Pattern</h3>
+
+<p>Adapter Pattern dựa trên một ý tưởng đơn giản nhưng mạnh mẽ: Thay vì thay đổi các đối tượng hoặc hệ thống để chúng tương thích với nhau, chúng ta sẽ tạo ra một “bộ chuyển đổi” (adapter) để làm cầu nối giữa chúng. Trong ngữ cảnh thiết kế phần mềm, Adapter thực sự giống như một bộ chuyển đổi cắm điện: Nó cho phép hai đầu kết nối không tương thích có thể hoạt động cùng nhau mà không cần phải thay đổi bất kì đầu nào.</p>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p>Trong quá trình phát triển phần mềm, chúng ta thường gặp phải tình huống mà hai hệ thống hoặc thư viện có sẵn không thể nối tiếp với nhau trực tiếp bởi vì chúng có những interface khác biệt.</p>
+
+<p>Ví dụ:</p>
+
+<pre><code class="language-mermaid">graph TD
+    System1[Thư viện cũ / Hệ thống Legacy] --&gt;|Interface cũ| Adapter[Adapter / Lớp trung gian]
+    System2[Ứng dụng hiện tại / Hệ thống mới] --&gt;|Interface mới| Adapter
+    Adapter --&gt;|Interface đã chuyển đổi| Link[Liên kết giữa 2 hệ thống]
+</code></pre>
+
+<ul>
+  <li>Muốn tích hợp một thư viện cũ vào ứng dụng hiện tại nhưng interface không tương thích.</li>
+  <li>Muốn kết nối một hệ thống legacy với hệ thống mới nhưng hai bên có interface khác biệt.</li>
+</ul>
+
+<p>Lúc này, ta cần một lớp trung gian đóng vai trò nối kết, chuyển đổi interface giữa chúng.</p>
+
+<h2 id="giải-pháp">Giải pháp</h2>
+
+<p>Giải pháp đề xuất ở đây là sử dụng một “Adapter” - một lớp trung gian để “dịch” hoặc “chuyển đổi” interface từ hệ thống này sang hệ thống kia, giúp chúng có thể làm việc chung mà không gặp vấn đề.</p>
+
+<p>Adapter Pattern được áp dụng như sau:</p>
+
+<pre><code class="language-mermaid">sequenceDiagram
+    participant SystemA as Hệ thống A (interface A)
+    participant Adapter as Adapter (interface B)
+    participant SystemB as Hệ thống B (interface C)
+
+    SystemA-&gt;&gt;Adapter: Giao tiếp qua interface B
+    Adapter-&gt;&gt;SystemB: Chứa tham chiếu &amp; chuyển đổi giao tiếp từ interface B sang C
+    SystemB--&gt;&gt;Adapter: Trả lời qua interface C
+    Adapter--&gt;&gt;SystemA: Chuyển đổi &amp; trả lời qua interface B
+</code></pre>
+
+<ul>
+  <li>Xác định hai hệ thống (object) có interface khác biệt cần tương tác.</li>
+  <li>Tạo một lớp Adapter triển khai interface mà hệ thống sử dụng cần.</li>
+  <li>Adapter sẽ chứa tham chiếu tới object kia và thực hiện chuyển đổi interface.</li>
+  <li>Hệ thống sẽ giao tiếp với Adapter thay vì object kia.</li>
+</ul>
+
+<p>Với cách này, ta tránh sửa đổi hai hệ thống hiện có mà vẫn kết nối được chúng.</p>
+
+<h2 id="cấu-trúc">Cấu Trúc</h2>
+
+<p>Các thành phần trong Adapter Pattern:</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class Target {
+        &lt;&lt;interface&gt;&gt;
+        +request() void
+    }
+
+    class Adaptee {
+        +specificRequest() void
+    }
+
+    class Adapter {
+        -adaptee Adaptee
+        +request() void
+    }
+
+    class Client {
+        +doWork() void
+    }
+
+    Target &lt;|.. Adapter: implements
+    Adaptee &lt;-- Adapter: uses
+    Client --&gt; Target: uses
+</code></pre>
+
+<ul>
+  <li>Target: interface mà client sử dụng.</li>
+  <li>Adapter: lớp trung gian, triển khai interface Target và gọi tới Adaptee.</li>
+  <li>Adaptee: lớp cần được adapt để phù hợp với interface Target.</li>
+  <li>Client: tương tác với Target interface.</li>
+</ul>
+
+<h2 id="triển-khai-adapter-pattern">Triển khai Adapter Pattern</h2>
+
+<p>Adapter Pattern cho phép bạn “đóng gói” một interface không tương thích vào một lớp adapter để làm cho nó tương thích với interface khác. Để triển khai Adapter Pattern, chúng ta sẽ tạo ra một lớp adapter, nó sẽ kết hợp giữa interface cũ và interface mới.</p>
+
+<h3 id="1-định-nghĩa-interface-cần-phục-vụ">1. Định nghĩa interface cần phục vụ</h3>
+
+<p>Đầu tiên, bạn cần xác định rõ interface mà ứng dụng hiện tại hoặc client muốn sử dụng. Đây chính là interface mà lớp adapter sẽ phải triển khai.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">NewInterface</span> <span class="o">{</span>
+    <span class="kt">void</span> <span class="nf">newMethod</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="2-tạo-lớp-adapter">2. Tạo lớp adapter</h3>
+
+<p>Lớp adapter này sẽ triển khai (implement) interface mới và có tham chiếu đến đối tượng của lớp cũ (hoặc interface cũ).</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Adapter</span> <span class="kd">implements</span> <span class="nc">NewInterface</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">OldClass</span> <span class="n">oldObject</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Adapter</span><span class="o">(</span><span class="nc">OldClass</span> <span class="n">oldObject</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">oldObject</span> <span class="o">=</span> <span class="n">oldObject</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">newMethod</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">oldObject</span><span class="o">.</span><span class="na">oldMethod</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Trong ví dụ trên, <code class="language-plaintext highlighter-rouge">OldClass</code> là một lớp mà bạn muốn tích hợp vào hệ thống hiện tại. Hàm <code class="language-plaintext highlighter-rouge">newMethod</code> của <code class="language-plaintext highlighter-rouge">NewInterface</code> được “đóng gói” bằng cách sử dụng hàm <code class="language-plaintext highlighter-rouge">oldMethod</code> của <code class="language-plaintext highlighter-rouge">OldClass</code>.</p>
+
+<h3 id="3-sử-dụng-lớp-adapater">3. Sử dụng lớp adapater</h3>
+
+<p>Khi muốn sử dụng lớp cũ trong ứng dụng của bạn, thay vì tạo một instance của <code class="language-plaintext highlighter-rouge">OldClass</code>, bạn sẽ tạo một instance của <code class="language-plaintext highlighter-rouge">Adapter</code>.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">NewInterface</span> <span class="n">target</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Adapter</span><span class="o">(</span><span class="k">new</span> <span class="nc">OldClass</span><span class="o">());</span>
+        <span class="n">target</span><span class="o">.</span><span class="na">newMethod</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Bằng cách này, lớp <code class="language-plaintext highlighter-rouge">Client</code> có thể sử dụng được lớp <code class="language-plaintext highlighter-rouge">OldClass</code> mà không cần phải biết đến chi tiết bên trong nó. Mọi tương tác đều diễn ra thông qua <code class="language-plaintext highlighter-rouge">NewInterface</code>.</p>
+
+<h2 id="ví-dụ-áp-dụng-adapter-pattern">Ví dụ áp dụng Adapter Pattern</h2>
+
+<p>Xét một ví dụ thực tế: Bạn muốn sử dụng một bóng đèn led cần điện áp 3v, nhưng nguồn điện ở nhà bạn lại là 220v. Để bóng đèn hoạt động đúng và không bị cháy, bạn cần một thiết bị chuyển đổi từ 220v xuống 3v. Ở đây, thiết bị chuyển đổi đóng vai trò như một Adapter.</p>
+
+<ul>
+  <li>Hiệu điện thế lớn hơn 3v bóng đèn sẽ cháy.</li>
+  <li>Hiệu điện thế nhỏ hơn 3v bóng sáng mờ hoặc không phát sáng (Trong trường hợp này ta quy ước nó không phát sáng).</li>
+  <li>Hiệu điện thế bằng 3v bóng đèn phát sáng</li>
+</ul>
+
+<p>Như vậy ta cần một adapter chuyển từ 220v sáng 3v. Mô hình thể hiện như sau:</p>
+
+<pre><code class="language-mermaid">graph LR
+    A[Mạng lưới điện Việt Nam&lt;br&gt;220v] --&gt;|Cung cấp điện| B[Adapter&lt;br&gt;Chuyển 220v xuống 3v]
+    B --&gt;|Cung cấp 3v| C[Đèn LED&lt;br&gt;Yêu cầu 3v]
+</code></pre>
+
+<p>LedInterFace.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">LedInterFace</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="nf">connect</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>VietNamPower.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">VietNamPower</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">electric</span> <span class="o">=</span> <span class="mi">220</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getElectric</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">electric</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>AdapterElectric.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AdapterElectric</span> <span class="kd">implements</span> <span class="nc">LedInterFace</span><span class="o">{</span>
+    <span class="nc">VietNamPower</span> <span class="n">adaptee</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">AdapterElectric</span><span class="o">(</span><span class="nc">VietNamPower</span> <span class="n">adaptee</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">adaptee</span> <span class="o">=</span> <span class="n">adaptee</span><span class="o">;</span>
+    <span class="o">}</span>
+
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">connect</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">electric</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">downElectric</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">adaptee</span><span class="o">.</span><span class="na">getElectric</span><span class="o">());</span>
+        <span class="c1">// Hiệu điện thế lớn hơn 3v bóng đèn sẽ cháy.</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">electric</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="o">)</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="c1">//Hiệu điện thế bằng 3v bóng đèn phát sáng.</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">electric</span> <span class="o">==</span> <span class="mi">3</span><span class="o">)</span>
+            <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="c1">// Đén không phát sáng.</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">downElectric</span><span class="o">(</span><span class="kt">int</span> <span class="n">electric</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">electric</span> <span class="o">-</span> <span class="mi">217</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Led.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Led</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">LedInterFace</span> <span class="n">led</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">AdapterElectric</span><span class="o">(</span><span class="k">new</span> <span class="nc">VietNamPower</span><span class="o">());</span>
+
+        <span class="k">switch</span> <span class="o">(</span><span class="n">led</span><span class="o">.</span><span class="na">connect</span><span class="o">())</span> <span class="o">{</span>
+            <span class="c1">// Nếu hiệu điện thế lớn 3v kết quả trả về -1</span>
+            <span class="k">case</span> <span class="o">-</span><span class="mi">1</span><span class="o">:</span>
+            <span class="o">{</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Crash"</span><span class="o">);</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="c1">// Nếu hiệu điện thế nhỏ hơn 3v kết quả trả về 0</span>
+            <span class="k">case</span> <span class="mi">0</span><span class="o">:</span>
+            <span class="o">{</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Not Thing"</span><span class="o">);</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="c1">// Nếu hiệu điện thế bằng 3v kết quả trả về 1</span>
+            <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+            <span class="o">{</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Light"</span><span class="o">);</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Kết quả:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Light
+</code></pre></div></div>
+
+<h2 id="so-sánh">So sánh</h2>
+
+<h3 id="1-adapter-vs-bridge">1. Adapter vs Bridge</h3>
+
+<ul>
+  <li>
+    <p><strong>Adapter</strong>: Mục tiêu chính của Adapter là biến đổi một interface của lớp này thành interface mong muốn của lớp khác. Nó giúp hai lớp hoạt động cùng nhau mặc dù chúng có những interface không tương thích.</p>
+  </li>
+  <li>
+    <p><strong>Bridge</strong>: Bridge tạo ra một cầu nối giữa abstractions và implementations, giúp cả hai có thể thay đổi một cách độc lập.</p>
+  </li>
+</ul>
+
+<h3 id="2-adapter-vs-decorator">2. Adapter vs Decorator</h3>
+
+<ul>
+  <li>
+    <p><strong>Adapter</strong>: Như đã nói ở trên, Adapter thay đổi interface của một đối tượng để phù hợp với một interface khác.</p>
+  </li>
+  <li>
+    <p><strong>Decorator</strong>: Decorator thêm các trách nhiệm hoặc chức năng vào một đối tượng mà không cần sửa đổi mã nguồn của nó. Nó giữ nguyên interface của đối tượng và thêm chức năng mở rộng.</p>
+  </li>
+</ul>
+
+<h3 id="3-adapter-vs-facade">3. Adapter vs Facade</h3>
+
+<ul>
+  <li>
+    <p><strong>Adapter</strong>: Adapter chuyển đổi một interface này sang một interface khác.</p>
+  </li>
+  <li>
+    <p><strong>Facade</strong>: Facade cung cấp một giao diện đơn giản hoá cho một nhóm các giao diện trong một hệ thống con. Mẫu Facade giúp giảm sự phức tạp khi giao tiếp với các hệ thống phức tạp.</p>
+  </li>
+</ul>
+
+<h3 id="4-adapter-vs-proxy">4. Adapter vs Proxy</h3>
+
+<ul>
+  <li>
+    <p><strong>Adapter</strong>: Điều chỉnh interfaces giữa hai lớp hoặc đối tượng.</p>
+  </li>
+  <li>
+    <p><strong>Proxy</strong>: Proxy không chỉ giữ nguyên interface, mà còn kiểm soát và quản lý việc truy cập đến đối tượng thực.</p>
+  </li>
+</ul>
+
+<h2 id="lưu-ý-khi-áp-dụng-adapter-pattern">Lưu ý khi áp dụng Adapter Pattern</h2>
+
+<p>Khi áp dụng Adapter Pattern trong thiết kế phần mềm, có một số lưu ý quan trọng mà bạn cần xem xét:</p>
+
+<h3 id="1-đừng-lạm-dụng">1. <strong>Đừng lạm dụng</strong></h3>
+
+<p>Adapter Pattern hữu ích khi bạn cần tích hợp một thư viện hoặc một hệ thống cũ mà không thể (hoặc không nên) thay đổi. Tuy nhiên, bạn không nên sử dụng nó chỉ vì muốn giữ lại tất cả mã nguồn cũ mà không có lý do chính đáng. Nên xác định rõ ràng vấn đề cần giải quyết và xem xét liệu Adapter Pattern có phải là giải pháp tốt nhất hay không.</p>
+
+<h3 id="2-hiệu-năng-có-thể-bị-ảnh-hưởng">2. <strong>Hiệu năng có thể bị ảnh hưởng</strong></h3>
+
+<p>Mặc dù hiệu suất không phải luôn là vấn đề chính, nhưng thêm một lớp trung gian giữa hai hệ thống có thể làm giảm hiệu năng. Trong một số trường hợp đặc biệt, việc này có thể tạo ra một chi phí không mong muốn.</p>
+
+<h3 id="3-bảo-trì-mã">3. <strong>Bảo trì mã</strong></h3>
+
+<p>Khi bạn thêm một lớp adapter, bạn thêm một điểm cần phải bảo trì. Nếu thư viện hoặc hệ thống cũ được cập nhật, adapter cũng cần phải được xem xét và cập nhật.</p>
+
+<h3 id="4-nhất-quán">4. <strong>Nhất quán</strong></h3>
+
+<p>Nếu bạn cần nhiều adapter, hãy đảm bảo rằng chúng đều tuân thủ một quy ước đặt tên và phong cách thiết kế nhất quán để dễ dàng cho việc bảo trì và hiểu biết.</p>
+
+<h3 id="5-sử-dụng-composition-thay-vì-inheritance">5. <strong>Sử dụng Composition thay vì Inheritance</strong></h3>
+
+<p>Điều này thường được xem xét là một nguyên tắc tốt trong OOP. Trong Adapter Pattern, bạn nên sử dụng composition (tức là chứa một instance của lớp cần adapt) thay vì kế thừa từ nó.</p>
+
+<h3 id="6-chú-ý-đến-việc-tái-sử-dụng">6. <strong>Chú ý đến việc tái sử dụng</strong></h3>
+
+<p>Trong một số trường hợp, bạn có thể tìm thấy rằng một adapter đã được viết trước đó có thể phục vụ cho mục đích hiện tại của bạn. Điều này có thể giúp bạn tiết kiệm thời gian và công sức.</p>
+
+<h3 id="7-kiểm-tra-kỹ-lưỡng">7. <strong>Kiểm tra kỹ lưỡng</strong></h3>
+
+<p>Khi viết một adapter, đặc biệt quan trọng là thực hiện các bài kiểm tra kỹ lưỡng để đảm bảo rằng nó hoạt động chính xác và không gây ra các vấn đề tiềm ẩn.</p>
+
+<h2 id="kết-luận">Kết luận</h2>
+
+<p>Adapter Pattern là một mẫu thiết kế hữu ích, giúp tích hợp và tái sử dụng mã nguồn một cách linh hoạt hơn. Đặc biệt trong các tình huống cần phải kết nối các hệ thống có sẵn với nhau mà không muốn hay không thể sửa đổi chúng. Mặc dù việc thêm một lớp trung gian có thể làm tăng độ phức tạp, nhưng lợi ích mà nó mang lại là không thể phủ nhận.</p>]]></content><author><name>hondanho</name></author><category term="design-pattern/structural-patterns" /><summary type="html"><![CDATA[Giới thiệu]]></summary></entry><entry><title type="html">Singleton</title><link href="http://localhost:4000/design-pattern/creational-patterns/singleton" rel="alternate" type="text/html" title="Singleton" /><published>2024-08-23T00:00:00+07:00</published><updated>2024-08-23T00:00:00+07:00</updated><id>http://localhost:4000/design-pattern/creational-patterns/singleton</id><content type="html" xml:base="http://localhost:4000/design-pattern/creational-patterns/singleton"><![CDATA[<h2 id="giới-thiệu">Giới thiệu</h2>
+
+<p>Singleton là một Design Pattern thuộc nhóm Creational Pattern. Nó đảm bảo chỉ duy nhất một thể hiện của một lớp được tạo ra trong suốt chương trình.</p>
+<h3 id="đặt-vấn-đề">Đặt vấn đề</h3>
+
+<p>Trong nhiều trường hợp, cần đảm bảo chỉ có một thể hiện của một lớp. Ví dụ trong hệ thống quản lý người dùng, chỉ nên có duy nhất một đối tượng UserManager để quản lý người dùng.</p>
+
+<p>Nếu tạo nhiều đối tượng UserManager có thể dẫn đến:</p>
+
+<ul>
+  <li>Dữ liệu bị trùng lặp</li>
+  <li>Xung đột tài nguyên</li>
+  <li>Khó kiểm soát</li>
+</ul>
+
+<pre><code class="language-mermaid">graph TD
+    A[User Management System] --&gt; B1[UserManager 1]
+    A --&gt; B2[UserManager 2]
+    A --&gt; B3[UserManager 3]
+
+    B1 --&gt; C[User 1]
+    B2 --&gt; D[User 2]
+    B3 --&gt; E[User 3]
+
+    classDef grey fill:#dddddd,stroke:#333333,stroke-width:2px;
+    classDef pink fill:#ffd6d6,stroke:#333,stroke-width:2px;
+
+    class A grey
+    class B1,B2,B3 grey
+    class C,D,E pink
+</code></pre>
+
+<h3 id="giải-quyết">Giải quyết</h3>
+
+<p>Singleton giải quyết bằng cách đảm bảo chỉ tạo duy nhất một thể hiện trong toàn bộ chương trình.</p>
+
+<pre><code class="language-mermaid">graph TD
+
+    A[User Management System] --&gt; B[UserManager]
+
+    B --&gt; C[User 1]
+    B --&gt; D[User 2]
+    B --&gt; E[User 3]
+
+    classDef grey fill:#dddddd,stroke:#333333,stroke-width:2px;
+    classDef pink fill:#ffd6d6,stroke:#333,stroke-width:2px;
+
+    class A grey
+    class B grey
+    class C,D,E pink
+</code></pre>
+
+<p>Giải thích:</p>
+
+<ul>
+  <li>Lớp UserManager được triển khai Singleton</li>
+  <li>Chỉ có DUY NHẤT một đối tượng UserManager trong hệ thống</li>
+  <li>Quản lý tất cả người dùng một cách tập trung</li>
+  <li>Tránh được các vấn đề như dữ liệu trùng lặp, xung đột tài nguyên, khó kiểm soát</li>
+</ul>
+
+<p>Với cách triển khai này, chỉ có một đối tượng UserManager duy nhất được tạo ra, và đối tượng này có thể được truy cập từ bất kỳ nơi nào trong chương trình.</p>
+
+<h3 id="cấu-tạo">Cấu tạo</h3>
+
+<p>Singleton Pattern có cấu trúc đơn giản, bao gồm các thành phần sau:</p>
+
+<pre><code class="language-mermaid">classDiagram
+    direction TB
+    class Singleton {
+        -static instance:Singleton
+        -Singleton()
+        +static getInstance() : Singleton
+    }
+
+    class Client {
+        +main()
+    }
+
+    Client --&gt; Singleton
+    Singleton ..&gt; Singleton : return instance
+</code></pre>
+
+<ul>
+  <li>Lớp Singleton: Lớp này chứa các phương thức và biến cần thiết để triển khai Singleton Pattern.</li>
+  <li>Phương thức khởi tạo private: Phương thức này chỉ có thể được gọi từ bên trong lớp.</li>
+  <li>Biến static private: Biến này giữ đối tượng của lớp.</li>
+  <li>Phương thức static public để trả về đối tượng của lớp: Phương thức này trả về đối tượng của lớp.</li>
+</ul>
+
+<h2 id="cách-triển-khai">Cách triển khai</h2>
+
+<p>Có nhiều cách để triển khai Singleton Pattern trong Java. Một cách phổ biến là sử dụng một biến static private để lưu trữ instance của class.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Singleton</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="nc">Singleton</span> <span class="n">instance</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="nf">Singleton</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// Constructor is private to prevent direct instantiation</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="nc">Singleton</span> <span class="nf">getInstance</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">instance</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Singleton</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">instance</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Cách triển khai này đảm bảo rằng chỉ có một instance của Singleton được tạo ra. Khi một đối tượng Singleton được yêu cầu, phương thức <code class="language-plaintext highlighter-rouge">getInstance()</code> sẽ kiểm tra xem instance đã tồn tại hay chưa. Nếu chưa, phương thức sẽ tạo ra một instance mới. Nếu đã tồn tại, phương thức sẽ trả về instance hiện tại.</p>
+
+<p>Một cách triển khai khác của Singleton Pattern là sử dụng một biến static final private.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Singleton</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Singleton</span> <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Singleton</span><span class="o">();</span>
+
+    <span class="kd">private</span> <span class="nf">Singleton</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// Constructor is private to prevent direct instantiation</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="nc">Singleton</span> <span class="nf">getInstance</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">instance</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Cách triển khai này tương tự như cách triển khai đầu tiên, nhưng nó sử dụng một biến static final private thay vì một biến static private. Cách triển khai này có một số ưu điểm như sau:</p>
+
+<ul>
+  <li>Sử dụng biến static final private sẽ ngăn chặn việc thay đổi giá trị của biến instance.</li>
+  <li>Cấu trúc code sẽ gọn gàng hơn.</li>
+</ul>
+
+<h2 id="ví-dụ-minh-họa">Ví dụ minh họa</h2>
+
+<p>Dưới đây là một ví dụ minh họa cách sử dụng Singleton Pattern để tạo một đối tượng DatabaseConnection.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DatabaseConnection</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">DatabaseConnection</span> <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">DatabaseConnection</span><span class="o">();</span>
+
+    <span class="kd">private</span> <span class="nf">DatabaseConnection</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// Connect to database</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="nc">DatabaseConnection</span> <span class="nf">getInstance</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">instance</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">query</span><span class="o">(</span><span class="nc">String</span> <span class="n">sql</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Execute query</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Trong ví dụ này, DatabaseConnection là một class singleton. Nó có một phương thức getInstance() để truy cập instance duy nhất của class.</p>
+
+<h2 id="so-sánh">So sánh</h2>
+
+<p>Singleton Pattern có thể được so sánh với một số Design Pattern tương tự, chẳng hạn như:</p>
+
+<ul>
+  <li>Factory Pattern: Factory Pattern cung cấp một cách để tạo các đối tượng của lớp một cách linh hoạt. Tuy nhiên, Factory Pattern không đảm bảo rằng chỉ có một đối tượng của lớp được tạo ra.</li>
+  <li>Prototype Pattern: Prototype Pattern cung cấp một cách để tạo các bản sao của đối tượng. Prototype Pattern cũng có thể được sử dụng để tạo một đối tượng duy nhất của lớp. Tuy nhiên, Prototype Pattern có thể phức tạp hơn Singleton Pattern.</li>
+</ul>
+
+<h2 id="lưu-ý">Lưu ý</h2>
+
+<p>Khi áp dụng Singleton Pattern, cần lưu ý một số điểm sau:</p>
+
+<ul>
+  <li>Singleton Pattern có thể làm giảm tính linh hoạt của ứng dụng. Ví dụ, nếu bạn cần tạo ra nhiều instance của một class, bạn sẽ cần phải thay đổi code để xóa phương thức getInstance().</li>
+  <li>Singleton Pattern có thể gây ra vấn đề khi test. Ví dụ, nếu bạn đang test một class sử dụng Singleton Pattern, bạn sẽ cần tạo ra một instance giả của class đó.</li>
+</ul>
+
+<h2 id="kết-luận">Kết luận</h2>
+
+<p>Singleton Pattern là một Design Pattern hữu ích trong những trường hợp cần đảm bảo rằng chỉ có một thể hiện duy nhất của một lớp được tạo ra. Tuy nhiên, cần lưu ý những điểm hạn chế của Singleton Pattern khi áp dụng.</p>
+
+<p>Dưới đây là một số hướng dẫn sử dụng Singleton Pattern:</p>
+
+<ul>
+  <li>Nên sử dụng Singleton Pattern khi cần đảm bảo rằng chỉ có một thể hiện duy nhất của một lớp được tạo ra.</li>
+  <li>Tránh sử dụng Singleton Pattern khi không cần thiết.</li>
+  <li>Hạn chế sử dụng Singleton trong các hệ thống lớn hoặc phức tạp.</li>
+</ul>]]></content><author><name>hondanho</name></author><category term="design-pattern/creational-patterns" /><summary type="html"><![CDATA[Giới thiệu]]></summary></entry></feed>

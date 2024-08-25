@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Command Pattern | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Command Pattern" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Khái niệm" />
+<meta property="og:description" content="Khái niệm" />
+<link rel="canonical" href="http://localhost:4000/design-pattern/behavioral-patterns/command" />
+<meta property="og:url" content="http://localhost:4000/design-pattern/behavioral-patterns/command" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Command Pattern" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"Khái niệm","headline":"Command Pattern","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/design-pattern/behavioral-patterns/command"},"url":"http://localhost:4000/design-pattern/behavioral-patterns/command"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Command Pattern</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/design-pattern/behavioral-patterns">design-pattern/behavioral-patterns</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="khái-niệm">Khái niệm</h2>
+
+<p><strong>Command</strong> là một Pattern dạng hành vi, cho phép biến một yêu cầu thành một đối tượng độc lập và chứa đầy đủ thông tin về yêu cầu đó. Nói cho dể hiểu, nó cho phép tất cả những Request gửi đến object được lưu trong chính object đó dưới dạng một object Command.</p>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p>Giả sử bạn đang làm trên một ứng dụng soạn thảo văn bản mới. Công việc của bạn hiện tại là tạo một thanh toolbar với vài nút button để chỉnh sữa. Giờ bạn tạo một lớp cơ sở <code class="language-plaintext highlighter-rouge">Button</code> để sử dụng cho các nút button trên toolbar.</p>
+
+<p>Các nút button có vẻ rất giống nhau, nhưng sự kiện của từng nút thì lại khác nhau. Làm sao để gắn sự kiện cho từng nút button ? Cách đơn giản nhất là tạo các lớp riêng cho từng sự kiện và kế thừa lại lớp cơ sở <code class="language-plaintext highlighter-rouge">Button</code></p>
+
+<p><img src="Images/problem.png" alt="" /></p>
+
+<p>Sau một thời gian, bạn nhận ra rằng cách tiếp cận này rất thiêu sót. Đầu tiên, bạn có rất nhiều lớp con, và điều này vẫn ổn nếu như không phá mã trong các lớp khi lớp cơ sỡ <code class="language-plaintext highlighter-rouge">Button</code> thay đổi.</p>
+
+<p>Vấn đề tới nhất sẽ đến, khi ứng dụng của bạn phát triên cao hơn, người dùng không chỉ muốn nhấn vào các nút để thực hiện chức năng, mà còn  thực hiện thông qua phím tắt hoặc vài thao tác kéo thả. Như vậy bạn phải một lớp khác bắt sự kiến phím tắt, sau đó lại copy toàn bộ chức năng ở nút <code class="language-plaintext highlighter-rouge">button</code> đã implement. Điều khá tốt những khi có việc cần thay đổi chức năng bạn phải cập nhật ở nhiều nơi.</p>
+
+<h2 id="giải-pháp">Giải pháp</h2>
+
+<p>Để giải quyết vấn đề trên, ta sẽ tách phần giao diện và phần logic ra hai lớp khác nhau. Lớp GUI (Giao Diện) sẽ đảm nhiệm vài trò thể hiện các giao diện đẹp ra cho người dùng sử dung, đồng thời sẽ lắng nghe và bắt các sự khi người dùng sử dụng. Tuy nhiên, khi cần đến những việc tính toán, lưu trữ dữ liệu, hoặc truy vấn dữ liệu thì phần GUI nên giao lại cho phần logic đảm nhiệm.</p>
+
+<p>Nói đến đây các bạn sẽ nghỉ chỉ cần tách ra một lớp logic bắt và xử lý các logic các sử kiện nút <code class="language-plaintext highlighter-rouge">Button</code> thì đã xong.</p>
+
+<p><img src="Images/solution.png" alt="" /></p>
+
+<p>Nhưng với Command Pattern đề nghị bạn đừng nên dùng GUI gọi yêu cầu trực tiếp. Bạn nên trích các thông tin, yêu cầu , tên phương được gọi……vào một lớp đặc biệt cùng với một phương thức để kích hoạt yêu cầu.</p>
+
+<p><img src="Images/solution2.png" alt="" /></p>
+
+<p>Như vậy ta sẽ giảm được sử ghép nối giữa GUI và Logic, giúp bạn có thể Linh hoạt hơn trong sử dụng</p>
+
+<h2 id="cấu-trúc">Cấu Trúc</h2>
+
+<p><img src="Images/struct.png" alt="" /></p>
+
+<ul>
+  <li><strong>Command</strong>: là interface hoặc abstract class, chứa một phương thức duy nhất để executing lệnh.</li>
+  <li><strong>Concrete Command</strong>: Thực hiện các yêu cầu khác nhau. Một Concrete Command không phải tự mình thực hiện công việc, thường sẽ chuyển đến lớp logic chuyên nghiệp.</li>
+  <li><strong>Client</strong>: Tiếp nhận request từ phía người dùng, đống gói request thành ConcreteCommand thích hợp.</li>
+  <li><strong>Invoker</strong>: Tiếp nhận Concrete Command từ Client và gọi execute()</li>
+  <li><strong>Receiver</strong>: Đây là thành phần thực thi logic chuyên nghiệp.</li>
+</ul>
+
+<h2 id="ví-dụ-áp-dụng-command-pattern">Ví dụ áp dụng Command Pattern</h2>
+
+<p><img src="Images/vidu.png" alt="" /></p>
+
+<p>Account.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">Account</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="py">name</span> <span class="p">:</span> <span class="nc">String</span>
+
+    <span class="k">constructor</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nc">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">name</span> <span class="p">=</span> <span class="n">name</span>
+    <span class="p">}</span>
+
+    <span class="k">fun</span> <span class="nf">open</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">println</span><span class="p">(</span><span class="s">"Account $name Opened"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">fun</span> <span class="nf">close</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">println</span><span class="p">(</span><span class="s">"Account $name Closed"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Command.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">interface</span> <span class="nc">Command</span> <span class="p">{</span>
+    <span class="k">fun</span> <span class="nf">execute</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>OpenAccount.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">OpenAccount</span> <span class="p">:</span> <span class="nc">Command</span><span class="p">{</span>
+    <span class="kd">var</span> <span class="py">account</span><span class="p">:</span> <span class="nc">Account</span>
+
+    <span class="k">constructor</span><span class="p">(</span><span class="n">account</span><span class="p">:</span> <span class="nc">Account</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">account</span> <span class="p">=</span> <span class="n">account</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">execute</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">account</span><span class="p">.</span><span class="k">open</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>CloseAccount.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">CloseAccount</span> <span class="p">:</span> <span class="nc">Command</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="py">account</span><span class="p">:</span> <span class="nc">Account</span>
+
+    <span class="k">constructor</span><span class="p">(</span><span class="n">account</span><span class="p">:</span> <span class="nc">Account</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">account</span> <span class="p">=</span> <span class="n">account</span>
+    <span class="p">}</span>
+
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">execute</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">account</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>BankApp.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">BankApp</span> <span class="p">{</span>
+    <span class="k">private</span> <span class="kd">var</span> <span class="py">openAccount</span><span class="p">:</span> <span class="nc">Command</span><span class="p">?</span> <span class="p">=</span> <span class="k">null</span>
+    <span class="k">private</span> <span class="kd">var</span> <span class="py">closeAccount</span><span class="p">:</span> <span class="nc">Command</span><span class="p">?</span> <span class="p">=</span> <span class="k">null</span>
+
+    <span class="k">constructor</span><span class="p">(</span><span class="n">openAccount</span><span class="p">:</span> <span class="nc">Command</span><span class="p">?,</span> <span class="n">closeAccount</span><span class="p">:</span> <span class="nc">Command</span><span class="p">?)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">openAccount</span> <span class="p">=</span> <span class="n">openAccount</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">closeAccount</span> <span class="p">=</span> <span class="n">closeAccount</span>
+    <span class="p">}</span>
+
+
+    <span class="k">fun</span> <span class="nf">clickOpenAccount</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">println</span><span class="p">(</span><span class="s">"User click open an account"</span><span class="p">)</span>
+        <span class="n">openAccount</span><span class="o">!!</span><span class="p">.</span><span class="nf">execute</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="k">fun</span> <span class="nf">clickCloseAccount</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">println</span><span class="p">(</span><span class="s">"User click close an account"</span><span class="p">)</span>
+        <span class="n">closeAccount</span><span class="o">!!</span><span class="p">.</span><span class="nf">execute</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>main.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fun</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="nc">Array</span><span class="p">&lt;</span><span class="nc">String</span><span class="p">&gt;)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="py">account</span> <span class="p">:</span> <span class="nc">Account</span> <span class="p">=</span> <span class="nc">Account</span><span class="p">(</span><span class="s">"NickSeven"</span><span class="p">)</span>
+
+    <span class="kd">var</span> <span class="py">openAccount</span> <span class="p">:</span> <span class="nc">Command</span> <span class="p">=</span> <span class="nc">OpenAccount</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
+
+    <span class="kd">var</span> <span class="py">closeAccount</span> <span class="p">:</span> <span class="nc">Command</span> <span class="p">=</span> <span class="nc">CloseAccount</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
+
+    <span class="kd">var</span> <span class="py">bankApp</span> <span class="p">:</span> <span class="nc">BankApp</span> <span class="p">=</span> <span class="nc">BankApp</span><span class="p">(</span><span class="n">openAccount</span><span class="p">,</span><span class="n">closeAccount</span><span class="p">)</span>
+
+    <span class="n">bankApp</span><span class="p">.</span><span class="nf">clickOpenAccount</span><span class="p">()</span>
+
+    <span class="n">bankApp</span><span class="p">.</span><span class="nf">clickCloseAccount</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Kết quả</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User click open an account
+Account NickSeven Opened
+User click close an account
+Account NickSeven Closed
+
+Process finished with exit code 0
+</code></pre></div></div>
+
+<h2 id="khi-nào-áp-dụng">Khi nào áp dụng</h2>
+
+<p>Khi cần tham số hóa các đối tượng theo một hành động thực hiện.</p>
+
+<p>Khi cần tạo và thực thi các yêu cầu vào các thời điểm khác nhau.</p>
+
+  </div><a class="u-url" href="/design-pattern/behavioral-patterns/command" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/design-pattern/behavioral-patterns/chain-of-responsibility" class="prev-post">← Chain of Responsibility Pattern</a>
+      
+      
+        <a href="/design-pattern/behavioral-patterns/intro" class="next-post">Behavioral Patterns Intro →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

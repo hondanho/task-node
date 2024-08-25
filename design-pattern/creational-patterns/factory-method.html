@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Factory Method | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Factory Method" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Giới thiệu" />
+<meta property="og:description" content="Giới thiệu" />
+<link rel="canonical" href="http://localhost:4000/design-pattern/creational-patterns/factory-method" />
+<meta property="og:url" content="http://localhost:4000/design-pattern/creational-patterns/factory-method" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Factory Method" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"Giới thiệu","headline":"Factory Method","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/design-pattern/creational-patterns/factory-method"},"url":"http://localhost:4000/design-pattern/creational-patterns/factory-method"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Factory Method</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/design-pattern/creational-patterns">design-pattern/creational-patterns</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="giới-thiệu">Giới thiệu</h2>
+
+<p><strong>Định nghĩa</strong>: Factory Method là một Design Pattern thuộc nhóm Creational Patterns (Mẫu thiết kế tạo đối tượng), cung cấp một cách để tạo các đối tượng của lớp một cách linh hoạt mà không cần chỉ định rõ kiểu cụ thể của đối tượng nào sẽ được tạo.</p>
+
+<p><strong>Mục đích</strong>: Factory Method Pattern được sử dụng để giải quyết việc tạo đối tượng mà không cố định lớp cụ thể nào sẽ được tạo. Các mục đích chính của mẫu này bao gồm:</p>
+<ul>
+  <li><strong>Dễ dàng tạo các đối tượng của lớp</strong>: Factory Method cho phép tạo các đối tượng của lớp một cách dễ dàng thông qua một phương thức trừu tượng.</li>
+  <li><strong>Dễ dàng thay đổi cách tạo các đối tượng của lớp</strong>: Bằng cách triển khai lại phương thức factory ở các lớp con, bạn có thể thay đổi cách tạo đối tượng mà không ảnh hưởng đến client code.</li>
+  <li><strong>Dễ dàng kiểm tra các đối tượng của lớp</strong>: Factory Method cho phép bạn kiểm tra và quản lý các đối tượng được tạo một cách linh hoạt.</li>
+</ul>
+
+<p><strong>Ý tưởng chính</strong>: Factory Method Pattern dựa trên việc sử dụng một phương thức trừu tượng (thường được gọi là “factory method”) trong một lớp trừu tượng (thường được gọi là “Creator”). Các lớp con của Creator sẽ triển khai factory method này để tạo ra các đối tượng cụ thể của lớp. Điều này cho phép linh hoạt trong việc tạo đối tượng mà không cần biết chính xác kiểu cụ thể của đối tượng.</p>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p>Hãy tưởng tượng bạn đang xây dựng một hệ thống quản lý bán hàng trực tuyến cho thị trường Việt Nam. Ban đầu, hệ thống của bạn chỉ hỗ trợ thanh toán bằng tiền mặt khi nhận hàng (COD - Cash On Delivery), bởi vì đây là phương thức thanh toán phổ biến nhất tại Việt Nam.</p>
+
+<p>Tuy nhiên, theo thời gian, bạn nhận thấy nhu cầu của khách hàng đang thay đổi. Người dùng muốn có sự linh hoạt hơn trong việc thanh toán, bao gồm thanh toán trực tuyến qua thẻ tín dụng và ví điện tử.</p>
+
+<pre><code class="language-mermaid">graph TB
+
+    subgraph Before
+        A[Hệ thống &lt;br&gt;bán hàng trực tuyến]
+
+        B(Chỉ có &lt;br&gt; COD)
+
+        A --&gt; B
+    end
+
+    subgraph After
+        A[Hệ thống &lt;br&gt;bán hàng trực tuyến]
+
+        B(COD)
+
+        C(Thanh toán &lt;br&gt;online)
+
+        A --&gt; B
+        A --&gt; C
+    end
+</code></pre>
+
+<p>Việc thêm phương thức thanh toán mới vào hệ thống gây ra một vấn đề:</p>
+
+<p>Thêm một phương thức thanh toán trực tuyến vào hệ thống là một thách thức, vì hầu hết mã nguồn của bạn đã được thiết kế dựa trên phương thức thanh toán COD. Toàn bộ hệ thống có thể liên quan chặt chẽ đến việc xử lý thanh toán bằng tiền mặt và có rất nhiều mã nguồn sử dụng các logic và quy trình liên quan đến COD.</p>
+
+<p>Dưới góc độ lập trình, việc thêm thanh toán trực tuyến yêu cầu bạn phải thay đổi toàn bộ hệ thống để tích hợp các API thanh toán trực tuyến, xử lý giao dịch trực tuyến và cập nhật giao diện người dùng để cho phép người dùng chọn phương thức thanh toán mới. Điều này đồng nghĩa với việc sửa đổi và thêm mã nguồn rải rác trong hệ thống, và có thể dẫn đến các vấn đề về tính nhất quán và bảo trì trong tương lai.</p>
+
+<p>Nếu bạn quyết định mở rộng hệ thống để hỗ trợ thêm các phương thức thanh toán khác như ví điện tử hay chuyển khoản ngân hàng, bạn sẽ phải duyệt qua toàn bộ mã nguồn một lần nữa và thực hiện các sửa đổi lớn. Điều này dẫn đến mã nguồn trở nên phức tạp và khó bảo trì, không tuân theo nguyên tắc thiết kế mở rộng.</p>
+
+<h2 id="giải-quyết">Giải quyết</h2>
+
+<p>Mẫu thiết kế <code class="language-plaintext highlighter-rouge">Factory Method</code> đề xuất bạn thay thế việc tạo đối tượng trực tiếp bằng cách gọi đến một phương thức factory đặc biệt. Đừng lo lắng: các đối tượng vẫn được tạo ra bằng toán tử new, nhưng điều này được thực hiện từ bên trong phương thức factory. Các đối tượng được trả về bởi một phương thức factory thường được gọi là sản phẩm (products).</p>
+
+<p>Ở cái nhìn đầu tiên, thay đổi này có vẻ không có ý nghĩa: chúng ta chỉ di chuyển cuộc gọi hàm khởi tạo từ một phần của chương trình sang phần khác. Tuy nhiên, hãy xem xét điều này: bây giờ bạn có thể ghi đè phương thức factory trong một lớp con và thay đổi lớp của các sản phẩm được tạo ra bởi phương thức đó.</p>
+
+<p>Tuy nhiên, có một hạn chế nhỏ: các lớp con chỉ có thể trả về các loại sản phẩm khác nhau nếu những sản phẩm này có một Base Class hoặc Interface chung. Ngoài ra, phương thức factory trong Base Class nên có kiểu trả về được khai báo là Interface hoặc Base Class đó.</p>
+
+<p>Ví dụ, trong bài toán thanh toán ở Việt Nam, bạn có thể tạo một giao diện (interface) có tên là <code class="language-plaintext highlighter-rouge">PaymentMethod</code> với một phương thức chung là <code class="language-plaintext highlighter-rouge">performPayment</code> (thực hiện thanh toán). Sau đó, bạn tạo hai lớp cụ thể, ví dụ: <code class="language-plaintext highlighter-rouge">CashOnDeliveryPayment</code> và <code class="language-plaintext highlighter-rouge">OnlinePayment</code>, và cả hai lớp này đều triển khai giao diện <code class="language-plaintext highlighter-rouge">PaymentMethod</code>.</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class PaymentMethod {
+        + performPayment(): void
+    }
+
+    class CashOnDeliveryPayment {
+        + performPayment(): void
+    }
+
+    class OnlinePayment {
+        + performPayment(): void
+    }
+
+    PaymentMethod &lt;|-- CashOnDeliveryPayment
+    PaymentMethod &lt;|-- OnlinePayment
+</code></pre>
+
+<p>Lớp <code class="language-plaintext highlighter-rouge">CashOnDeliveryPayment</code> có thể triển khai phương thức <code class="language-plaintext highlighter-rouge">performPayment</code> để xử lý thanh toán bằng tiền mặt khi nhận hàng, trong khi lớp <code class="language-plaintext highlighter-rouge">OnlinePayment</code> triển khai phương thức đó để xử lý thanh toán trực tuyến.</p>
+
+<p>Tiếp theo, bạn tạo một lớp <code class="language-plaintext highlighter-rouge">PaymentFactory</code> với một phương thức <code class="language-plaintext highlighter-rouge">createPaymentMethod</code>, và các lớp cụ thể <code class="language-plaintext highlighter-rouge">CashOnDeliveryPaymentFactory</code> và <code class="language-plaintext highlighter-rouge">OnlinePaymentFactory</code> kế thừa từ lớp này.</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class PaymentFactory {
+        + createPaymentMethod(): PaymentMethod
+    }
+
+    class CashOnDeliveryPaymentFactory {
+        + createPaymentMethod(): PaymentMethod
+    }
+
+    class OnlinePaymentFactory {
+        + createPaymentMethod(): PaymentMethod
+    }
+
+    PaymentFactory &lt;|.. CashOnDeliveryPaymentFactory
+    PaymentFactory &lt;|.. OnlinePaymentFactory
+</code></pre>
+
+<p>Lớp <code class="language-plaintext highlighter-rouge">CashOnDeliveryPaymentFactory</code> sẽ triển khai phương thức <code class="language-plaintext highlighter-rouge">createPaymentMethod</code> để trả về một đối tượng <code class="language-plaintext highlighter-rouge">CashOnDeliveryPayment</code>, trong khi <code class="language-plaintext highlighter-rouge">OnlinePaymentFactory</code> sẽ trả về một đối tượng <code class="language-plaintext highlighter-rouge">OnlinePayment</code>.</p>
+
+<p>Với cách làm này, mã nguồn sử dụng phương thức nhà máy (factory method) không phát hiện sự khác biệt giữa các phương thức thanh toán khác nhau. Khách hàng (client) xem xét tất cả các phương thức thanh toán như là đối tượng <code class="language-plaintext highlighter-rouge">PaymentMethod</code> trừu tượng và biết rằng tất cả các đối tượng này đều có thể thực hiện phương thức <code class="language-plaintext highlighter-rouge">performPayment</code>, nhưng cụ thể cách mỗi phương thức hoạt động không quan trọng đối với khách hàng.</p>
+
+<h2 id="cấu-trúc">Cấu trúc</h2>
+
+<p>Factory Method có cấu trúc đơn giản, bao gồm các thành phần sau:</p>
+
+<ul>
+  <li>Lớp cha: Lớp cha chứa phương thức trừu tượng để tạo các đối tượng của lớp.</li>
+  <li>Lớp con: Các lớp con triển khai phương thức trừu tượng của lớp cha để tạo các đối tượng của lớp theo cách tùy ý.</li>
+</ul>
+
+<pre><code class="language-mermaid">classDiagram
+    class Creator {
+        +factoryMethod()
+    }
+
+    class ConcreteCreatorA {
+        +factoryMethod()
+    }
+
+    class ConcreteCreatorB {
+        +factoryMethod()
+    }
+
+    class Product {
+        &lt;&lt;interface&gt;&gt;
+        doSomeThing()
+    }
+    
+    class ProductA {
+        
+    }
+    
+    class ProductB {
+    
+    }
+    
+    Product &lt;|-- ProductA
+    Product &lt;|-- ProductB
+    
+    Creator &lt;|-- ConcreteCreatorA
+    Creator &lt;|-- ConcreteCreatorB
+    
+    Creator --&gt; Product
+    
+</code></pre>
+
+<h2 id="cách-triển-khai">Cách triển khai</h2>
+
+<p>Để triển khai Factory Method Pattern, ta cần:</p>
+
+<ul>
+  <li>Xác định Interface/ Lớp trừu tượng cho sản phẩm:</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Định nghĩa giao diện Product</span>
+<span class="kd">interface</span> <span class="nc">Product</span> <span class="o">{</span>
+    <span class="kt">void</span> <span class="nf">doSomething</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="c1">// Các lớp cụ thể triển khai giao diện Product</span>
+<span class="kd">class</span> <span class="nc">ProductA</span> <span class="kd">implements</span> <span class="nc">Product</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doSomething</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"ProductA is doing something."</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">ProductB</span> <span class="kd">implements</span> <span class="nc">Product</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doSomething</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"ProductB is doing something."</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Xác định lớp Creator trừu tượng với phương thức factory method:</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Định nghĩa lớp Creator và phương thức factoryMethod</span>
+<span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Creator</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="nc">Product</span> <span class="nf">factoryMethod</span><span class="o">();</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">anOperation</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">Product</span> <span class="n">product</span> <span class="o">=</span> <span class="n">factoryMethod</span><span class="o">();</span>
+        <span class="n">product</span><span class="o">.</span><span class="na">doSomething</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Các lớp ConcreteCreator triển khai factoryMethod để tạo Product tương ứng</span>
+<span class="kd">class</span> <span class="nc">ConcreteCreatorA</span> <span class="kd">extends</span> <span class="nc">Creator</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">Product</span> <span class="nf">factoryMethod</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">ProductA</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">ConcreteCreatorB</span> <span class="kd">extends</span> <span class="nc">Creator</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">Product</span> <span class="nf">factoryMethod</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">ProductB</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Sử dụng Creator và ConcreteCreator để lấy ra sản phẩm:</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Sử dụng ConcreteCreatorA để tạo ProductA</span>
+        <span class="nc">Creator</span> <span class="n">creatorA</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ConcreteCreatorA</span><span class="o">();</span>
+        <span class="nc">Product</span> <span class="n">productA</span> <span class="o">=</span> <span class="n">creatorA</span><span class="o">.</span><span class="na">factoryMethod</span><span class="o">();</span>
+        <span class="n">productA</span><span class="o">.</span><span class="na">doSomething</span><span class="o">();</span>
+
+        <span class="c1">// Sử dụng ConcreteCreatorB để tạo ProductB</span>
+        <span class="nc">Creator</span> <span class="n">creatorB</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ConcreteCreatorB</span><span class="o">();</span>
+        <span class="nc">Product</span> <span class="n">productB</span> <span class="o">=</span> <span class="n">creatorB</span><span class="o">.</span><span class="na">factoryMethod</span><span class="o">();</span>
+        <span class="n">productB</span><span class="o">.</span><span class="na">doSomething</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="ví-dụ">Ví dụ</h2>
+
+<p>Dưới đây là một ví dụ minh họa về Factory Method trong Java:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Định nghĩa lớp hình học cơ bản</span>
+<span class="kd">interface</span> <span class="nc">Shape</span> <span class="o">{</span>
+    <span class="kt">void</span> <span class="nf">draw</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="c1">// Triển khai lớp Circle</span>
+<span class="kd">class</span> <span class="nc">Circle</span> <span class="kd">implements</span> <span class="nc">Shape</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Drawing a Circle"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Triển khai lớp Rectangle</span>
+<span class="kd">class</span> <span class="nc">Rectangle</span> <span class="kd">implements</span> <span class="nc">Shape</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Drawing a Rectangle"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Lớp cơ sở ShapeFactory khai báo một phương thức factory method</span>
+<span class="c1">// Mọi lớp con của ShapeFactory cần triển khai phương thức này để tạo đối tượng hình học cụ thể.</span>
+<span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">ShapeFactory</span> <span class="o">{</span>
+
+    <span class="c1">// Factory Method: Một phương thức abstract để tạo đối tượng hình học.</span>
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="nc">Shape</span> <span class="nf">createShape</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="c1">// Lớp CircleFactory là một lớp con của ShapeFactory</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CircleFactory</span> <span class="kd">extends</span> <span class="nc">ShapeFactory</span> <span class="o">{</span>
+
+    <span class="c1">// Triển khai factory method để tạo đối tượng Circle.</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">Shape</span> <span class="nf">createShape</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Circle</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Lớp RectangleFactory cũng là một lớp con của ShapeFactory</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RectangleFactory</span> <span class="kd">extends</span> <span class="nc">ShapeFactory</span> <span class="o">{</span>
+
+    <span class="c1">// Triển khai factory method để tạo đối tượng Rectangle.</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">Shape</span> <span class="nf">createShape</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Rectangle</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">ShapeFactory</span> <span class="n">circleFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">CircleFactory</span><span class="o">();</span>
+        <span class="nc">Shape</span> <span class="n">circle</span> <span class="o">=</span> <span class="n">circleFactory</span><span class="o">.</span><span class="na">createShape</span><span class="o">();</span>
+        <span class="n">circle</span><span class="o">.</span><span class="na">draw</span><span class="o">();</span> <span class="c1">// Output: Drawing a Circle</span>
+
+        <span class="nc">ShapeFactory</span> <span class="n">rectangleFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">RectangleFactory</span><span class="o">();</span>
+        <span class="nc">Shape</span> <span class="n">rectangle</span> <span class="o">=</span> <span class="n">rectangleFactory</span><span class="o">.</span><span class="na">createShape</span><span class="o">();</span>
+        <span class="n">rectangle</span><span class="o">.</span><span class="na">draw</span><span class="o">();</span> <span class="c1">// Output: Drawing a Rectangle</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>Trong ví dụ này, chúng ta đã triển khai các lớp Circle và Rectangle để thực hiện phương thức draw(), và sau đó gọi phương thức này từ đối tượng Shape được tạo bởi các Factory tương ứng. Điều này cho phép bạn tạo các đối tượng hình học mà không cần quan tâm đến việc cụ thể chúng là hình tròn hay hình chữ nhật.</p>
+
+<h2 id="so-sánh">So sánh</h2>
+
+<p>Factory Method có thể được so sánh với một số Design Pattern tương tự như sau:</p>
+
+<ul>
+  <li>
+    <p>Builder Pattern: Cả Builder Pattern và Factory Method đều cung cấp cách tạo ra các đối tượng một cách linh hoạt. Tuy nhiên, Builder Pattern tách biệt quá trình xây dựng đối tượng với biểu diễn của nó, trong khi Factory Method vẫn kết hợp hai khía cạnh này.</p>
+  </li>
+  <li>
+    <p>Abstract Factory Pattern: Abstract Factory cung cấp interface để tạo ra các họ đối tượng liên quan nhau, trong khi Factory Method chỉ tập trung vào việc tạo một lớp đối tượng cụ thể.</p>
+  </li>
+  <li>
+    <p>Prototype Pattern: Prototype tạo ra đối tượng bằng cách clone một đối tượng đã tồn tại, trong khi Factory Method tạo ra đối tượng mới mỗi lần được gọi.</p>
+  </li>
+  <li>
+    <p>Singleton Pattern: Singleton chỉ cho phép tạo một thể hiện của lớp, còn Factory Method cho phép tạo nhiều thể hiện khác nhau của lớp.</p>
+  </li>
+</ul>
+
+<p>Như vậy, mặc dù có một số điểm tương đồng, Factory Method vẫn có những đặc điểm riêng biệt so với các Pattern khác.</p>
+
+<h2 id="kết-luận">Kết Luận</h2>
+
+<p>Factory Pattern thường được sử dụng trong các trường hợp sau:</p>
+
+<ul>
+  <li>
+    <p>Khi có nhu cầu tạo ra các đối tượng phức tạp với nhiều bước xử lý khác nhau hoặc phụ thuộc vào điều kiện cụ thể nào đó. Factory Method cho phép tách quá trình khởi tạo phức tạp ra khỏi business logic chính.</p>
+  </li>
+  <li>
+    <p>Khi muốn mở rộng để thêm các lớp con mới mà không làm ảnh hưởng đến code hiện tại. Factory Method cho phép mở rộng dễ dàng hơn so với khởi tạo trực tiếp.</p>
+  </li>
+  <li>
+    <p>Khi muốn đóng gói hoặc che giấu logic khởi tạo của hệ thống.</p>
+  </li>
+  <li>
+    <p>Khi muốn tạo ra các đối tượng theo cách chung chung mà không cần chỉ định lớp cụ thể.</p>
+  </li>
+</ul>
+
+<p>Như vậy, Factory Pattern là một pattern hữu ích giúp tăng tính linh hoạt và khả năng mở rộng cho hệ thống bằng cách tách biệt quá trình khởi tạo đối tượng. Pattern này được sử dụng rộng rãi trong thiết kế phần mềm.</p>
+
+  </div><a class="u-url" href="/design-pattern/creational-patterns/factory-method" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/design-pattern/creational-patterns/builder" class="prev-post">← Builder Pattern</a>
+      
+      
+        <a href="/design-pattern/creational-patterns/intro" class="next-post">Creational Patterns Intro →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

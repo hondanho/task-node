@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Abstract Factory | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Abstract Factory" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Giới thiệu" />
+<meta property="og:description" content="Giới thiệu" />
+<link rel="canonical" href="http://localhost:4000/design-pattern/creational-patterns/abstract-factory" />
+<meta property="og:url" content="http://localhost:4000/design-pattern/creational-patterns/abstract-factory" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Abstract Factory" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"Giới thiệu","headline":"Abstract Factory","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/design-pattern/creational-patterns/abstract-factory"},"url":"http://localhost:4000/design-pattern/creational-patterns/abstract-factory"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Abstract Factory</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/design-pattern/creational-patterns">design-pattern/creational-patterns</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="giới-thiệu">Giới thiệu</h2>
+
+<p>Trong cuốn sách về Design Pattern, chúng ta đã tìm hiểu về nhóm Creational Pattern, bao gồm những Pattern giúp khởi tạo đối tượng một cách linh hoạt và thuận tiện. Factory Method là một Pattern đã được giới thiệu, giúp tạo ra các đối tượng của một lớp. Tuy nhiên, trong nhiều trường hợp, các đối tượng có quan hệ với nhau và được nhóm thành các họ. Lúc này, chúng ta cần Abstract Factory.</p>
+
+<p>Abstract Factory cung cấp một interface để tạo ra các họ đối tượng liên quan với nhau một cách linh hoạt.</p>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p>Giả sử bạn đang phát triển một ứng dụng gọi món ăn cho nhà hàng. Các món ăn được phân thành các nhóm:</p>
+
+<ul>
+  <li>Món lẩu: Thịt bò, rau củ, nấm hương</li>
+  <li>Món phở: Bánh phở, thịt bò, giá đỗ</li>
+  <li>Món bún: Bún, nem nuong, chả giò</li>
+</ul>
+
+<p>Khi người dùng gọi món, các nguyên liệu cần được chuẩn bị phù hợp với nhau trong cùng một nhóm món.</p>
+
+<p>Ngoài ra, nhà hàng thường xuyên thay đổi thực đơn, bổ sung các nhóm món mới.</p>
+
+<p>Chúng ta cần một cách để dễ dàng tạo ra và thay đổi các nhóm món mà không ảnh hưởng đến code hiện tại.</p>
+
+<h2 id="giải-quyết">Giải quyết</h2>
+
+<p>Để giải quyết vấn đề trên, Abstract Factory đưa ra ý tưởng:</p>
+
+<ul>
+  <li>
+    <p>Tạo interface định nghĩa các phương thức tạo các loại nguyên liệu trừu tượng: thịt, rau, carb, …</p>
+  </li>
+  <li>
+    <p>Tạo các Concrete Factory triển khai interface này, mỗi Factory tương ứng với một nhóm món, chịu trách nhiệm tạo ra các nguyên liệu phù hợp.</p>
+  </li>
+  <li>
+    <p>Code sẽ sử dụng Abstract Factory để lấy các nguyên liệu một cách tổng quát.</p>
+  </li>
+</ul>
+
+<p>Như vậy, khi thêm nhóm món mới, chỉ cần tạo thêm Concrete Factory tương ứng, mà không làm ảnh hưởng code hiện tại.</p>
+
+<h2 id="cấu-trúc">Cấu trúc</h2>
+
+<p>Abstract Factory có cấu trúc gồm các thành phần chính sau:</p>
+
+<pre><code class="language-mermaid">classDiagram
+
+  class AbstractFactory {
+    &lt;&lt;interface&gt;&gt;
+    +CreateProductA()
+    +CreateProductB()
+  }
+
+  AbstractFactory &lt;|-- ConcreteFactory1
+  AbstractFactory &lt;|-- ConcreteFactory2
+
+ConcreteProductA1 --|&gt; AbstractProductA
+ConcreteProductA2 --|&gt; AbstractProductA
+
+ConcreteProductB1 --|&gt; AbstractProductB
+ConcreteProductB2 --|&gt; AbstractProductB
+
+
+ConcreteFactory1: +CreateProductA()
+ConcreteFactory1: +CreateProductB()
+
+ConcreteFactory2: +CreateProductA()
+ConcreteFactory2: +CreateProductB()
+
+Client --&gt; AbstractFactory
+ConcreteFactory1 ..&gt; ConcreteProductA1
+ConcreteFactory2 ..&gt; ConcreteProductA2
+ConcreteFactory1 ..&gt; ConcreteProductB1
+ConcreteFactory2 ..&gt; ConcreteProductB2
+
+</code></pre>
+
+<ul>
+  <li>Abstract Factory interface: định nghĩa các phương thức nhà máy trừu tượng để tạo ra các sản phẩm trừu tượng.</li>
+  <li>Concrete Factory: cài đặt các phương thức nhà máy cụ thể để tạo ra các sản phẩm cụ thể. Mỗi Concrete Factory tạo ra một tập sản phẩm khác biệt, phù hợp với một variant.</li>
+  <li>Abstract Product: định nghĩa interface chung cho một loại sản phẩm trừu tượng.</li>
+  <li>Concrete Product: cài đặt các sản phẩm cụ thể, triển khai từ Abstract Product. Mỗi sản phẩm thuộc về một Concrete Factory nhất định.</li>
+  <li>Client: sử dụng Abstract Factory và Abstract Product để tương tác với hệ thống. Không cần quan tâm đến các lớp cụ thể.</li>
+</ul>
+
+<h2 id="cách-triển-khai">Cách triển khai</h2>
+
+<p>Đầu tiên, ta định nghĩa interface AbstractFactory:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">interface</span> <span class="nc">AbstractFactory</span> <span class="o">{</span>
+  <span class="nc">AbstractProductA</span> <span class="nf">createProductA</span><span class="o">();</span>
+  <span class="nc">AbstractProductB</span> <span class="nf">createProductB</span><span class="o">();</span> 
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Tiếp theo, định nghĩa các Concrete Factory triển khai AbstractFactory:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">ConcreteFactory1</span> <span class="kd">implements</span> <span class="nc">AbstractFactory</span> <span class="o">{</span>
+
+  <span class="nd">@Override</span>
+  <span class="nc">AbstractProductA</span> <span class="nf">createProductA</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">ConcreteProductA1</span><span class="o">();</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="nc">AbstractProductB</span> <span class="nf">createProductB</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">ConcreteProductB1</span><span class="o">();</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">ConcreteFactory2</span> <span class="kd">implements</span> <span class="nc">AbstractFactory</span> <span class="o">{</span>
+
+  <span class="c1">// implements createProductA() and createProductB()</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Định nghĩa các Abstract Product dưới dạng interface:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">interface</span> <span class="nc">AbstractProductA</span> <span class="o">{}</span>
+<span class="kd">interface</span> <span class="nc">AbstractProductB</span> <span class="o">{}</span>
+</code></pre></div></div>
+
+<p>Triển khai các Concrete Product từ Abstract Product:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">ConcreteProductA1</span> <span class="kd">implements</span> <span class="nc">AbstractProductA</span> <span class="o">{}</span>
+
+<span class="kd">class</span> <span class="nc">ConcreteProductB1</span> <span class="kd">implements</span> <span class="nc">AbstractProductB</span> <span class="o">{}</span>
+</code></pre></div></div>
+
+<p>Cuối cùng, ở Client chúng ta sẽ sử dụng AbstractFactory để tạo ra các Abstract Product mà không cần quan tâm đến các lớp cụ thể:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+
+    <span class="c1">// Khởi tạo factory </span>
+    <span class="nc">AbstractFactory</span> <span class="n">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ConcreteFactory1</span><span class="o">();</span>
+
+    <span class="c1">// Sử dụng factory để lấy các sản phẩm</span>
+    <span class="nc">AbstractProductA</span> <span class="n">productA</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="na">createProductA</span><span class="o">();</span>
+    <span class="nc">AbstractProductB</span> <span class="n">productB</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="na">createProductB</span><span class="o">();</span>
+
+    <span class="c1">// Sử dụng các sản phẩm </span>
+    <span class="n">productA</span><span class="o">.</span><span class="na">methodA</span><span class="o">();</span>
+    <span class="n">productB</span><span class="o">.</span><span class="na">methodB</span><span class="o">();</span>
+
+    <span class="c1">// Thay đổi factory khác</span>
+    <span class="n">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ConcreteFactory2</span><span class="o">();</span>
+
+    <span class="c1">// Lấy lại các sản phẩm </span>
+    <span class="n">productA</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="na">createProductA</span><span class="o">();</span>
+    <span class="n">productB</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="na">createProductB</span><span class="o">();</span>
+
+    <span class="c1">// Sử dụng các sản phẩm mới</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<h2 id="ví-dụ">Ví dụ</h2>
+
+<p>Dưới đây là một ví dụ minh họa về Abstract Factory trong Java:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Interfaces cho các thành phần món ăn</span>
+<span class="kd">interface</span> <span class="nc">IProtein</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">prepare</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="kd">interface</span> <span class="nc">ICarbohydrate</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">prepare</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="kd">interface</span> <span class="nc">IVegetable</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">prepare</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="c1">// Các thành phần cụ thể</span>
+<span class="kd">class</span> <span class="nc">Beef</span> <span class="kd">implements</span> <span class="nc">IProtein</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">prepare</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Preparing beef"</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">RiceNoodle</span> <span class="kd">implements</span> <span class="nc">ICarbohydrate</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">prepare</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Preparing rice noodle"</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Các thành phần khác...</span>
+
+<span class="c1">// Abstract factory interface </span>
+<span class="kd">interface</span> <span class="nc">FoodFactory</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="nc">IProtein</span> <span class="nf">createProtein</span><span class="o">();</span>
+  <span class="kd">public</span> <span class="nc">ICarbohydrate</span> <span class="nf">createCarbohydrate</span><span class="o">();</span>
+  <span class="kd">public</span> <span class="nc">IVegetable</span> <span class="nf">createVegetable</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="c1">// Concrete factory</span>
+<span class="kd">class</span> <span class="nc">LauFactory</span> <span class="kd">implements</span> <span class="nc">FoodFactory</span> <span class="o">{</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="nc">IProtein</span> <span class="nf">createProtein</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">Beef</span><span class="o">();</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="nc">ICarbohydrate</span> <span class="nf">createCarbohydrate</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">RiceNoodle</span><span class="o">();</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="nc">IVegetable</span> <span class="nf">createVegetable</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">Cabbage</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Client</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">FoodFactory</span> <span class="n">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">LauFactory</span><span class="o">();</span>
+    <span class="nc">IProtein</span> <span class="n">protein</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="na">createProtein</span><span class="o">();</span>
+    <span class="nc">ICarbohydrate</span> <span class="n">carb</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="na">createCarbohydrate</span><span class="o">();</span>
+
+    <span class="n">protein</span><span class="o">.</span><span class="na">prepare</span><span class="o">();</span>
+    <span class="n">carb</span><span class="o">.</span><span class="na">prepare</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Chương trình sẽ in ra các bước chuẩn bị cho từng thành phần món lẩu. Bạn có thể dễ dàng thêm các nhóm món khác bằng cách tạo thêm Concrete Factory.</p>
+
+<h2 id="so-sánh">So sánh</h2>
+
+<p>Abstract Factory có thể được so sánh với một số Design Pattern tương tự như:</p>
+
+<ul>
+  <li>
+    <p>Factory Method: Factory Method chỉ cung cấp phương thức factory để tạo ra đối tượng của một lớp cụ thể. Trong khi đó, Abstract Factory cung cấp interface để tạo ra toàn bộ họ các đối tượng liên quan.</p>
+  </li>
+  <li>
+    <p>Builder Pattern: Builder tập trung vào việc tạo ra một đối tượng phức tạp bằng cách tách quá trình xây dựng ra khỏi biểu diễn. Abstract Factory tập trung vào việc tạo ra các đối tượng thuộc cùng một họ liên quan.</p>
+  </li>
+  <li>
+    <p>Prototype Pattern: Prototype tạo ra đối tượng bằng cách clone đối tượng ban đầu. Abstract Factory tạo ra đối tượng mới mỗi lần được gọi.</p>
+  </li>
+  <li>
+    <p>Singleton Pattern: Singleton chỉ cho phép tồn tại duy nhất một instance. Abstract Factory tạo nhiều đối tượng khác nhau.</p>
+  </li>
+</ul>
+
+<h2 id="kết-luận">Kết luận</h2>
+
+<p>Abstract Factory là một Design Pattern hữu ích, có một số ưu điểm sau:</p>
+
+<ul>
+  <li>
+    <p>Tách biệt phần triển khai với phần sử dụng code, giảm sự phụ thuộc lẫn nhau giữa các đối tượng.</p>
+  </li>
+  <li>
+    <p>Có thể dễ dàng thay đổi, mở rộng cách tạo đối tượng mà không ảnh hưởng đến phần còn lại của code.</p>
+  </li>
+  <li>
+    <p>Giúp tạo ra các họ đối tượng liên quan một cách thống nhất.</p>
+  </li>
+</ul>
+
+<p>Tuy nhiên, Pattern cũng có một số nhược điểm cần lưu ý:</p>
+
+<ul>
+  <li>
+    <p>Cấu trúc phức tạp, nhiều lớp trừu tượng cần phải triển khai.</p>
+  </li>
+  <li>
+    <p>Khó khăn trong việc cân bằng giữa tính linh hoạt và hiệu suất.</p>
+  </li>
+</ul>
+
+<p>Vì vậy, Abstract Factory phù hợp trong trường hợp cần tạo ra các họ đối tượng liên quan, có tính mở rộng cao. Không nên sử dụng nếu chỉ cần tạo đơn giản một Object.</p>
+
+<p>Như vậy, với ưu điểm về tính linh hoạt và mở rộng, Abstract Factory là một Pattern rất hữu ích, phổ biến trong thiết kế phần mềm.</p>
+
+  </div><a class="u-url" href="/design-pattern/creational-patterns/abstract-factory" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/design-pattern/behavioral-patterns/visitor" class="prev-post">← Visitor Pattern</a>
+      
+      
+        <a href="/design-pattern/creational-patterns/builder" class="next-post">Builder Pattern →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

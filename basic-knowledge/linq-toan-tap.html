@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Linq toàn tập | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Linq toàn tập" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Trải nghiệm thử LINQ xem dư nào" />
+<meta property="og:description" content="Trải nghiệm thử LINQ xem dư nào" />
+<link rel="canonical" href="http://localhost:4000/basic-knowledge/linq-toan-tap" />
+<meta property="og:url" content="http://localhost:4000/basic-knowledge/linq-toan-tap" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-03-12T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Linq toàn tập" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-03-12T00:00:00+07:00","datePublished":"2024-03-12T00:00:00+07:00","description":"Trải nghiệm thử LINQ xem dư nào","headline":"Linq toàn tập","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/basic-knowledge/linq-toan-tap"},"url":"http://localhost:4000/basic-knowledge/linq-toan-tap"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Linq toàn tập</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-03-12T00:00:00+07:00" itemprop="datePublished">Mar 12, 2024
+      </time>• posted on  <a class="category-name" href="/category/basic-knowledge">basic-knowledge</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Trải nghiệm thử LINQ xem dư nào
+<script src="https://gist.github.com/hondanho/b0801d0ea19ae46b1734f7d0f68684e1.js"></script></p>
+
+<p>Hiểu khái Niệm cơ bản về LINQ</p>
+
+<p><strong>LINQ</strong> - Language Integrated Query (tạm dịch là ngôn ngữ truy vấn tích hợp) - là cách thức truy vấn dữ liệu từ một tập hợp dữ liệu(hiểu nôm na là cách thức xử lý dữ liệu: query, find, sort, cast,..)</p>
+
+<p><strong>LINQ</strong> cung cấp cho chúng ta những providers khác nhau để có thể truy vấn đến những nguồn dữ liệu khác nhau. Dưới đây là bảng providers và giải thích:</p>
+
+<p><img src="/assets/image/image-29.png" alt="image-29.png" /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Tên provider</th>
+      <th>Mô tả</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LINQ to Objects</td>
+      <td>Sử dụng LINQ đối với các đối tượng collection mà implement từ IEnumerable hoặc IEnumerable<T> (dữ liệu được lưu trong bộ nhớ). Được sử dụng rộng rãi đặc biệt đối với những bài toán cần hiệu năng cao.</T></td>
+    </tr>
+    <tr>
+      <td>LINQ to SQL</td>
+      <td>Thực hiện map các tables, views, store procedures thành các đối tượng. LINQ sẽ thực hiện truy vấn trên các đối tượng đó bằng cách chuyển đổi qua lại giữa đối tượng và câu lệnh sql. Ngoài truy vấn ta cũng có thể thực hiện thêm/sửa/xóa dữ liệu dựa trên các đối tượng trên. Hỗ trợ transaction. Ưu điểm: được sử dụng khá nhiều trong thực tế dưới cái tên Entity Framework hoặc Entity Framework Core. Nhược điểm: chỉ làm việc với cơ sở dữ liệu là SQL Server.</td>
+    </tr>
+    <tr>
+      <td>LINQ to Entities</td>
+      <td>Tương tự như LINQ to SQL nhưng hỗ trợ nhiều loại cơ sở dữ liệu.Nhược điểm: sử dụng phức tạp. Nhiều cơ sở dữ liệu không thích hợp sử dụng chung với .Net.</td>
+    </tr>
+    <tr>
+      <td>LINQ to DataSets</td>
+      <td>Sự kết hợp giữa LINQ và ADO.NET.</td>
+    </tr>
+    <tr>
+      <td>LINQ to XML</td>
+      <td>Truy vấn thông tin trong file XML.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>LINQ API</strong>
+Có thể viết truy vấn LINQ cho các class implement IEnumerable or IQueryable interface. 2 class static Enumerable và Queryable có chứa các Extension Method viết truy vấn LINQ
+<img src="/assets/image/Untitled-design-4.png" alt="Untitled-design-4.png" />
+Ngoài ra còn có các API bên thứ 3 như LINQ to AMazon, LINQ to LDAP, PLINQ
+Những điều cần nhớ:</p>
+
+<ul>
+  <li>Sử dụng namespace System.Linq</li>
+  <li>LINQ QPI bao gồm 2 class static Enumerable and Queryable</li>
+  <li>class Enumerable static bao gồm các Extension Method cho các class implement interface IEnumerable<T>, class Queryable static bao gồm các Extension Method cho các class implement interface IQueryable<T>,</T></T></li>
+  <li>Kiểu IEnumerable<T> là collection trong bộ nhớ như List<T>, Dictionary&lt;TKey, TValue&gt;, SortedList&lt;TKey, TValue&gt;, Queue<T>, Stack<T>, Hashset<T></T></T></T></T></T></li>
+</ul>
+
+<h3 id="cú-pháp-viết-truy-vấn-linqcó-2-cách-cơ-bản-để-viết-truy-vấn-linq-linq-query-và-linq-method">Cú pháp viết truy vấn LINQCó 2 cách cơ bản để viết truy vấn LINQ: Linq Query và Linq Method</h3>
+
+<p>Trong Linq thì có thể viết kết hợp Lambda Expression, Expression giúp code linh hoạt, gọn, dễ hiểu hơn.</p>
+
+<p>Dưới đây là ví dụ về các toán tử truy vấn, Expression, Expression Tree , Lambda Expression, từ khóa Let|Into và các truy vấn LINQ phức tạp
+<script src="https://gist.github.com/hondanho/fac7ecc3b59c480c7df974185a65c136.js"></script></p>
+
+<h3 id="sự-khác-nhau-giữa-ienumerable-và-iqueryable">Sự khác nhau giữa IEnumerable và IQueryable</h3>
+<p>| IEnumerable | IQueryable  |
+| ———– | ———– |
+| IEnumerable nằm trong namespace System.Collections | IQueryable nằm trong namespace System.Linq |
+| IEnumerable có thể duyệt cac phần tử chỉ 1 chiều tiến lên, nó không thể duyệt ngược lại giữa các phần tử.| IQueryable cũng chỉ có thể di chuyển 1 chiều tiến lên trong collection, nó không thể move back lại. |
+| IEnumerable tốt nhất khi truy vấn từ một collection in-memory tức là trong bộ nhớ RAM như List, Array… | IQueryable tốt nhất cho truy vấn dữ liệu out-memory như là database.|
+| Khi truy vấn dữ liệu từ database, IEnumerable thực thi câu lệnh select trên server sau đó tải toàn bộ dữ liệu về client rồi mới lọc dữ liệu. | Khi truy vấn, IQueryable thực thi câu lệnh truy vấn và lọc dữ liệu trên Server luôn|
+| IEnumerable phù hợp với Linq to Object và Linq to XML | IQueryable phù hợp cho Linq to SQL |
+| IEnumerable không hỗ trợ custom query | IQueryable hỗ trợ custom query sử dụng phương thức CreateQuery và Execute. |
+| IEnumerable không hỗ trợ lazy loading vì thế không phù hợp với trường hợp phân trang. | IQueryable hỗ trợ lazy loading. Vì thế nó phù hợp cho trường hợp phân trang.Ví dụ về IQueryable |</p>
+
+<script src="https://gist.github.com/hondanho/fe4929b2c60dcd9cb299dc4ca97af2f1.js"></script>
+
+<h3 id="ưu-và-nhược-điểm-của-linq-so-với-stored-procedure">Ưu và nhược điểm của LINQ so với Stored Procedure</h3>
+<ul>
+  <li>Stored Procedure and compiled SQL query có tốc độ thực thi nhanh nhất vì nó gần với dữ liệu trên CSDL nhất: mục tiêu chạy thật nhanh, nhưng tính mở rộng kém, khả năng bảo trì kém.</li>
+  <li>LINQ là thư viện cho phép truy vấn trên nhiều kiểu dữ liệu khác nhau: Object collections, XML, LINQ to SQL (truy vấn cơ sở dữ liệu MS-SQL), LINQ to Dataset, LINQ to Entity (ADO.net Entity Framework), LINQ to SharePoint, LINQ to XML, LINQ to nHIbernate, LINQ to XYZ, LINQ to Azure SQL Service….: một cú pháp lập trình chung–&gt; tính mở rộng rất cao.</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>LINQ</th>
+      <th>Stored Procedure</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Compiled lại mỗi lần query</td>
+      <td>Plan Excution dưới server và tận dụng full advantage of SQL features</td>
+    </tr>
+    <tr>
+      <td>Hỗ trợ Multiple Thread .NET</td>
+      <td>Không thể chạy Multiple Thread</td>
+    </tr>
+    <tr>
+      <td>Cung cấp model query có thể dùng cho nhiều Database cùng 1 cú pháp</td>
+      <td>Phải re-write nếu đổi Database</td>
+    </tr>
+    <tr>
+      <td>Dễ dàng debug, hỗ trợ IntelliSense khi code</td>
+      <td>Có thể debug trên tool manager RDBMS nhưng vẫn nhằn hơn, ngoài ra có thể dùng cách check log hoặc print message</td>
+    </tr>
+    <tr>
+      <td>Hỗ trợ gen ra SQL statement ở mức cơ bản, không tốt với các statement phức tạp</td>
+      <td>Viết các câu truy vấn SQL phức tạp</td>
+    </tr>
+    <tr>
+      <td>Chỉ một cú pháp lập trình chung–&gt; tính mở rộng rất cao</td>
+      <td>Thực thi nhanh, Giảm tải băng thông(thay vì gọi nhiều lần thì gom SQL lại thành 1 SP rồi call đúng 1 lần), Hỗ trợ cache</td>
+    </tr>
+    <tr>
+      <td>Khi desploy mọi thứ được compiled thành DLL, dễ dàng hơn.</td>
+      <td>Cần cung cấp script để call</td>
+    </tr>
+    <tr>
+      <td>Không phải cách tốt khi dùng Bulk Insert hoặc Bulk Update: ảnh hướng tới hiệu suất do số lần truy cập vào máy chủ CSDL</td>
+      <td>Thực thi luôn trên Server, có thể gửi data trên application dạng: string_split, xml, json, cast list thành many select, table value parameter</td>
+    </tr>
+    <tr>
+      <td>Sử dụng với bài toán cần check logic, testing, thay đổi bảo trì nhiều, phần cứng vẫn tải được</td>
+      <td>Sử dụng với các bài toán cần truy vấn lưu trữ data lớn, đòi hỏi performance thì nên dùng store procedure để tận dụng thể mạnh của database</td>
+    </tr>
+  </tbody>
+</table>
+
+
+  </div><a class="u-url" href="/basic-knowledge/linq-toan-tap" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/basic-knowledge/asynchronous-thread-task-trong-c-sharp" class="prev-post">← Asynchronous, Thread, Task, Multi Thread, Thread Pool trong C#</a>
+      
+      
+        <a href="/basic-knowledge/nguyen-ly-solid-trong-c-sharp" class="next-post">Nguyên lý SOLID strong C# →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

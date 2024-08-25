@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Facade | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Facade" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Khái Niệm" />
+<meta property="og:description" content="Khái Niệm" />
+<link rel="canonical" href="http://localhost:4000/design-pattern/structural-patterns/facade" />
+<meta property="og:url" content="http://localhost:4000/design-pattern/structural-patterns/facade" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Facade" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"Khái Niệm","headline":"Facade","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/design-pattern/structural-patterns/facade"},"url":"http://localhost:4000/design-pattern/structural-patterns/facade"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Facade</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/design-pattern/structural-patterns">design-pattern/structural-patterns</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="khái-niệm">Khái Niệm</h2>
+
+<p>Khi làm việc với các hệ thống phần mềm lớn và phức tạp, việc cung cấp một giao diện đơn giản cho người dùng là một yếu tố quan trọng để đảm bảo sự tiện lợi và dễ dàng trong quá trình sử dụng. Đây chính là nơi Facade Pattern, một mẫu thiết kế cấu trúc phổ biến, thể hiện vai trò của mình. Facade Pattern giúp tạo ra một giao diện đơn giản cho một hệ thống phức tạp, giống như cách một “mặt tiền” che giấu sự rối ren và phức tạp bên trong.</p>
+
+<h3 id="tổng-quan">Tổng quan</h3>
+
+<ul>
+  <li>
+    <p><strong>Định Nghĩa của Pattern:</strong> Facade Pattern cung cấp một giao diện đơn giản để tương tác với một hệ thống phức tạp, giúp che giấu sự phức tạp và các chi tiết kỹ thuật không cần thiết khỏi người dùng.</p>
+  </li>
+  <li>
+    <p><strong>Mục Đích:</strong> Mẫu thiết kế này hữu ích khi cần cung cấp một giao diện đơn giản cho các hệ thống lớn và phức tạp, giúp người dùng dễ dàng tương tác mà không cần hiểu sâu về chi tiết bên trong.</p>
+  </li>
+  <li>
+    <p><strong>Ý Tưởng Cốt Lõi:</strong> Facade Pattern tạo ra một lớp “mặt tiền” đơn giản, qua đó tất cả các yêu cầu từ phía người dùng đều được chuyển hướng một cách gọn gàng và hiệu quả. Qua đó, người dùng có thể tương tác với hệ thống một cách dễ dàng hơn mà không cần lo lắng về các chi tiết phức tạp bên trong.</p>
+  </li>
+</ul>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p>Hãy tưởng tượng bạn đang phát triển một hệ thống quản lý rạp chiếu phim. Ban đầu, hệ thống chỉ cần quản lý các chức năng cơ bản như hiển thị danh sách phim đang chiếu và đặt vé. Bạn sử dụng các lớp như <code class="language-plaintext highlighter-rouge">MovieListing</code> để quản lý danh sách phim và <code class="language-plaintext highlighter-rouge">TicketBooking</code> để xử lý việc đặt vé.</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class CinemaSystem {
+        +listMovies()
+        +bookTicket()
+    }
+
+    class MovieListing {
+        +getMovies()
+    }
+
+    class TicketBooking {
+        +bookTicket()
+    }
+
+    CinemaSystem --&gt; MovieListing : uses
+    CinemaSystem --&gt; TicketBooking : uses
+</code></pre>
+
+<p>Khi nhu cầu ngày càng tăng, hệ thống cần tích hợp thêm nhiều chức năng phức tạp như quản lý ghế ngồi, thanh toán trực tuyến, thông báo qua email hoặc SMS, và quản lý ưu đãi thành viên. Điều này dẫn đến việc phát triển thêm nhiều lớp và dịch vụ mới: <code class="language-plaintext highlighter-rouge">SeatManagement</code>, <code class="language-plaintext highlighter-rouge">PaymentService</code>, <code class="language-plaintext highlighter-rouge">NotificationService</code>, và <code class="language-plaintext highlighter-rouge">MembershipService</code>.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">SeatManagement</code> để quản lý ghế ngồi.</li>
+  <li><code class="language-plaintext highlighter-rouge">PaymentService</code> để xử lý các giao dịch thanh toán.</li>
+  <li><code class="language-plaintext highlighter-rouge">NotificationService</code> để gửi thông báo.</li>
+  <li><code class="language-plaintext highlighter-rouge">MembershipService</code> để quản lý các ưu đãi cho thành viên.</li>
+</ul>
+
+<pre><code class="language-mermaid">classDiagram
+    class CinemaSystem {
+        +listMovies()
+        +bookTicket()
+        +selectSeats()
+        +processPayment()
+        +sendNotification()
+        +manageMembership()
+    }
+
+    class MovieListing {
+        +getMovies()
+    }
+
+    class TicketBooking {
+        +bookTicket()
+    }
+
+    class SeatManagement {
+        +selectSeat()
+        +reserveSeat()
+    }
+
+    class PaymentService {
+        +processPayment()
+    }
+
+    class NotificationService {
+        +sendEmail()
+        +sendSMS()
+    }
+
+    class MembershipService {
+        +applyDiscount()
+        +accumulatePoints()
+    }
+
+    CinemaSystem --&gt; MovieListing : uses
+    CinemaSystem --&gt; TicketBooking : uses
+    CinemaSystem --&gt; SeatManagement : uses
+    CinemaSystem --&gt; PaymentService : uses
+    CinemaSystem --&gt; NotificationService : uses
+    CinemaSystem --&gt; MembershipService : uses
+</code></pre>
+
+<p>Với sự phát triển này, hệ thống trở nên phức tạp và khó quản lý. Người dùng, đặc biệt là nhân viên rạp chiếu phim, phải đối mặt với quy trình phức tạp khi thực hiện từng công việc như đặt vé, chọn ghế, xác nhận thanh toán, và gửi thông báo. Sự phức tạp này không chỉ làm tăng khả năng sai sót mà còn làm giảm hiệu quả và tốc độ phục vụ.</p>
+
+<p>Ban đầu, giao diện người dùng chỉ cần làm quen với hai chức năng chính: <code class="language-plaintext highlighter-rouge">MovieListing</code> và <code class="language-plaintext highlighter-rouge">TicketBooking</code>. Khi thêm chức năng mới, người dùng phải học cách sử dụng nhiều hệ thống con hơn, mỗi hệ thống có giao diện và cách thức hoạt động khác nhau.</p>
+
+<p>Quy trình làm việc trở nên phức tạp hơn với các bước đặt vé, chọn ghế, thanh toán, gửi thông báo, và áp dụng ưu đãi thành viên. Mỗi giao dịch yêu cầu tương tác với nhiều hệ thống con, tăng khả năng xảy ra sai sót và làm giảm tốc độ phục vụ. Điều này cũng làm tăng khó khăn trong quản lý và bảo trì hệ thống, đồng thời yêu cầu đào tạo và hỗ trợ nhân viên một cách liên tục.</p>
+
+<p>Tóm lại, sự phức tạp tăng lên không chỉ ảnh hưởng đến người dùng cuối mà còn đặt gánh nặng lên nhân viên và quản lý hệ thống. Đây chính là thách thức mà Facade Pattern có thể giải quyết, giúp đơn giản hóa quy trình bằng cách cung cấp một giao diện thống nhất, giảm thiểu sự phức tạp và cải thiện hiệu quả tổng thể của hệ thống.</p>
+
+<h2 id="giái-pháp">Giái pháp</h2>
+
+<p>Để giải quyết những thách thức trong quản lý rạp chiếu phim, chúng ta có thể sử dụng Facade Pattern. Mô hình này tạo ra một giao diện đơn giản, giúp truy cập dễ dàng vào các hệ thống phụ trợ khác nhau, giảm bớt sự phức tạp và nâng cao trải nghiệm người dùng. Cách thức áp dụng Facade Pattern như sau:</p>
+
+<ol>
+  <li>
+    <p><strong>Tạo Lớp Facade</strong>: Chúng ta xây dựng một lớp <code class="language-plaintext highlighter-rouge">CinemaFacade</code>, hoạt động như một trung tâm liên kết, điều phối các tương tác giữa người dùng và chức năng của hệ thống.</p>
+  </li>
+  <li>
+    <p><strong>Tích Hợp Dịch Vụ</strong>: <code class="language-plaintext highlighter-rouge">CinemaFacade</code> sẽ kết nối với các dịch vụ như <code class="language-plaintext highlighter-rouge">MovieListing</code>, <code class="language-plaintext highlighter-rouge">TicketBooking</code>, <code class="language-plaintext highlighter-rouge">SeatManagement</code>, <code class="language-plaintext highlighter-rouge">PaymentService</code>, <code class="language-plaintext highlighter-rouge">NotificationService</code>, và <code class="language-plaintext highlighter-rouge">MembershipService</code>. Mục đích là che giấu những chi tiết kỹ thuật phức tạp, cung cấp một giao diện sử dụng đơn giản cho người dùng.</p>
+  </li>
+  <li>
+    <p><strong>Đơn Giản Hóa Giao Diện Người Dùng</strong>: Người dùng không cần phải hiểu sâu về từng hệ thống phụ trợ. Thay vào đó, họ chỉ cần tương tác với <code class="language-plaintext highlighter-rouge">CinemaFacade</code>. Ví dụ, khi đặt vé, người dùng chỉ cần sử dụng một phương thức trên <code class="language-plaintext highlighter-rouge">CinemaFacade</code>, và các bước như chọn ghế, thanh toán, thông báo sẽ được tự động xử lý bên trong.</p>
+  </li>
+</ol>
+
+<pre><code class="language-mermaid">classDiagram
+    class CinemaFacade {
+        +listMovies()
+        +bookCompleteTicket()
+    }
+
+    class MovieListing {
+        +getMovies()
+    }
+
+    class TicketBooking {
+        +bookTicket()
+    }
+
+    class SeatManagement {
+        +selectSeat()
+    }
+
+    class PaymentService {
+        +processPayment()
+    }
+
+    class NotificationService {
+        +sendNotification()
+    }
+
+    class MembershipService {
+        +applyDiscount()
+    }
+
+    CinemaFacade --&gt; MovieListing : uses
+    CinemaFacade --&gt; TicketBooking : uses
+    CinemaFacade --&gt; SeatManagement : uses
+    CinemaFacade --&gt; PaymentService : uses
+    CinemaFacade --&gt; NotificationService : uses
+    CinemaFacade --&gt; MembershipService : uses
+</code></pre>
+
+<p>Sơ đồ trên đây minh họa cách <code class="language-plaintext highlighter-rouge">CinemaFacade</code> tích hợp vào hệ thống, đơn giản hóa quy trình làm việc và tạo điều kiện thuận lợi cho người dùng. Mô hình này không chỉ làm giảm độ phức tạp mà còn tăng hiệu quả hoạt động của hệ thống, giảm thiểu lỗi và cải thiện tốc độ phục vụ.</p>
+
+<h2 id="cấu-trúc">Cấu Trúc</h2>
+
+<pre><code class="language-mermaid">classDiagram
+    class Facade {
+        +operation()
+    }
+    class Subsystem1 {
+        +operation1()
+    }
+    class Subsystem2 {
+        +operation2()
+    }
+    class Subsystem3 {
+        +operation3()
+    }
+    class Client
+    
+    Client --&gt; Facade: uses
+    Facade --&gt; Subsystem1: delegates
+    Facade --&gt; Subsystem2: delegates
+    Facade --&gt; Subsystem3: delegates
+</code></pre>
+
+<h3 id="các-thành-phần">Các Thành Phần</h3>
+
+<ol>
+  <li>
+    <p><strong>Facade</strong>: Một lớp duy nhất đóng vai trò là giao diện chính cho hệ thống con phức tạp. Facade biết chức năng nào của hệ thống con cần được kích hoạt để xử lý yêu cầu.</p>
+  </li>
+  <li>
+    <p><strong>Hệ thống con (Subsystems)</strong>: Các lớp cấu thành hệ thống, mỗi lớp cung cấp chức năng đặc biệt. Chúng có thể làm việc độc lập hoặc tương tác với nhau.</p>
+  </li>
+</ol>
+
+<h3 id="tổ-chức-và-tương-tác">Tổ Chức và Tương Tác</h3>
+
+<ul>
+  <li><strong>Facade</strong> cung cấp một giao diện đơn giản đến một hoặc nhiều hệ thống con phức tạp. Khi một yêu cầu đến từ client, Facade sẽ xác định xem cần kích hoạt chức năng nào từ hệ thống con để xử lý yêu cầu đó.</li>
+  <li><strong>Hệ thống con</strong> không biết về sự tồn tại của Facade; chúng xử lý các nhiệm vụ được giao mà không cần biết liệu yêu cầu đến từ Facade hay trực tiếp từ client.</li>
+  <li>Facade có thể chọn một hoặc nhiều chức năng từ mỗi hệ thống con để hoàn thành yêu cầu, giúp giảm sự phức tạp và tương tác trực tiếp mà client cần thực hiện với hệ thống.</li>
+</ul>
+
+<h2 id="ví-dụ-áp-dụng-facede">Ví dụ áp dụng Facede</h2>
+
+<p>Trong ví dụ này, chúng ta xem xét một ứng dụng mua sắm trực tuyến, nơi mà người dùng cần thực hiện nhiều bước để mua một sản phẩm: đăng nhập, thanh toán, vận chuyển, và nhận thông báo. Mỗi bước này được xử lý bởi một service riêng biệt (LoginService, PayService, ShipService, NotiService). ShopFacade được tạo ra như một lớp facade, cung cấp một phương thức đơn giản để xử lý tất cả các bước này, giúp người dùng không cần trực tiếp tương tác với từng service.</p>
+
+<h3 id="sơ-đồ">Sơ đồ</h3>
+
+<pre><code class="language-mermaid">classDiagram
+    class ShopFacade {
+        +buyProductByMoMoWithGrabShipping(String name)
+        +buyProductByPayPalWithNinjaVanShipping(String name)
+    }
+    class LoginService {
+        +loginFB(String userName)
+        +loginYoutube(String userName)
+        +loginGithub(String userName)
+    }
+    class PayService {
+        +payByPayPal()
+        +payByMoMo()
+        +payByDebitCash()
+    }
+    class ShipService {
+        +nowShip()
+        +grabShip()
+        +ninjaVanShip()
+    }
+    class NotiService {
+        +NotificationSMS()
+        +NotificationGmail()
+    }
+
+    ShopFacade --&gt; LoginService
+    ShopFacade --&gt; PayService
+    ShopFacade --&gt; ShipService
+    ShopFacade --&gt; NotiService
+
+</code></pre>
+
+<p>Sơ đồ này thể hiện mối quan hệ giữa ShopFacade và các service khác nhau. ShopFacade đóng vai trò trung gian, gọi đến các phương thức cần thiết của các service khác.</p>
+
+<h4 id="ví-dụ-code">Ví dụ Code</h4>
+
+<p>LoginService.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoginService</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">loginFB</span><span class="o">(</span><span class="nc">String</span> <span class="n">userName</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">userName</span> <span class="o">+</span> <span class="s">"Login Facebook"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">loginYoutube</span><span class="o">(</span><span class="nc">String</span> <span class="n">userName</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">userName</span> <span class="o">+</span> <span class="s">"Login Youtube"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">loginGithub</span><span class="o">(</span><span class="nc">String</span> <span class="n">userName</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">userName</span> <span class="o">+</span> <span class="s">"Login Github"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>PayService.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">PayService</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">payByPayPal</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Pay by PayPal"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">payByMoMo</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Pay by MoMo"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">payByDebitCash</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Pay by Debit Cash"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>ShipService.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ShipService</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">nowShip</span><span class="o">()</span>
+    <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Now Ship"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">grabShip</span><span class="o">()</span>
+    <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Grab Ship"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">ninjaVanShip</span><span class="o">()</span>
+    <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Ninja Van Ship"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>NotiService.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">NotiService</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">NotificationSMS</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Notification SMS"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">NotificationGmail</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Notification Gmail"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>ShopFacade.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ShopFacade</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="nc">LoginService</span> <span class="n">loginService</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">PayService</span> <span class="n">payService</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">ShipService</span> <span class="n">shipService</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">NotiService</span> <span class="n">notiService</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">ShopFacade</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">loginService</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">LoginService</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">payService</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">PayService</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">shipService</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ShipService</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">notiService</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">NotiService</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">buyProductByMoMoWithGrabShipping</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">loginService</span><span class="o">.</span><span class="na">loginFB</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="n">payService</span><span class="o">.</span><span class="na">payByMoMo</span><span class="o">();</span>
+        <span class="n">shipService</span><span class="o">.</span><span class="na">grabShip</span><span class="o">();</span>
+        <span class="n">notiService</span><span class="o">.</span><span class="na">NotificationSMS</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">buyProductByPayPalWithNinjaVanShipping</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">loginService</span><span class="o">.</span><span class="na">loginGithub</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="n">payService</span><span class="o">.</span><span class="na">payByPayPal</span><span class="o">();</span>
+        <span class="n">shipService</span><span class="o">.</span><span class="na">ninjaVanShip</span><span class="o">();</span>
+        <span class="n">notiService</span><span class="o">.</span><span class="na">NotificationGmail</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Demo.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Demo</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">ShopFacade</span> <span class="n">shopFacade</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ShopFacade</span><span class="o">();</span>
+        <span class="n">shopFacade</span><span class="o">.</span><span class="na">buyProductByMoMoWithGrabShipping</span><span class="o">(</span><span class="s">"Nick"</span><span class="o">);</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+        <span class="n">shopFacade</span><span class="o">.</span><span class="na">buyProductByPayPalWithNinjaVanShipping</span><span class="o">(</span><span class="s">"Nick"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Kết quả</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NickLogin Facebook
+Pay by MoMo
+Grab Ship
+Notification SMS
+
+NickLogin Github
+Pay by PayPal
+Ninja Van Ship
+Notification Gmail
+</code></pre></div></div>
+
+<h2 id="khi-nào-áp-dụng">Khi nào áp dụng</h2>
+
+<p>Mẫu Facade đặc biệt hữu ích trong các tình huống mà một hệ thống rất phức tạp hoặc khó hiểu do có số lượng lớn các lớp phụ thuộc hoặc dựa trên mã legacy. Trong những trường hợp như vậy, Facade có thể cung cấp một giao diện đơn giản cho một lượng lớn mã, che giấu sự phức tạp của nó. Điều này đặc biệt có lợi khi có nhiều điểm nhập vào hệ thống phụ, và những điểm nhập này dễ bị lạm dụng bởi mã client. Mẫu này ít hữu dụng hơn khi hệ thống phần mềm đã được modular hóa tốt hoặc khi client cần sử dụng một phần lớn chức năng của hệ thống phụ một cách trực tiếp, vì Facade có thể trở nên thừa thãi hoặc quá hạn chế trong những tình huống như vậy.</p>
+
+
+  </div><a class="u-url" href="/design-pattern/structural-patterns/facade" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/design-pattern/structural-patterns/decorator" class="prev-post">← Decorator Pattern</a>
+      
+      
+        <a href="/design-pattern/structural-patterns/flyweight" class="next-post">Flyweight Pattern →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

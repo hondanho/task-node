@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Observer Pattern | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Observer Pattern" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Giới thiệu" />
+<meta property="og:description" content="Giới thiệu" />
+<link rel="canonical" href="http://localhost:4000/design-pattern/behavioral-patterns/observer" />
+<meta property="og:url" content="http://localhost:4000/design-pattern/behavioral-patterns/observer" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Observer Pattern" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"Giới thiệu","headline":"Observer Pattern","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/design-pattern/behavioral-patterns/observer"},"url":"http://localhost:4000/design-pattern/behavioral-patterns/observer"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Observer Pattern</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/design-pattern/behavioral-patterns">design-pattern/behavioral-patterns</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="giới-thiệu">Giới thiệu</h2>
+
+<p>Observer Pattern định nghĩa mối phụ thuộc một-nhiều giữa các đối tượng để khi một đối tượng thay đổi trạng thái, các đối tượng phụ thuộc vào nó sẽ được thông báo và cập nhật.</p>
+
+<h2 id="định-nghĩa">Định nghĩa</h2>
+
+<p>Observer Pattern mô tả mối quan hệ giữa các đối tượng theo mô hình phát trực tiếp (publish-subscribe), trong đó có một đối tượng (subject) sẽ “báo cáo” sự thay đổi trạng thái của nó tới các đối tượng đăng ký quan sát (observer) để chúng cập nhật.</p>
+
+<h2 id="mục-đích">Mục đích</h2>
+
+<ul>
+  <li>
+    <p>Định nghĩa mối phụ thuộc một-nhiều giữa các đối tượng.</p>
+  </li>
+  <li>
+    <p>Khi một đối tượng thay đổi trạng thái, tất cả các đối tượng phụ thuộc vào nó sẽ được thông báo và cập nhật.</p>
+  </li>
+</ul>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p>Giả sử bạn đang phát triển một website thương mại điện tử với các chức năng sau:</p>
+
+<ul>
+  <li>
+    <p>Người dùng có thể đăng ký nhận thông báo khi một sản phẩm nào đó có giá giảm.</p>
+  </li>
+  <li>
+    <p>Khi giá sản phẩm thay đổi, tất cả người dùng đã đăng ký sẽ nhận được thông báo.</p>
+  </li>
+</ul>
+
+<p>Làm thế nào để triển khai khi có hàng triệu người dùng cùng theo dõi hàng triệu sản phẩm khác nhau?</p>
+
+<h2 id="giải-quyết">Giải quyết</h2>
+
+<p>Observer Pattern được áp dụng như sau:</p>
+
+<ul>
+  <li>
+    <p>Định nghĩa một Subject (đối tượng chủ đề) đại diện cho sản phẩm.</p>
+  </li>
+  <li>
+    <p>Người dùng (Observer) có thể đăng ký theo dõi Subject.</p>
+  </li>
+  <li>
+    <p>Khi trạng thái của Subject thay đổi (giá sản phẩm) thì sẽ thông báo tới tất cả Observer đã đăng ký.</p>
+  </li>
+</ul>
+
+<p><img src="https://refactoring.guru/images/patterns/diagrams/observer/structure.png" alt="" /></p>
+
+<h2 id="cấu-trúc">Cấu trúc</h2>
+
+<p>Các thành phần trong Observer Pattern:</p>
+
+<ul>
+  <li>
+    <p>Subject: đối tượng chủ thể cần theo dõi. Nó duy trì danh sách các Observer và thông báo cho chúng khi trạng thái thay đổi.</p>
+  </li>
+  <li>
+    <p>Observer: đối tượng quan sát Subject. Nó đăng ký theo dõi Subject và cập nhật khi nhận được thông báo từ Subject.</p>
+  </li>
+  <li>
+    <p>ConcreteSubject và ConcreteObserver: các cài đặt cụ thể.</p>
+  </li>
+</ul>
+
+<h2 id="cách-triển-khai">Cách triển khai</h2>
+
+<p>Để triển khai Observer Pattern trong Java, có thể:</p>
+
+<ul>
+  <li>Sử dụng interface java.util.Observable và java.util.Observer.</li>
+  <li>Tự định nghĩa Subject, Observer interface và các cài đặt tương ứng.</li>
+</ul>
+
+<h2 id="ví-dụ">Ví dụ</h2>
+
+<p>// Ví dụ đăng ký nhận thông báo khi giá sản phẩm thay đổi</p>
+
+<h2 id="so-sánh">So sánh</h2>
+
+<p>So với PubSub, Observer tập trung vào mối quan hệ giữa các object, còn PubSub tập trung vào việc truyền thông điệp.</p>
+
+<h2 id="kết-luận">Kết luận</h2>
+
+<p>Observer Pattern thích hợp để xây dựng các chức năng thông báo sự kiện trong hệ thống. Tuy nhiên cũng cần tránh lạm dụng và làm phức tạp hóa code.</p>
+
+  </div><a class="u-url" href="/design-pattern/behavioral-patterns/observer" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/design-pattern/behavioral-patterns/memento" class="prev-post">← Memento Pattern</a>
+      
+      
+        <a href="/design-pattern/behavioral-patterns/state" class="next-post">State Pattern →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

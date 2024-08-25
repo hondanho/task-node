@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Decorator Pattern | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Decorator Pattern" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Khái Niệm" />
+<meta property="og:description" content="Khái Niệm" />
+<link rel="canonical" href="http://localhost:4000/design-pattern/structural-patterns/decorator" />
+<meta property="og:url" content="http://localhost:4000/design-pattern/structural-patterns/decorator" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Decorator Pattern" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"Khái Niệm","headline":"Decorator Pattern","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/design-pattern/structural-patterns/decorator"},"url":"http://localhost:4000/design-pattern/structural-patterns/decorator"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Decorator Pattern</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/design-pattern/structural-patterns">design-pattern/structural-patterns</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="khái-niệm">Khái Niệm</h2>
+
+<p>Trong lập trình, việc mở rộng chức năng của một hệ thống mà không làm rối loạn cấu trúc hiện có là một thách thức đáng kể. <strong>Decorator Pattern</strong>, một trong những mẫu thiết kế cấu trúc quan trọng, xuất hiện như một giải pháp linh hoạt cho vấn đề này. Pattern này cho phép chúng ta “trang trí” thêm hành vi cho đối tượng mà không cần thay đổi cấu trúc nội tại của chúng, hỗ trợ mở rộng chức năng mà vẫn tuân thủ nguyên tắc đóng mở (Open/Closed Principle).</p>
+
+<h3 id="tổng-quan">Tổng quan</h3>
+
+<ul>
+  <li>
+    <p><strong>Định Nghĩa của Pattern</strong>: Decorator Pattern cho phép thêm các tính năng mới cho một đối tượng thông qua một lớp trang trí, mà không cần sửa đổi lớp đó.</p>
+  </li>
+  <li>
+    <p><strong>Mục Đích</strong>: Mẫu thiết kế này hữu ích khi cần mở rộng chức năng đối tượng mà không ảnh hưởng đến các đối tượng khác.</p>
+  </li>
+  <li>
+    <p><strong>Ý Tưởng Cốt Lõi</strong>: Bằng cách sử dụng thành phần (composition), Decorator Pattern thêm “vỏ bọc” cho đối tượng cơ bản, cung cấp hành vi thêm vào và có thể thay đổi tại runtime.</p>
+  </li>
+</ul>
+
+<h2 id="đặt-vấn-đề">Đặt Vấn Đề</h2>
+
+<p>Hãy tưởng tượng bạn có một lớp Notifier, chuyên trách gửi thông báo qua email. Khi người dùng muốn thêm tính năng thông báo qua SMS, Facebook, và thậm chí là Slack, việc tiếp tục tạo thêm và kế thừa từ lớp Notifier ban đầu dường như là một giải pháp đơn giản.</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class Notifier {
+        +sendMail()
+    }
+
+    class SMSNotifier {
+        +sendSMS()
+    }
+
+    class FacebookNotifier {
+        +sendFacebookMessage()
+    }
+
+    class SlackNotifier {
+        +sendSlackMessage()
+    }
+
+    Notifier &lt;|-- SMSNotifier
+    Notifier &lt;|-- FacebookNotifier
+    Notifier &lt;|-- SlackNotifier
+</code></pre>
+
+<p>Tuy nhiên, khi nhu cầu thông báo trở nên đa dạng và phức tạp hơn, việc quản lý số lượng lớn các lớp con trở nên khó khăn và không hiệu quả. Đặc biệt là khi người dùng cần kết hợp nhiều hình thức thông báo cùng một lúc, cấu trúc mã nguồn có thể trở nên cồng kềnh và khó bảo trì.</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class Notifier {
+        +send()
+    }
+
+    class MailNotifier {
+        +send()
+    }
+
+    class SMSNotifier {
+        +send()
+    }
+
+    class FacebookNotifier {
+        +send()
+    }
+
+    class SlackNotifier {
+        +send()
+    }
+
+    class SMSFacebookNotifier {
+        +send()
+    }
+
+    class SMSSlackNotifier {
+        +send()
+    }
+
+    class FacebookSlackNotifier {
+        +send()
+    }
+
+    class SMSFacebookSlackNotifier {
+        +send()
+    }
+
+    Notifier &lt;|-- MailNotifier
+    Notifier &lt;|-- SMSNotifier
+    Notifier &lt;|-- FacebookNotifier
+    Notifier &lt;|-- SlackNotifier
+    Notifier &lt;|-- SMSFacebookNotifier
+    Notifier &lt;|-- SMSSlackNotifier
+    Notifier &lt;|-- FacebookSlackNotifier
+    Notifier &lt;|-- SMSFacebookSlackNotifier
+</code></pre>
+
+<p>Đây là lúc mà Decorator Pattern trở nên quan trọng và thiết thực. Pattern này cho phép chúng ta “trang trí” các đối tượng với các chức năng mới mà không cần phải thay đổi cấu trúc nội tại của chúng, mang lại sự linh hoạt và dễ dàng mở rộng mà không làm ảnh hưởng đến các thành phần khác trong hệ thống.</p>
+
+<h2 id="giải-pháp">Giải pháp</h2>
+
+<p>Để giải quyết vấn đề mở rộng chức năng một cách hiệu quả, Decorator Pattern cung cấp một giải pháp linh hoạt. Thay vì tạo ra một loạt các lớp con, mỗi lớp với một chức năng cụ thể, chúng ta có thể sử dụng mô hình “trang trí” này để bổ sung chức năng mới.</p>
+
+<p>Xét về trường hợp thêm chức năng SMS, Decorator Pattern cho phép chúng ta “bọc” đối tượng <code class="language-plaintext highlighter-rouge">Notifier</code> ban đầu trong một lớp <code class="language-plaintext highlighter-rouge">NotifierDecorator</code>, sau đó thêm một lớp <code class="language-plaintext highlighter-rouge">SMSDecorator</code> bổ sung chức năng gửi SMS. <code class="language-plaintext highlighter-rouge">SMSDecorator</code> sẽ không thay thế lớp <code class="language-plaintext highlighter-rouge">Notifier</code> gốc mà là mở rộng chức năng của nó. Khi phương thức <code class="language-plaintext highlighter-rouge">send()</code> được gọi trên <code class="language-plaintext highlighter-rouge">SMSDecorator</code>, nó sẽ thực hiện cả hành động gửi email thông qua <code class="language-plaintext highlighter-rouge">Notifier</code> gốc cùng với việc gửi tin nhắn SMS mới được thêm vào.</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class Notifier {
+        +send()
+    }
+
+    class NotifierDecorator {
+        -wrappedNotifier Notifier
+        +send()
+    }
+
+    class SMSDecorator {
+        -wrappedNotifier NotifierDecorator
+        +send()
+    }
+
+    Notifier &lt;|-- NotifierDecorator : Decorates
+    NotifierDecorator &lt;|-- SMSDecorator : Decorates
+</code></pre>
+
+<p>Mô hình này không chỉ đơn giản hóa quá trình quản lý mã nguồn bằng cách giảm thiểu số lượng lớp cần phải xử lý, mà còn cung cấp sự linh hoạt để dễ dàng thêm hoặc bớt các “vỏ bọc” mà không ảnh hưởng tới hệ thống hiện có.</p>
+
+<p>Hãy xem xét một ví dụ cụ thể về việc áp dụng Decorator Pattern:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Interface chung cho tất cả các thông báo</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Notifier</span> <span class="o">{</span>
+    <span class="kt">void</span> <span class="nf">send</span><span class="o">(</span><span class="nc">String</span> <span class="n">message</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="c1">// Lớp cơ bản thực hiện việc gửi thông báo qua email</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">EmailNotifier</span> <span class="kd">implements</span> <span class="nc">Notifier</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">send</span><span class="o">(</span><span class="nc">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Gửi thông báo qua email</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Decorator cơ bản</span>
+<span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">NotifierDecorator</span> <span class="kd">implements</span> <span class="nc">Notifier</span> <span class="o">{</span>
+    <span class="kd">protected</span> <span class="nc">Notifier</span> <span class="n">wrappedNotifier</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">NotifierDecorator</span><span class="o">(</span><span class="nc">Notifier</span> <span class="n">notifier</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">wrappedNotifier</span> <span class="o">=</span> <span class="n">notifier</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">send</span><span class="o">(</span><span class="nc">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">wrappedNotifier</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Thêm chức năng gửi SMS vào thông báo</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SMSDecorator</span> <span class="kd">extends</span> <span class="nc">NotifierDecorator</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">SMSDecorator</span><span class="o">(</span><span class="nc">Notifier</span> <span class="n">notifier</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">notifier</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">send</span><span class="o">(</span><span class="nc">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="n">message</span><span class="o">);</span> <span class="c1">// Gửi email</span>
+        <span class="c1">// Thêm mã để gửi SMS ở đây</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Trong ví dụ trên, chúng ta tạo ra một <code class="language-plaintext highlighter-rouge">SMSDecorator</code> mới từ <code class="language-plaintext highlighter-rouge">EmailNotifier</code> và bổ sung chức năng gửi tin nhắn SMS. Khi một thông báo cần được gửi, <code class="language-plaintext highlighter-rouge">SMSDecorator</code> sẽ gọi cả hai phương thức <code class="language-plaintext highlighter-rouge">send()</code> - từ <code class="language-plaintext highlighter-rouge">EmailNotifier</code> và từ mã SMS được thêm vào. Như vậy, Decorator Pattern không chỉ giải quyết vấn đề mở rộng mà còn giữ cho cấu trúc mã nguồn gọn gàng và dễ quản lý.</p>
+
+<p>Sự linh hoạt mà Decorator Pattern cung cấp là một trong những lợi ích chính của nó. Bạn không chỉ có thể thêm các chức năng mới một cách dễ dàng mà còn có thể xóa bỏ hoặc thay thế chúng mà không cần phải sửa đổi các lớp đã tồn tại. Điều này làm giảm đáng kể nguy cơ phá vỡ hệ thống hiện tại khi mở rộng hoặc cập nhật chức năng.</p>
+
+<p>Tuy nhiên, việc áp dụng Decorator Pattern cũng đòi hỏi phải cân nhắc một cách cẩn thận. Mỗi “vỏ bọc” mới thêm vào có thể làm tăng độ phức tạp của quá trình debug và theo dõi mã nguồn, đặc biệt là khi có nhiều lớp trang trí được áp dụng cùng một lúc. Đồng thời, cần phải đảm bảo rằng mọi thành viên trong đội ngũ phát triển đều hiểu rõ về pattern này để có thể sử dụng nó một cách hiệu quả.</p>
+
+<h3 id="cấu-trúc-decorator-pattern">Cấu Trúc Decorator Pattern</h3>
+
+<pre><code class="language-mermaid">classDiagram
+  class Component {
+    +operation()
+  }
+
+  class ConcreteComponent {
+    +operation()
+  }
+
+  class Decorator {
+    -component : Component
+    +operation()
+  }
+
+  class ConcreteDecoratorA {
+    +operation()
+  }
+
+  class ConcreteDecoratorB {
+    +operation()
+  }
+
+  Component &lt;|.. ConcreteComponent
+  Component &lt;|.. Decorator
+  Decorator &lt;|-- ConcreteDecoratorA
+  Decorator &lt;|-- ConcreteDecoratorB
+  Decorator "1" *-- "1" Component : contains
+</code></pre>
+
+<ol>
+  <li>
+    <p><strong>Component</strong>: Đây là interface chung cho tất cả đối tượng, cả cơ bản và trang trí, trong mẫu này. Nó quy định các phương thức chung cần có.</p>
+  </li>
+  <li>
+    <p><strong>ConcreteComponent</strong>: Đây là lớp triển khai interface <code class="language-plaintext highlighter-rouge">Component</code>. Nó định nghĩa một đối tượng cơ bản có thể có chức năng được “trang trí” bởi Decorators.</p>
+  </li>
+  <li>
+    <p><strong>Decorator</strong>: Lớp trung gian này nắm giữ một tham chiếu đến một đối tượng <code class="language-plaintext highlighter-rouge">Component</code> và cung cấp giao diện tương tự như <code class="language-plaintext highlighter-rouge">Component</code>. Mục đích của nó là để kế thừa từ lớp <code class="language-plaintext highlighter-rouge">Component</code> và mở rộng chức năng của nó.</p>
+  </li>
+  <li>
+    <p><strong>ConcreteDecorator</strong>: Những lớp này thực hiện việc trang trí cụ thể. Mỗi <code class="language-plaintext highlighter-rouge">ConcreteDecorator</code> thêm các chức năng hoặc trách nhiệm mới cho <code class="language-plaintext highlighter-rouge">Component</code> mà nó trang trí.</p>
+  </li>
+</ol>
+
+<p>Các thành phần này tương tác với nhau như sau: <code class="language-plaintext highlighter-rouge">ConcreteComponent</code> là đối tượng cơ bản được trang trí. <code class="language-plaintext highlighter-rouge">Decorator</code> chứa một tham chiếu đến <code class="language-plaintext highlighter-rouge">Component</code> và định nghĩa giao diện phù hợp với <code class="language-plaintext highlighter-rouge">Component</code>. <code class="language-plaintext highlighter-rouge">ConcreteDecorator</code> thực hiện các phương thức của <code class="language-plaintext highlighter-rouge">Decorator</code> và thêm chức năng mới. Khi một phương thức trong <code class="language-plaintext highlighter-rouge">Decorator</code> được gọi, nó chuyển tiếp yêu cầu đến đối tượng <code class="language-plaintext highlighter-rouge">Component</code> mà nó trang trí, có thể thực hiện thêm các hành động trước hoặc sau khi chuyển tiếp yêu cầu.</p>
+
+<p>Cấu trúc này giúp tạo ra các đối tượng với chức năng mở rộng một cách linh hoạt, mà không làm thay đổi cấu trúc nội tại hoặc mã nguồn của đối tượng gốc.</p>
+
+<h3 id="ví-dụ-áp-dụng-decorator-pattern">Ví dụ Áp Dụng Decorator Pattern</h3>
+
+<p>Hãy xem xét một ví dụ khác về Decorator Pattern, lần này trong một ngữ cảnh khác: một ứng dụng quản lý cà phê. Trong ví dụ này, chúng ta có một lớp cơ bản <code class="language-plaintext highlighter-rouge">Coffee</code> cùng với một số lớp trang trí (decorators) như <code class="language-plaintext highlighter-rouge">MilkDecorator</code>, <code class="language-plaintext highlighter-rouge">SugarDecorator</code>, và <code class="language-plaintext highlighter-rouge">WhipDecorator</code> để thêm các thành phần khác nhau vào cà phê.</p>
+
+<p>Cấu trúc cơ bản của <code class="language-plaintext highlighter-rouge">Coffee</code> được xác định như sau:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">interface</span> <span class="nc">Coffee</span> <span class="o">{</span>
+    <span class="nc">String</span> <span class="nf">getDescription</span><span class="o">();</span>
+    <span class="kt">double</span> <span class="nf">getCost</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">SimpleCoffee</span> <span class="kd">implements</span> <span class="nc">Coffee</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">"Simple Coffee"</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getCost</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="mf">2.0</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Chúng ta tiếp tục với việc tạo các lớp trang trí:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">CoffeeDecorator</span> <span class="kd">implements</span> <span class="nc">Coffee</span> <span class="o">{</span>
+    <span class="kd">protected</span> <span class="nc">Coffee</span> <span class="n">decoratedCoffee</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">CoffeeDecorator</span><span class="o">(</span><span class="nc">Coffee</span> <span class="n">coffee</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">decoratedCoffee</span> <span class="o">=</span> <span class="n">coffee</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">decoratedCoffee</span><span class="o">.</span><span class="na">getDescription</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getCost</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">decoratedCoffee</span><span class="o">.</span><span class="na">getCost</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">MilkDecorator</span> <span class="kd">extends</span> <span class="nc">CoffeeDecorator</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">MilkDecorator</span><span class="o">(</span><span class="nc">Coffee</span> <span class="n">coffee</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">coffee</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()</span> <span class="o">+</span> <span class="s">", Milk"</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getCost</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">getCost</span><span class="o">()</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">SugarDecorator</span> <span class="kd">extends</span> <span class="nc">CoffeeDecorator</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">SugarDecorator</span><span class="o">(</span><span class="nc">Coffee</span> <span class="n">coffee</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">coffee</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()</span> <span class="o">+</span> <span class="s">", Sugar"</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getCost</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">getCost</span><span class="o">()</span> <span class="o">+</span> <span class="mf">0.2</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Cuối cùng, chúng ta sử dụng Decorator Pattern để tạo một ly cà phê theo yêu cầu:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CoffeeShop</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Coffee</span> <span class="n">myCoffee</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SimpleCoffee</span><span class="o">();</span>
+        <span class="n">myCoffee</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MilkDecorator</span><span class="o">(</span><span class="n">myCoffee</span><span class="o">);</span>
+        <span class="n">myCoffee</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SugarDecorator</span><span class="o">(</span><span class="n">myCoffee</span><span class="o">);</span>
+
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Description: "</span> <span class="o">+</span> <span class="n">myCoffee</span><span class="o">.</span><span class="na">getDescription</span><span class="o">());</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Cost: $"</span> <span class="o">+</span> <span class="n">myCoffee</span><span class="o">.</span><span class="na">getCost</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Kết quả:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Description: Simple Coffee, Milk, Sugar
+Cost: $2.7
+</code></pre></div></div>
+
+<p>Trong ví dụ này, Decorator Pattern cho phép chúng ta thêm hoặc thay đổi chức năng của các đối tượng <code class="language-plaintext highlighter-rouge">Coffee</code> mà không cần thay đổi cấu trúc của lớp cơ bản. Điều này cung cấp sự linh hoạt tối đa trong việc tạo ra các biến thể của sản phẩm mà không phải viết lại mã nguồn hay tạo ra nhiều lớp con khác nhau.</p>
+<h2 id="so-sánh">So sánh</h2>
+
+<h3 id="điểm-nổi-bật-và-điểm-tương-đồng">Điểm nổi bật và Điểm tương đồng</h3>
+
+<ul>
+  <li>
+    <p>Decorator Pattern nổi bật với khả năng mở rộng chức năng của một đối tượng mà không cần sửa đổi lớp gốc. Điều này tạo nên sự linh hoạt đáng kể so với các pattern cấu trúc khác như Singleton hay Factory, mà lại không làm thay đổi cấu trúc tổng thể của hệ thống. Decorator cho phép thêm tính năng mới một cách động mà không cần phụ thuộc vào sự kế thừa, giảm thiểu rủi ro phá vỡ OCP (Open-Closed Principle).</p>
+  </li>
+  <li>
+    <p>Tương tự như Strategy Pattern, Decorator cũng cung cấp tính năng mở rộng, nhưng khác ở chỗ Strategy thay đổi hành vi thông qua việc truyền đối tượng chiến lược vào lớp context, trong khi Decorator thêm chức năng bằng cách “bọc” lớp gốc bằng lớp Decorator. Cả hai đều tuân theo nguyên tắc “composition over inheritance” nhưng với các mục tiêu khác nhau.</p>
+  </li>
+</ul>
+
+<h3 id="khi-nào-áp-dụng">Khi nào Áp dụng</h3>
+
+<ul>
+  <li>
+    <p>Decorator Pattern phù hợp nhất khi bạn cần thêm tính năng cho đối tượng một cách linh hoạt và có thể tháo rời. Nó thích hợp trong các trường hợp cần mở rộng chức năng của một lớp mà không muốn ảnh hưởng đến các đối tượng khác từ cùng một lớp. Nó cũng rất hữu ích trong việc áp dụng nguyên tắc Single Responsibility, khi mỗi Decorator chỉ thêm một chức năng cụ thể.</p>
+  </li>
+  <li>
+    <p>Trong thực tế, khi bạn muốn thay đổi hành vi của một đối tượng tại runtime hoặc khi việc sử dụng kế thừa tạo ra một lượng lớn các lớp con không cần thiết và phức tạp, Decorator là một lựa chọn sáng suốt. Điều này làm cho nó trở nên lý tưởng trong các ứng dụng với yêu cầu cao về sự linh hoạt và mở rộng, như trong các ứng dụng giao diện người dùng hoặc khi xử lý các quy trình với nhiều biến thể.</p>
+  </li>
+</ul>
+
+<h3 id="kết-luận">Kết luận</h3>
+
+<p>Decorator Pattern là một công cụ mạnh mẽ trong việc mở rộng chức năng của các đối tượng mà không cần thay đổi lớp gốc, giúp tuân thủ nguyên tắc Open-Closed. Nó phù hợp nhất khi cần thêm tính năng vào đối tượng một cách linh hoạt, đặc biệt trong các hệ thống mà sự mở rộng liên tục là cần thiết. Tuy nhiên, cần thận trọng để không làm dư thừa hoặc quá phức tạp hóa hệ thống bằng cách sử dụng quá nhiều decorators. Khi cân nhắc sử dụng Decorator Pattern, hãy xem xét mục tiêu cụ thể của dự án và so sánh với các pattern khác như Strategy hoặc Composite để chọn lựa phương án phù hợp nhất cho tình huống cụ thể của bạn.</p>
+
+  </div><a class="u-url" href="/design-pattern/structural-patterns/decorator" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/design-pattern/structural-patterns/composite" class="prev-post">← Composite Pattern</a>
+      
+      
+        <a href="/design-pattern/structural-patterns/facade" class="next-post">Facade →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

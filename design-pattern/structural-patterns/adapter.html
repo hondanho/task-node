@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Adapter Pattern | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Adapter Pattern" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Giới thiệu" />
+<meta property="og:description" content="Giới thiệu" />
+<link rel="canonical" href="http://localhost:4000/design-pattern/structural-patterns/adapter" />
+<meta property="og:url" content="http://localhost:4000/design-pattern/structural-patterns/adapter" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Adapter Pattern" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"Giới thiệu","headline":"Adapter Pattern","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/design-pattern/structural-patterns/adapter"},"url":"http://localhost:4000/design-pattern/structural-patterns/adapter"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Adapter Pattern</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/design-pattern/structural-patterns">design-pattern/structural-patterns</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="giới-thiệu">Giới thiệu</h2>
+
+<h3 id="định-nghĩa">Định nghĩa</h3>
+
+<p>Adapter Pattern là một mẫu thiết kế thuộc loại cấu trúc (Structural Patterns) . Nó giúp kết nối giữa hai interface không tương thích sao cho chúng có thể làm việc cùng nhau mà không cần sửa đổi. Để thực hiện điều này, Adapter Pattern sử dụng một lớp trung gian (gọi là adapter) để chuyển đổi interface của lớp này thành một interface khác.</p>
+
+<h3 id="mục-đích">Mục đích:</h3>
+
+<ul>
+  <li>Giúp kết nối giữa các đối tượng hoặc hệ thống với nhau mà không cần phải sửa đổi chúng, dựa trên nguyên tắc “kết nối chứ không là để sửa đổi”.</li>
+  <li>Tích hợp hoặc kết nối các hệ thống có sẵn, thư viện, modules có giao diện không tương thích.</li>
+  <li>Cung cấp một giải pháp linh hoạt để mở rộng và tái sử dụng mã nguồn.</li>
+</ul>
+
+<h3 id="ý-tưởng-chính-của-pattern">Ý tưởng chính của Pattern</h3>
+
+<p>Adapter Pattern dựa trên một ý tưởng đơn giản nhưng mạnh mẽ: Thay vì thay đổi các đối tượng hoặc hệ thống để chúng tương thích với nhau, chúng ta sẽ tạo ra một “bộ chuyển đổi” (adapter) để làm cầu nối giữa chúng. Trong ngữ cảnh thiết kế phần mềm, Adapter thực sự giống như một bộ chuyển đổi cắm điện: Nó cho phép hai đầu kết nối không tương thích có thể hoạt động cùng nhau mà không cần phải thay đổi bất kì đầu nào.</p>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p>Trong quá trình phát triển phần mềm, chúng ta thường gặp phải tình huống mà hai hệ thống hoặc thư viện có sẵn không thể nối tiếp với nhau trực tiếp bởi vì chúng có những interface khác biệt.</p>
+
+<p>Ví dụ:</p>
+
+<pre><code class="language-mermaid">graph TD
+    System1[Thư viện cũ / Hệ thống Legacy] --&gt;|Interface cũ| Adapter[Adapter / Lớp trung gian]
+    System2[Ứng dụng hiện tại / Hệ thống mới] --&gt;|Interface mới| Adapter
+    Adapter --&gt;|Interface đã chuyển đổi| Link[Liên kết giữa 2 hệ thống]
+</code></pre>
+
+<ul>
+  <li>Muốn tích hợp một thư viện cũ vào ứng dụng hiện tại nhưng interface không tương thích.</li>
+  <li>Muốn kết nối một hệ thống legacy với hệ thống mới nhưng hai bên có interface khác biệt.</li>
+</ul>
+
+<p>Lúc này, ta cần một lớp trung gian đóng vai trò nối kết, chuyển đổi interface giữa chúng.</p>
+
+<h2 id="giải-pháp">Giải pháp</h2>
+
+<p>Giải pháp đề xuất ở đây là sử dụng một “Adapter” - một lớp trung gian để “dịch” hoặc “chuyển đổi” interface từ hệ thống này sang hệ thống kia, giúp chúng có thể làm việc chung mà không gặp vấn đề.</p>
+
+<p>Adapter Pattern được áp dụng như sau:</p>
+
+<pre><code class="language-mermaid">sequenceDiagram
+    participant SystemA as Hệ thống A (interface A)
+    participant Adapter as Adapter (interface B)
+    participant SystemB as Hệ thống B (interface C)
+
+    SystemA-&gt;&gt;Adapter: Giao tiếp qua interface B
+    Adapter-&gt;&gt;SystemB: Chứa tham chiếu &amp; chuyển đổi giao tiếp từ interface B sang C
+    SystemB--&gt;&gt;Adapter: Trả lời qua interface C
+    Adapter--&gt;&gt;SystemA: Chuyển đổi &amp; trả lời qua interface B
+</code></pre>
+
+<ul>
+  <li>Xác định hai hệ thống (object) có interface khác biệt cần tương tác.</li>
+  <li>Tạo một lớp Adapter triển khai interface mà hệ thống sử dụng cần.</li>
+  <li>Adapter sẽ chứa tham chiếu tới object kia và thực hiện chuyển đổi interface.</li>
+  <li>Hệ thống sẽ giao tiếp với Adapter thay vì object kia.</li>
+</ul>
+
+<p>Với cách này, ta tránh sửa đổi hai hệ thống hiện có mà vẫn kết nối được chúng.</p>
+
+<h2 id="cấu-trúc">Cấu Trúc</h2>
+
+<p>Các thành phần trong Adapter Pattern:</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class Target {
+        &lt;&lt;interface&gt;&gt;
+        +request() void
+    }
+
+    class Adaptee {
+        +specificRequest() void
+    }
+
+    class Adapter {
+        -adaptee Adaptee
+        +request() void
+    }
+
+    class Client {
+        +doWork() void
+    }
+
+    Target &lt;|.. Adapter: implements
+    Adaptee &lt;-- Adapter: uses
+    Client --&gt; Target: uses
+</code></pre>
+
+<ul>
+  <li>Target: interface mà client sử dụng.</li>
+  <li>Adapter: lớp trung gian, triển khai interface Target và gọi tới Adaptee.</li>
+  <li>Adaptee: lớp cần được adapt để phù hợp với interface Target.</li>
+  <li>Client: tương tác với Target interface.</li>
+</ul>
+
+<h2 id="triển-khai-adapter-pattern">Triển khai Adapter Pattern</h2>
+
+<p>Adapter Pattern cho phép bạn “đóng gói” một interface không tương thích vào một lớp adapter để làm cho nó tương thích với interface khác. Để triển khai Adapter Pattern, chúng ta sẽ tạo ra một lớp adapter, nó sẽ kết hợp giữa interface cũ và interface mới.</p>
+
+<h3 id="1-định-nghĩa-interface-cần-phục-vụ">1. Định nghĩa interface cần phục vụ</h3>
+
+<p>Đầu tiên, bạn cần xác định rõ interface mà ứng dụng hiện tại hoặc client muốn sử dụng. Đây chính là interface mà lớp adapter sẽ phải triển khai.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">NewInterface</span> <span class="o">{</span>
+    <span class="kt">void</span> <span class="nf">newMethod</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="2-tạo-lớp-adapter">2. Tạo lớp adapter</h3>
+
+<p>Lớp adapter này sẽ triển khai (implement) interface mới và có tham chiếu đến đối tượng của lớp cũ (hoặc interface cũ).</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Adapter</span> <span class="kd">implements</span> <span class="nc">NewInterface</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">OldClass</span> <span class="n">oldObject</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Adapter</span><span class="o">(</span><span class="nc">OldClass</span> <span class="n">oldObject</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">oldObject</span> <span class="o">=</span> <span class="n">oldObject</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">newMethod</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">oldObject</span><span class="o">.</span><span class="na">oldMethod</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Trong ví dụ trên, <code class="language-plaintext highlighter-rouge">OldClass</code> là một lớp mà bạn muốn tích hợp vào hệ thống hiện tại. Hàm <code class="language-plaintext highlighter-rouge">newMethod</code> của <code class="language-plaintext highlighter-rouge">NewInterface</code> được “đóng gói” bằng cách sử dụng hàm <code class="language-plaintext highlighter-rouge">oldMethod</code> của <code class="language-plaintext highlighter-rouge">OldClass</code>.</p>
+
+<h3 id="3-sử-dụng-lớp-adapater">3. Sử dụng lớp adapater</h3>
+
+<p>Khi muốn sử dụng lớp cũ trong ứng dụng của bạn, thay vì tạo một instance của <code class="language-plaintext highlighter-rouge">OldClass</code>, bạn sẽ tạo một instance của <code class="language-plaintext highlighter-rouge">Adapter</code>.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">NewInterface</span> <span class="n">target</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Adapter</span><span class="o">(</span><span class="k">new</span> <span class="nc">OldClass</span><span class="o">());</span>
+        <span class="n">target</span><span class="o">.</span><span class="na">newMethod</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Bằng cách này, lớp <code class="language-plaintext highlighter-rouge">Client</code> có thể sử dụng được lớp <code class="language-plaintext highlighter-rouge">OldClass</code> mà không cần phải biết đến chi tiết bên trong nó. Mọi tương tác đều diễn ra thông qua <code class="language-plaintext highlighter-rouge">NewInterface</code>.</p>
+
+<h2 id="ví-dụ-áp-dụng-adapter-pattern">Ví dụ áp dụng Adapter Pattern</h2>
+
+<p>Xét một ví dụ thực tế: Bạn muốn sử dụng một bóng đèn led cần điện áp 3v, nhưng nguồn điện ở nhà bạn lại là 220v. Để bóng đèn hoạt động đúng và không bị cháy, bạn cần một thiết bị chuyển đổi từ 220v xuống 3v. Ở đây, thiết bị chuyển đổi đóng vai trò như một Adapter.</p>
+
+<ul>
+  <li>Hiệu điện thế lớn hơn 3v bóng đèn sẽ cháy.</li>
+  <li>Hiệu điện thế nhỏ hơn 3v bóng sáng mờ hoặc không phát sáng (Trong trường hợp này ta quy ước nó không phát sáng).</li>
+  <li>Hiệu điện thế bằng 3v bóng đèn phát sáng</li>
+</ul>
+
+<p>Như vậy ta cần một adapter chuyển từ 220v sáng 3v. Mô hình thể hiện như sau:</p>
+
+<pre><code class="language-mermaid">graph LR
+    A[Mạng lưới điện Việt Nam&lt;br&gt;220v] --&gt;|Cung cấp điện| B[Adapter&lt;br&gt;Chuyển 220v xuống 3v]
+    B --&gt;|Cung cấp 3v| C[Đèn LED&lt;br&gt;Yêu cầu 3v]
+</code></pre>
+
+<p>LedInterFace.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">LedInterFace</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="nf">connect</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>VietNamPower.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">VietNamPower</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">electric</span> <span class="o">=</span> <span class="mi">220</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getElectric</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">electric</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>AdapterElectric.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AdapterElectric</span> <span class="kd">implements</span> <span class="nc">LedInterFace</span><span class="o">{</span>
+    <span class="nc">VietNamPower</span> <span class="n">adaptee</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">AdapterElectric</span><span class="o">(</span><span class="nc">VietNamPower</span> <span class="n">adaptee</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">adaptee</span> <span class="o">=</span> <span class="n">adaptee</span><span class="o">;</span>
+    <span class="o">}</span>
+
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">connect</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">electric</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">downElectric</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">adaptee</span><span class="o">.</span><span class="na">getElectric</span><span class="o">());</span>
+        <span class="c1">// Hiệu điện thế lớn hơn 3v bóng đèn sẽ cháy.</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">electric</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="o">)</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="c1">//Hiệu điện thế bằng 3v bóng đèn phát sáng.</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">electric</span> <span class="o">==</span> <span class="mi">3</span><span class="o">)</span>
+            <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="c1">// Đén không phát sáng.</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">downElectric</span><span class="o">(</span><span class="kt">int</span> <span class="n">electric</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">electric</span> <span class="o">-</span> <span class="mi">217</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Led.java</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Led</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">LedInterFace</span> <span class="n">led</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">AdapterElectric</span><span class="o">(</span><span class="k">new</span> <span class="nc">VietNamPower</span><span class="o">());</span>
+
+        <span class="k">switch</span> <span class="o">(</span><span class="n">led</span><span class="o">.</span><span class="na">connect</span><span class="o">())</span> <span class="o">{</span>
+            <span class="c1">// Nếu hiệu điện thế lớn 3v kết quả trả về -1</span>
+            <span class="k">case</span> <span class="o">-</span><span class="mi">1</span><span class="o">:</span>
+            <span class="o">{</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Crash"</span><span class="o">);</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="c1">// Nếu hiệu điện thế nhỏ hơn 3v kết quả trả về 0</span>
+            <span class="k">case</span> <span class="mi">0</span><span class="o">:</span>
+            <span class="o">{</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Not Thing"</span><span class="o">);</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="c1">// Nếu hiệu điện thế bằng 3v kết quả trả về 1</span>
+            <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+            <span class="o">{</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Light"</span><span class="o">);</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Kết quả:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Light
+</code></pre></div></div>
+
+<h2 id="so-sánh">So sánh</h2>
+
+<h3 id="1-adapter-vs-bridge">1. Adapter vs Bridge</h3>
+
+<ul>
+  <li>
+    <p><strong>Adapter</strong>: Mục tiêu chính của Adapter là biến đổi một interface của lớp này thành interface mong muốn của lớp khác. Nó giúp hai lớp hoạt động cùng nhau mặc dù chúng có những interface không tương thích.</p>
+  </li>
+  <li>
+    <p><strong>Bridge</strong>: Bridge tạo ra một cầu nối giữa abstractions và implementations, giúp cả hai có thể thay đổi một cách độc lập.</p>
+  </li>
+</ul>
+
+<h3 id="2-adapter-vs-decorator">2. Adapter vs Decorator</h3>
+
+<ul>
+  <li>
+    <p><strong>Adapter</strong>: Như đã nói ở trên, Adapter thay đổi interface của một đối tượng để phù hợp với một interface khác.</p>
+  </li>
+  <li>
+    <p><strong>Decorator</strong>: Decorator thêm các trách nhiệm hoặc chức năng vào một đối tượng mà không cần sửa đổi mã nguồn của nó. Nó giữ nguyên interface của đối tượng và thêm chức năng mở rộng.</p>
+  </li>
+</ul>
+
+<h3 id="3-adapter-vs-facade">3. Adapter vs Facade</h3>
+
+<ul>
+  <li>
+    <p><strong>Adapter</strong>: Adapter chuyển đổi một interface này sang một interface khác.</p>
+  </li>
+  <li>
+    <p><strong>Facade</strong>: Facade cung cấp một giao diện đơn giản hoá cho một nhóm các giao diện trong một hệ thống con. Mẫu Facade giúp giảm sự phức tạp khi giao tiếp với các hệ thống phức tạp.</p>
+  </li>
+</ul>
+
+<h3 id="4-adapter-vs-proxy">4. Adapter vs Proxy</h3>
+
+<ul>
+  <li>
+    <p><strong>Adapter</strong>: Điều chỉnh interfaces giữa hai lớp hoặc đối tượng.</p>
+  </li>
+  <li>
+    <p><strong>Proxy</strong>: Proxy không chỉ giữ nguyên interface, mà còn kiểm soát và quản lý việc truy cập đến đối tượng thực.</p>
+  </li>
+</ul>
+
+<h2 id="lưu-ý-khi-áp-dụng-adapter-pattern">Lưu ý khi áp dụng Adapter Pattern</h2>
+
+<p>Khi áp dụng Adapter Pattern trong thiết kế phần mềm, có một số lưu ý quan trọng mà bạn cần xem xét:</p>
+
+<h3 id="1-đừng-lạm-dụng">1. <strong>Đừng lạm dụng</strong></h3>
+
+<p>Adapter Pattern hữu ích khi bạn cần tích hợp một thư viện hoặc một hệ thống cũ mà không thể (hoặc không nên) thay đổi. Tuy nhiên, bạn không nên sử dụng nó chỉ vì muốn giữ lại tất cả mã nguồn cũ mà không có lý do chính đáng. Nên xác định rõ ràng vấn đề cần giải quyết và xem xét liệu Adapter Pattern có phải là giải pháp tốt nhất hay không.</p>
+
+<h3 id="2-hiệu-năng-có-thể-bị-ảnh-hưởng">2. <strong>Hiệu năng có thể bị ảnh hưởng</strong></h3>
+
+<p>Mặc dù hiệu suất không phải luôn là vấn đề chính, nhưng thêm một lớp trung gian giữa hai hệ thống có thể làm giảm hiệu năng. Trong một số trường hợp đặc biệt, việc này có thể tạo ra một chi phí không mong muốn.</p>
+
+<h3 id="3-bảo-trì-mã">3. <strong>Bảo trì mã</strong></h3>
+
+<p>Khi bạn thêm một lớp adapter, bạn thêm một điểm cần phải bảo trì. Nếu thư viện hoặc hệ thống cũ được cập nhật, adapter cũng cần phải được xem xét và cập nhật.</p>
+
+<h3 id="4-nhất-quán">4. <strong>Nhất quán</strong></h3>
+
+<p>Nếu bạn cần nhiều adapter, hãy đảm bảo rằng chúng đều tuân thủ một quy ước đặt tên và phong cách thiết kế nhất quán để dễ dàng cho việc bảo trì và hiểu biết.</p>
+
+<h3 id="5-sử-dụng-composition-thay-vì-inheritance">5. <strong>Sử dụng Composition thay vì Inheritance</strong></h3>
+
+<p>Điều này thường được xem xét là một nguyên tắc tốt trong OOP. Trong Adapter Pattern, bạn nên sử dụng composition (tức là chứa một instance của lớp cần adapt) thay vì kế thừa từ nó.</p>
+
+<h3 id="6-chú-ý-đến-việc-tái-sử-dụng">6. <strong>Chú ý đến việc tái sử dụng</strong></h3>
+
+<p>Trong một số trường hợp, bạn có thể tìm thấy rằng một adapter đã được viết trước đó có thể phục vụ cho mục đích hiện tại của bạn. Điều này có thể giúp bạn tiết kiệm thời gian và công sức.</p>
+
+<h3 id="7-kiểm-tra-kỹ-lưỡng">7. <strong>Kiểm tra kỹ lưỡng</strong></h3>
+
+<p>Khi viết một adapter, đặc biệt quan trọng là thực hiện các bài kiểm tra kỹ lưỡng để đảm bảo rằng nó hoạt động chính xác và không gây ra các vấn đề tiềm ẩn.</p>
+
+<h2 id="kết-luận">Kết luận</h2>
+
+<p>Adapter Pattern là một mẫu thiết kế hữu ích, giúp tích hợp và tái sử dụng mã nguồn một cách linh hoạt hơn. Đặc biệt trong các tình huống cần phải kết nối các hệ thống có sẵn với nhau mà không muốn hay không thể sửa đổi chúng. Mặc dù việc thêm một lớp trung gian có thể làm tăng độ phức tạp, nhưng lợi ích mà nó mang lại là không thể phủ nhận.</p>
+
+  </div><a class="u-url" href="/design-pattern/structural-patterns/adapter" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/design-pattern/creational-patterns/singleton" class="prev-post">← Singleton</a>
+      
+      
+        <a href="/design-pattern/structural-patterns/bridge" class="next-post">Bridge Pattern →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

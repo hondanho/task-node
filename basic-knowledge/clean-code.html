@@ -1,0 +1,2296 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Clean Code .NET | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Clean Code .NET" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Naming" />
+<meta property="og:description" content="Naming" />
+<link rel="canonical" href="http://localhost:4000/basic-knowledge/clean-code" />
+<meta property="og:url" content="http://localhost:4000/basic-knowledge/clean-code" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-03-28T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Clean Code .NET" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-03-28T00:00:00+07:00","datePublished":"2024-03-28T00:00:00+07:00","description":"Naming","headline":"Clean Code .NET","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/basic-knowledge/clean-code"},"url":"http://localhost:4000/basic-knowledge/clean-code"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Clean Code .NET</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-03-28T00:00:00+07:00" itemprop="datePublished">Mar 28, 2024
+      </time>• posted on  <a class="category-name" href="/category/basic-knowledge">basic-knowledge</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="naming">Naming</h2>
+
+<h3 id="avoid-using-bad-names-không-dùng-tên-xấu">Avoid using bad names (không dùng tên xấu)</h3>
+
+<p><em>Bad</em></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int d;
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int daySinceModification;
+</code></pre></div></div>
+
+<h3 id="avoid-misleading-names-dùng-tên-đúng-với-mục-đích-sử-dụng">Avoid Misleading Names (dùng tên đúng với mục đích sử dụng)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var dataFromDb = db.GetFromService().ToList();
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var listOfEmployee = _employeeService.GetEmployees().ToList();
+</code></pre></div></div>
+
+<h3 id="avoid-hungarian-notation-tránh-đặt-tên-biến-có-tiền-tố-chỉ-loại-dữ-liệu-của-biến">Avoid Hungarian notation (tránh đặt tên biến có tiền tố chỉ loại dữ liệu của biến)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int iCounter;
+string strFullName;
+DateTime dModifiedDate;
+
+public bool IsShopOpen(string pDay, int pAmount)
+{
+    // some logic
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int counter;
+string fullName;
+DateTime modifiedDate;
+
+public bool IsShopOpen(string day, int amount)
+{
+    // some logic
+}
+</code></pre></div></div>
+
+<h3 id="use-consistent-capitalization-tính-nhất-quán-trong-việc-đặt-tên-hoa-thường">Use consistent capitalization (tính nhất quán trong việc đặt tên hoa thường)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const int DAYS_IN_WEEK = 7;
+const int daysInMonth = 30;
+
+var songs = new List&lt;string&gt; { 'Back In Black', 'Stairway to Heaven', 'Hey Jude' };
+var Artists = new List&lt;string&gt; { 'ACDC', 'Led Zeppelin', 'The Beatles' };
+
+bool EraseDatabase() {}
+bool Restore_database() {}
+
+class animal {}
+class Alpaca {}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const int DaysInWeek = 7;
+const int DaysInMonth = 30;
+
+var songs = new List&lt;string&gt; { 'Back In Black', 'Stairway to Heaven', 'Hey Jude' };
+var artists = new List&lt;string&gt; { 'ACDC', 'Led Zeppelin', 'The Beatles' };
+
+bool EraseDatabase() {}
+bool RestoreDatabase() {}
+
+class Animal {}
+class Alpaca {}
+</code></pre></div></div>
+
+<h3 id="use-pronounceable-names-tên-hàm-biến-dễ-đọc">Use pronounceable names (tên hàm biến dễ đọc)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class Employee
+{
+    public Datetime sWorkDate { get; set; } // what the heck is this
+    public Datetime modTime { get; set; } // same here
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class Employee
+{
+    public Datetime StartWorkingDate { get; set; }
+    public Datetime ModificationTime { get; set; }
+}
+</code></pre></div></div>
+
+<h3 id="use-camelcase-notation-sử-dụng-camelcase-cho-biến-và-parameter">Use Camelcase notation (sử dụng camelcase cho biến và parameter)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var employeephone;
+
+public double CalculateSalary(int workingdays, int workinghours)
+{
+    // some logic
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var employeePhone;
+
+public double CalculateSalary(int workingDays, int workingHours)
+{
+    // some logic
+}
+</code></pre></div></div>
+
+<h3 id="use-domain-name-đặt-tên-đúng-với-quan-điểm-chung-tránh-mất-công-giải-thích">Use domain name (đặt tên đúng với quan điểm chung, tránh mất công giải thích)</h3>
+
+<p><strong>Good</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class SingleObject
+{
+    // create an object of SingleObject
+    private static SingleObject _instance = new SingleObject();
+
+    // make the constructor private so that this class cannot be instantiated
+    private SingleObject() {}
+
+    // get the only object available
+    public static SingleObject GetInstance()
+    {
+        return _instance;
+    }
+
+    public string ShowMessage()
+    {
+        return "Hello World!";
+    }
+}
+
+public static void main(String[] args)
+{
+    // illegal construct
+    // var object = new SingleObject();
+
+    // Get the only object available
+    var singletonObject = SingleObject.GetInstance();
+
+    // show the message
+    singletonObject.ShowMessage();
+}
+</code></pre></div></div>
+
+<h2 id="variables">Variables</h2>
+
+<h3 id="avoid-nesting-too-deeply-and-return-early-tránh-sử-dụng-nhiều-if-else-gây-khó-đọc-viết-tường-minh-tốt-hơn">Avoid nesting too deeply and return early (tránh sử dụng nhiều if else gây khó đọc, viết tường minh tốt hơn)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public bool IsShopOpen(string day)
+{
+    if (!string.IsNullOrEmpty(day))
+    {
+        day = day.ToLower();
+        if (day == "friday")
+        {
+            return true;
+        }
+        else if (day == "saturday")
+        {
+            return true;
+        }
+        else if (day == "sunday")
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public bool IsShopOpen(string day)
+{
+    if (string.IsNullOrEmpty(day))
+    {
+        return false;
+    }
+
+    var openingDays = new[] { "friday", "saturday", "sunday" };
+    return openingDays.Any(d =&gt; d == day.ToLower());
+}
+</code></pre></div></div>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public long Fibonacci(int n)
+{
+    if (n &lt; 50)
+    {
+        if (n != 0)
+        {
+            if (n != 1)
+            {
+                return Fibonacci(n - 1) + Fibonacci(n - 2);
+            }
+            else
+            {
+                return 1;
+            }
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        throw new System.Exception("Not supported");
+    }
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public long Fibonacci(int n)
+{
+    if (n == 0)
+    {
+        return 0;
+    }
+
+    if (n == 1)
+    {
+        return 1;
+    }
+
+    if (n &gt; 50)
+    {
+        throw new System.Exception("Not supported");
+    }
+
+    return Fibonacci(n - 1) + Fibonacci(n - 2);
+}
+</code></pre></div></div>
+
+<h3 id="avoid-mental-mapping-tên-biến-tường-minh">Avoid mental mapping (tên biến tường minh)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var l = new[] { "Austin", "New York", "San Francisco" };
+
+for (var i = 0; i &lt; l.Count(); i++)
+{
+    var li = l[i];
+    DoStuff();
+    DoSomeOtherStuff();
+
+    // ...
+    // ...
+    // ...
+    // Wait, what is `li` for again?
+    Dispatch(li);
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var locations = new[] { "Austin", "New York", "San Francisco" };
+
+foreach (var location in locations)
+{
+    DoStuff();
+    DoSomeOtherStuff();
+
+    // ...
+    // ...
+    // ...
+    Dispatch(location);
+}
+</code></pre></div></div>
+
+<h3 id="avoid-magic-string-tránh-sử-dụng-chuỗi-ký-tự-fix-cứng-rất-dễ-gây-bug">Avoid magic string (tránh sử dụng chuỗi ký tự fix cứng rất dễ gây bug)</h3>
+
+<p><strong>Bad</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if (userRole == "Admin")
+{
+    // logic in here
+}
+</code></pre></div></div>
+
+<p><strong>Good</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const string ADMIN_ROLE = "Admin"
+if (userRole == ADMIN_ROLE)
+{
+    // logic in here
+}
+</code></pre></div></div>
+
+<h3 id="dont-add-unneeded-context-không-thêm-ngữ-cảnh-không-cần-thiết-vào-tên-biến-class">Don’t add unneeded context (không thêm ngữ cảnh không cần thiết vào tên biến, class)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class Car
+{
+    public string CarMake { get; set; }
+    public string CarModel { get; set; }
+    public string CarColor { get; set; }
+
+    //...
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class Car
+{
+    public string Make { get; set; }
+    public string Model { get; set; }
+    public string Color { get; set; }
+
+    //...
+}
+</code></pre></div></div>
+
+<h3 id="use-meaningful-and-pronounceable-variable-names-tên-biến-có-ý-nghĩa-và-dễ-phát-âm">Use meaningful and pronounceable variable names (tên biến có ý nghĩa và dễ phát âm)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var ymdstr = DateTime.UtcNow.ToString("MMMM dd, yyyy");
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var currentDate = DateTime.UtcNow.ToString("MMMM dd, yyyy");
+</code></pre></div></div>
+
+<h3 id="use-the-same-vocabulary-for-the-same-type-of-variable-đồng-nhất-1-loại-từ-vựng">Use the same vocabulary for the same type of variable (đồng nhất 1 loại từ vựng)</h3>
+<p>ví dụ đang dùng là customerName thì nên tiếp tục sử dụng “customerName” thay vì “clientName” cho cả ứng dụng</p>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GetUserInfo();
+GetUserData();
+GetUserRecord();
+GetUserProfile();
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GetUser();
+</code></pre></div></div>
+
+<h3 id="use-searchable-names-sử-dụng-tên-có-thể-tìm-kiếm">Use searchable names (sử dụng tên có thể tìm kiếm)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// What the heck is data for?
+var data = new { Name = "John", Age = 42 };
+
+var stream1 = new MemoryStream();
+var ser1 = new DataContractJsonSerializer(typeof(object));
+ser1.WriteObject(stream1, data);
+
+stream1.Position = 0;
+var sr1 = new StreamReader(stream1);
+Console.Write("JSON form of Data object: ");
+Console.WriteLine(sr1.ReadToEnd());
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var person = new Person
+{
+    Name = "John",
+    Age = 42
+};
+
+var stream2 = new MemoryStream();
+var ser2 = new DataContractJsonSerializer(typeof(Person));
+ser2.WriteObject(stream2, data);
+
+stream2.Position = 0;
+var sr2 = new StreamReader(stream2);
+Console.Write("JSON form of Data object: ");
+Console.WriteLine(sr2.ReadToEnd());
+</code></pre></div></div>
+
+<h3 id="use-explanatory-variablessử-dụng-các-biến-có-tên-mô-tả-mục-đích-và-ý-nghĩa-của-chúng-thay-vì-sử-dụng-các-giá-trị-cứng-hard-coded-values-trực-tiếp-trong-code">Use explanatory variables(sử dụng các biến có tên mô tả mục đích và ý nghĩa của chúng, thay vì sử dụng các giá trị cứng hard-coded values trực tiếp trong code)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const string Address = "One Infinite Loop, Cupertino 95014";
+var cityZipCodeRegex = @"/^[^,\]+[,\\s]+(.+?)\s*(\d{5})?$/";
+var matches = Regex.Matches(Address, cityZipCodeRegex);
+if (matches[0].Success == true &amp;&amp; matches[1].Success == true)
+{
+    SaveCityZipCode(matches[0].Value, matches[1].Value);
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<p>Giảm sự phụ thuộc vào biểu thức chính quy bằng cách đặt tên cho subpatterns.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const string Address = "One Infinite Loop, Cupertino 95014";
+var cityZipCodeWithGroupRegex = @"/^[^,\]+[,\\s]+(?&lt;city&gt;.+?)\s*(?&lt;zipCode&gt;\d{5})?$/";
+var matchesWithGroup = Regex.Match(Address, cityZipCodeWithGroupRegex);
+var cityGroup = matchesWithGroup.Groups["city"];
+var zipCodeGroup = matchesWithGroup.Groups["zipCode"];
+if(cityGroup.Success == true &amp;&amp; zipCodeGroup.Success == true)
+{
+    SaveCityZipCode(cityGroup.Value, zipCodeGroup.Value);
+}
+</code></pre></div></div>
+
+<h3 id="use-default-arguments-instead-of-short-circuiting-or-conditionals-sử-dụng-đối-số-mặc-định-trong-khai-báo-hàm-thay-vì-sử-dụng-các-điều-kiện-rẽ-nhánh-hoặc-các-biểu-thức-ngắn-gọn-short-circuiting-để-xử-lý-các-trường-hợp-đặc-biệt">Use default arguments instead of short circuiting or conditionals (sử dụng đối số mặc định trong khai báo hàm thay vì sử dụng các điều kiện rẽ nhánh hoặc các biểu thức ngắn gọn (short-circuiting) để xử lý các trường hợp đặc biệt)</h3>
+
+<p><strong>Not good:</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public void CreateMicrobrewery(string name = null)
+{
+    var breweryName = !string.IsNullOrEmpty(name) ? name : "Hipster Brew Co.";
+    // ...
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public void CreateMicrobrewery(string breweryName = "Hipster Brew Co.")
+{
+    // ...
+}
+</code></pre></div></div>
+
+<h2 id="functions">Functions</h2>
+
+<h3 id="avoid-side-effects-1-hàm-chỉ-nên-nhận-vào-một-giá-trị-và-trả-về-một-giá-trị-khác-không-nên-thực-hiện-các-thao-tác-bên-ngoài-phạm-vi-hàm-đó-như-thay-đổi-biến-toàn-cục-ghi-file-mà-không-có-sự-chú-ý-hoặc-kiểm-soát-cẩn-thận">Avoid side effects (1 hàm chỉ nên nhận vào một giá trị và trả về một giá trị khác, không nên thực hiện các thao tác bên ngoài phạm vi hàm đó như thay đổi biến toàn cục, ghi file,.. mà không có sự chú ý hoặc kiểm soát cẩn thận)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Global variable referenced by following function.
+// If we had another function that used this name, now it'd be an array and it could break it.
+var name = "Ryan McDermott";
+
+public void SplitAndEnrichFullName()
+{
+    var temp = name.Split(" ");
+    name = $"His first name is {temp[0]}, and his last name is {temp[1]}"; // side effect
+}
+
+SplitAndEnrichFullName();
+
+Console.WriteLine(name); // His first name is Ryan, and his last name is McDermott
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public string SplitAndEnrichFullName(string name)
+{
+    var temp = name.Split(" ");
+    return $"His first name is {temp[0]}, and his last name is {temp[1]}";
+}
+
+var name = "Ryan McDermott";
+var fullName = SplitAndEnrichFullName(name);
+
+Console.WriteLine(name); // Ryan McDermott
+Console.WriteLine(fullName); // His first name is Ryan, and his last name is McDermott
+</code></pre></div></div>
+
+<h3 id="avoid-negative-conditionals-tránh-sử-dụng-các-biểu-thức-điều-kiện-mà-có-kết-quả-là-phủ-định-negatives-hoặc-phức-tạp">Avoid negative conditionals (tránh sử dụng các biểu thức điều kiện mà có kết quả là phủ định negatives hoặc phức tạp.)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public bool IsDOMNodeNotPresent(string node)
+{
+    // ...
+}
+
+if (!IsDOMNodeNotPresent(node))
+{
+    // ...
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public bool IsDOMNodePresent(string node)
+{
+    // ...
+}
+
+if (IsDOMNodePresent(node))
+{
+    // ...
+}
+</code></pre></div></div>
+
+<h3 id="avoid-conditionals-tránh-sử-dụng-điều-kiện-if-else-switch-trong-code-và-thay-thế-chúng-bằng-sự-sử-dụng-đa-hình-polymorphism-trong-nhiều-trường-hợp">Avoid conditionals (tránh sử dụng điều kiện if, else, switch trong code, và thay thế chúng bằng sự sử dụng đa hình polymorphism trong nhiều trường hợp.)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Airplane
+{
+    // ...
+
+    public double GetCruisingAltitude()
+    {
+        switch (_type)
+        {
+            case '777':
+                return GetMaxAltitude() - GetPassengerCount();
+            case 'Air Force One':
+                return GetMaxAltitude();
+            case 'Cessna':
+                return GetMaxAltitude() - GetFuelExpenditure();
+        }
+    }
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>interface IAirplane
+{
+    // ...
+
+    double GetCruisingAltitude();
+}
+
+class Boeing777 : IAirplane
+{
+    // ...
+
+    public double GetCruisingAltitude()
+    {
+        return GetMaxAltitude() - GetPassengerCount();
+    }
+}
+
+class AirForceOne : IAirplane
+{
+    // ...
+
+    public double GetCruisingAltitude()
+    {
+        return GetMaxAltitude();
+    }
+}
+
+class Cessna : IAirplane
+{
+    // ...
+
+    public double GetCruisingAltitude()
+    {
+        return GetMaxAltitude() - GetFuelExpenditure();
+    }
+}
+</code></pre></div></div>
+
+<h3 id="avoid-type-checking-tránh-kiểm-tra-type-data-của-đối-tượng-thay-thế-nó-bằng-sự-sử-dụng-đa-hình-polymorphism-để-linh-hoạt-và-dễ-bảo-trì-hơn">Avoid type-checking (tránh kiểm tra type data của đối tượng, thay thế nó bằng sự sử dụng đa hình polymorphism để linh hoạt và dễ bảo trì hơn)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public Path TravelToTexas(object vehicle)
+{
+    if (vehicle.GetType() == typeof(Bicycle))
+    {
+        (vehicle as Bicycle).PeddleTo(new Location("texas"));
+    }
+    else if (vehicle.GetType() == typeof(Car))
+    {
+        (vehicle as Car).DriveTo(new Location("texas"));
+    }
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public Path TravelToTexas(Traveler vehicle)
+{
+    vehicle.TravelTo(new Location("texas"));
+}
+</code></pre></div></div>
+
+<p>or</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// pattern matching
+public Path TravelToTexas(object vehicle)
+{
+    if (vehicle is Bicycle bicycle)
+    {
+        bicycle.PeddleTo(new Location("texas"));
+    }
+    else if (vehicle is Car car)
+    {
+        car.DriveTo(new Location("texas"));
+    }
+}
+</code></pre></div></div>
+
+<h3 id="avoid-flags-in-method-parameters-tránh-sử-dụng-cờ-flags-trong-các-tham-số-của-method-nhằm-giảm-thiểu-việc-một-phương-thức-có-nhiều-hơn-một-nhiệm-vụ">Avoid flags in method parameters (Tránh sử dụng cờ flags trong các tham số của method nhằm giảm thiểu việc một phương thức có nhiều hơn một nhiệm vụ)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public void CreateFile(string name, bool temp = false)
+{
+    if (temp)
+    {
+        Touch("./temp/" + name);
+    }
+    else
+    {
+        Touch(name);
+    }
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public void CreateFile(string name)
+{
+    Touch(name);
+}
+
+public void CreateTempFile(string name)
+{
+    Touch("./temp/"  + name);
+}
+</code></pre></div></div>
+
+<h3 id="dont-write-to-global-functions-không-ghi-dữ-liệu-vào-các-hàm-global-dùng-chung-dễ-gây-bug">Don’t write to global functions (không ghi dữ liệu vào các hàm global dùng chung, dễ gây bug)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public Dictionary&lt;string, string&gt; Config()
+{
+    return new Dictionary&lt;string,string&gt;(){
+        ["foo"] = "bar"
+    };
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Configuration
+{
+    private Dictionary&lt;string, string&gt; _configuration;
+
+    public Configuration(Dictionary&lt;string, string&gt; configuration)
+    {
+        _configuration = configuration;
+    }
+
+    public string[] Get(string key)
+    {
+        return _configuration.ContainsKey(key) ? _configuration[key] : null;
+    }
+}
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var configuration = new Configuration(new Dictionary&lt;string, string&gt;() {
+    ["foo"] = "bar"
+});
+</code></pre></div></div>
+
+<h3 id="dont-use-a-singleton-pattern-không-sử-dụng-singleton-pattern-thay-vào-đó-dùng-interface-dependency-injection">Don’t use a Singleton pattern (không sử dụng singleton pattern, thay vào đó dùng interface dependency injection)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class DBConnection
+{
+    private static DBConnection _instance;
+
+    private DBConnection()
+    {
+        // ...
+    }
+
+    public static GetInstance()
+    {
+        if (_instance == null)
+        {
+            _instance = new DBConnection();
+        }
+
+        return _instance;
+    }
+
+    // ...
+}
+
+var singleton = DBConnection.GetInstance();
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class DBConnection
+{
+    public DBConnection(IOptions&lt;DbConnectionOption&gt; options)
+    {
+        // ...
+    }
+
+    // ...
+}
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var options = &lt;resolve from IOC&gt;;
+var connection = new DBConnection(options);
+</code></pre></div></div>
+
+<h3 id="function-arguments-method-ít-hơn-2-tham-số-là-tốt-nhất">Function arguments (method ít hơn 2 tham số là tốt nhất)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public void CreateMenu(string title, string body, string buttonText, bool cancellable)
+{
+    // ...
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class MenuConfig
+{
+    public string Title { get; set; }
+    public string Body { get; set; }
+    public string ButtonText { get; set; }
+    public bool Cancellable { get; set; }
+}
+
+var config = new MenuConfig
+{
+    Title = "Foo",
+    Body = "Bar",
+    ButtonText = "Baz",
+    Cancellable = true
+};
+
+public void CreateMenu(MenuConfig config)
+{
+    // ...
+}
+</code></pre></div></div>
+
+<h3 id="functions-should-do-one-thing-method-chỉ-nên-làm-1-việc-duy-nhất">Functions should do one thing (method chỉ nên làm 1 việc duy nhất)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public void SendEmailToListOfClients(string[] clients)
+{
+    foreach (var client in clients)
+    {
+        var clientRecord = db.Find(client);
+        if (clientRecord.IsActive())
+        {
+            Email(client);
+        }
+    }
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public void SendEmailToListOfClients(string[] clients)
+{
+    var activeClients = GetActiveClients(clients);
+    // Do some logic
+}
+
+public List&lt;Client&gt; GetActiveClients(string[] clients)
+{
+    return db.Find(clients).Where(s =&gt; s.Status == "Active");
+}
+</code></pre></div></div>
+
+<h3 id="function-names-should-say-what-they-do-tên-method-nói-rõ-chức-năng-của-chúng">Function names should say what they do (tên method nói rõ chức năng của chúng)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class Email
+{
+    //...
+
+    public void Handle()
+    {
+        SendMail(this._to, this._subject, this._body);
+    }
+}
+
+var message = new Email(...);
+// What is this? A handle for the message? Are we writing to a file now?
+message.Handle();
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class Email
+{
+    //...
+
+    public void Send()
+    {
+        SendMail(this._to, this._subject, this._body);
+    }
+}
+
+var message = new Email(...);
+// Clear and obvious
+message.Send();
+</code></pre></div></div>
+
+<h3 id="functions-should-only-be-one-level-of-abstraction-1-hàm-chỉ-1-cấp-độ-trừu-tượng-chia-nhỏ-method-ra">Functions should only be one level of abstraction (1 hàm chỉ 1 cấp độ trừu tượng, chia nhỏ method ra)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public string ParseBetterJSAlternative(string code)
+{
+    var regexes = [
+        // ...
+    ];
+
+    var statements = explode(" ", code);
+    var tokens = new string[] {};
+    foreach (var regex in regexes)
+    {
+        foreach (var statement in statements)
+        {
+            // ...
+        }
+    }
+
+    var ast = new string[] {};
+    foreach (var token in tokens)
+    {
+        // lex...
+    }
+
+    foreach (var node in ast)
+    {
+        // parse...
+    }
+}
+</code></pre></div></div>
+
+<p><em>Bad too:</em></p>
+
+<p>We have carried out some of the functionality, but the <code class="language-plaintext highlighter-rouge">ParseBetterJSAlternative()</code> function is still very complex and not testable.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public string Tokenize(string code)
+{
+    var regexes = new string[]
+    {
+        // ...
+    };
+
+    var statements = explode(" ", code);
+    var tokens = new string[] {};
+    foreach (var regex in regexes)
+    {
+        foreach (var statement in statements)
+        {
+            tokens[] = /* ... */;
+        }
+    }
+
+    return tokens;
+}
+
+public string Lexer(string[] tokens)
+{
+    var ast = new string[] {};
+    foreach (var token in tokens)
+    {
+        ast[] = /* ... */;
+    }
+
+    return ast;
+}
+
+public string ParseBetterJSAlternative(string code)
+{
+    var tokens = Tokenize(code);
+    var ast = Lexer(tokens);
+    foreach (var node in ast)
+    {
+        // parse...
+    }
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<p>The best solution is move out the dependencies of <code class="language-plaintext highlighter-rouge">ParseBetterJSAlternative()</code> function.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Tokenizer
+{
+    public string Tokenize(string code)
+    {
+        var regexes = new string[] {
+            // ...
+        };
+
+        var statements = explode(" ", code);
+        var tokens = new string[] {};
+        foreach (var regex in regexes)
+        {
+            foreach (var statement in statements)
+            {
+                tokens[] = /* ... */;
+            }
+        }
+
+        return tokens;
+    }
+}
+
+class Lexer
+{
+    public string Lexify(string[] tokens)
+    {
+        var ast = new[] {};
+        foreach (var token in tokens)
+        {
+            ast[] = /* ... */;
+        }
+
+        return ast;
+    }
+}
+
+class BetterJSAlternative
+{
+    private string _tokenizer;
+    private string _lexer;
+
+    public BetterJSAlternative(Tokenizer tokenizer, Lexer lexer)
+    {
+        _tokenizer = tokenizer;
+        _lexer = lexer;
+    }
+
+    public string Parse(string code)
+    {
+        var tokens = _tokenizer.Tokenize(code);
+        var ast = _lexer.Lexify(tokens);
+        foreach (var node in ast)
+        {
+            // parse...
+        }
+    }
+}
+</code></pre></div></div>
+
+<h3 id="function-callers-and-callees-should-be-close-viết-code-theo-thứ-tự-từ-trên-xuống-khi-gọi-hàm">Function callers and callees should be close (viết code theo thứ tự từ trên xuống khi gọi hàm)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class PerformanceReview
+{
+    private readonly Employee _employee;
+
+    public PerformanceReview(Employee employee)
+    {
+        _employee = employee;
+    }
+
+    private IEnumerable&lt;PeersData&gt; LookupPeers()
+    {
+        return db.lookup(_employee, 'peers');
+    }
+
+    private ManagerData LookupManager()
+    {
+        return db.lookup(_employee, 'manager');
+    }
+
+    private IEnumerable&lt;PeerReviews&gt; GetPeerReviews()
+    {
+        var peers = LookupPeers();
+        // ...
+    }
+
+    public PerfReviewData PerfReview()
+    {
+        GetPeerReviews();
+        GetManagerReview();
+        GetSelfReview();
+    }
+
+    public ManagerData GetManagerReview()
+    {
+        var manager = LookupManager();
+    }
+
+    public EmployeeData GetSelfReview()
+    {
+        // ...
+    }
+}
+
+var  review = new PerformanceReview(employee);
+review.PerfReview();
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class PerformanceReview
+{
+    private readonly Employee _employee;
+
+    public PerformanceReview(Employee employee)
+    {
+        _employee = employee;
+    }
+
+    public PerfReviewData PerfReview()
+    {
+        GetPeerReviews();
+        GetManagerReview();
+        GetSelfReview();
+    }
+
+    private IEnumerable&lt;PeerReviews&gt; GetPeerReviews()
+    {
+        var peers = LookupPeers();
+        // ...
+    }
+
+    private IEnumerable&lt;PeersData&gt; LookupPeers()
+    {
+        return db.lookup(_employee, 'peers');
+    }
+
+    private ManagerData GetManagerReview()
+    {
+        var manager = LookupManager();
+        return manager;
+    }
+
+    private ManagerData LookupManager()
+    {
+        return db.lookup(_employee, 'manager');
+    }
+
+    private EmployeeData GetSelfReview()
+    {
+        // ...
+    }
+}
+
+var review = new PerformanceReview(employee);
+review.PerfReview();
+</code></pre></div></div>
+
+<h3 id="encapsulate-conditionals-đóng-gói-điền-kiện-lại-dễ-maintain-và-sử-dụng-lại-code">Encapsulate conditionals (đóng gói điền kiện lại dễ maintain và sử dụng lại code)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if (article.state == "published")
+{
+    // ...
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if (article.IsPublished())
+{
+    // ...
+}
+</code></pre></div></div>
+
+<h3 id="remove-dead-code-xóa-code-thừa">Remove dead code (xóa code thừa)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public void OldRequestModule(string url)
+{
+    // ...
+}
+
+public void NewRequestModule(string url)
+{
+    // ...
+}
+
+var request = NewRequestModule(requestUrl);
+InventoryTracker("apples", request, "www.inventory-awesome.io");
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public void RequestModule(string url)
+{
+    // ...
+}
+
+var request = RequestModule(requestUrl);
+InventoryTracker("apples", request, "www.inventory-awesome.io");
+</code></pre></div></div>
+
+<h2 id="objects-and-data-structures">Objects and Data Structures</h2>
+
+<h3 id="use-getters-and-setters-sử-dụng-public-protected-private-để-điều-khiển-properties-modification-của-object">Use getters and setters (sử dụng public, protected, private để điều khiển properties modification của object)</h3>
+
+<ul>
+  <li>Khi muốn làm nhiều việc hơn ngoài việc lấy thuộc tính đối tượng, bạn không cần phải tra cứu và thay đổi mọi trình truy cập trong cơ sở mã của mình.</li>
+  <li>Làm cho việc thêm xác thực trở nên đơn giản khi thực hiện <code class="language-plaintext highlighter-rouge">set</code>.</li>
+  <li>Đóng gói biểu diễn bên trong.</li>
+  <li>Dễ dàng thêm tính năng ghi nhật ký và xử lý lỗi khi nhận và cài đặt.</li>
+  <li>Kế thừa lớp này, bạn có thể ghi đè chức năng mặc định.</li>
+  <li>Bạn có thể lười tải các thuộc tính của đối tượng, giả sử lấy nó từ máy chủ.</li>
+</ul>
+
+<p>Ngoài ra, đây là một phần của Open/Closed principle SOLID</p>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class BankAccount
+{
+    public double Balance = 1000;
+}
+
+var bankAccount = new BankAccount();
+
+// Fake buy shoes...
+bankAccount.Balance -= 100;
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class BankAccount
+{
+    private double _balance = 0.0D;
+
+    pubic double Balance {
+        get {
+            return _balance;
+        }
+    }
+
+    public BankAccount(balance = 1000)
+    {
+       _balance = balance;
+    }
+
+    public void WithdrawBalance(int amount)
+    {
+        if (amount &gt; _balance)
+        {
+            throw new Exception('Amount greater than available balance.');
+        }
+
+        _balance -= amount;
+    }
+
+    public void DepositBalance(int amount)
+    {
+        _balance += amount;
+    }
+}
+
+var bankAccount = new BankAccount();
+
+// Buy shoes...
+bankAccount.WithdrawBalance(price);
+
+// Get balance
+balance = bankAccount.Balance;
+</code></pre></div></div>
+
+<h3 id="make-objects-have-privateprotected-members-ẩn-các-thành-phần-bên-trong-chỉ-hiển-thị-ra-bên-ngoài-bằng-interfaces-rõ-ràng">Make objects have private/protected members (ẩn các thành phần bên trong chỉ hiển thị ra bên ngoài bằng interfaces rõ ràng)</h3>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Employee
+{
+    public string Name { get; set; }
+
+    public Employee(string name)
+    {
+        Name = name;
+    }
+}
+
+var employee = new Employee("John Doe");
+Console.WriteLine(employee.Name); // Employee name: John Doe
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Employee
+{
+    public string Name { get; }
+
+    public Employee(string name)
+    {
+        Name = name;
+    }
+}
+
+var employee = new Employee("John Doe");
+Console.WriteLine(employee.Name); // Employee name: John Doe
+</code></pre></div></div>
+
+<h3 id="use-method-chaining-sử-dụng-this-để-viết-function-giúp-ngắn-gọn-dễ-đọc-và-dễ-bảo-trì-hơn">Use method chaining (sử dụng <code class="language-plaintext highlighter-rouge">this</code> để viết function giúp ngắn gọn, dễ đọc và dễ bảo trì hơn)</h3>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public static class ListExtensions
+{
+    public static List&lt;T&gt; FluentAdd&lt;T&gt;(this List&lt;T&gt; list, T item)
+    {
+        list.Add(item);
+        return list;
+    }
+
+    public static List&lt;T&gt; FluentClear&lt;T&gt;(this List&lt;T&gt; list)
+    {
+        list.Clear();
+        return list;
+    }
+
+    public static List&lt;T&gt; FluentForEach&lt;T&gt;(this List&lt;T&gt; list, Action&lt;T&gt; action)
+    {
+        list.ForEach(action);
+        return list;
+    }
+
+    public static List&lt;T&gt; FluentInsert&lt;T&gt;(this List&lt;T&gt; list, int index, T item)
+    {
+        list.Insert(index, item);
+        return list;
+    }
+
+    public static List&lt;T&gt; FluentRemoveAt&lt;T&gt;(this List&lt;T&gt; list, int index)
+    {
+        list.RemoveAt(index);
+        return list;
+    }
+
+    public static List&lt;T&gt; FluentReverse&lt;T&gt;(this List&lt;T&gt; list)
+    {
+        list.Reverse();
+        return list;
+    }
+}
+
+internal static void ListFluentExtensions()
+{
+    var list = new List&lt;int&gt;() { 1, 2, 3, 4, 5 }
+        .FluentAdd(1)
+        .FluentInsert(0, 0)
+        .FluentRemoveAt(1)
+        .FluentReverse()
+        .FluentForEach(value =&gt; value.WriteLine())
+        .FluentClear();
+}
+</code></pre></div></div>
+
+<h3 id="prefer-composition-over-inheritance">Prefer composition over inheritance</h3>
+
+<p>As stated famously in <a href="https://en.wikipedia.org/wiki/Design_Patterns"><em>Design Patterns</em></a> by the Gang of Four,
+you should prefer composition over inheritance where you can. There are lots of good reasons to use inheritance and lots of good reasons to use composition.</p>
+
+<p>The main point for this maxim is that if your mind instinctively goes for inheritance, try to think if composition could model your problem better. In some cases it can.</p>
+
+<p>You might be wondering then, “when should I use inheritance?” It
+depends on your problem at hand, but this is a decent list of when inheritance makes more sense than composition:</p>
+
+<ol>
+  <li>Your inheritance represents an “is-a” relationship and not a “has-a” relationship (Human-&gt;Animal vs. User-&gt;UserDetails).</li>
+  <li>You can reuse code from the base classes (Humans can move like all animals).</li>
+  <li>You want to make global changes to derived classes by changing a base class (Change the caloric expenditure of all animals when they move).</li>
+</ol>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Employee
+{
+    private string Name { get; set; }
+    private string Email { get; set; }
+
+    public Employee(string name, string email)
+    {
+        Name = name;
+        Email = email;
+    }
+
+    // ...
+}
+
+// Bad because Employees "have" tax data.
+// EmployeeTaxData is not a type of Employee
+
+class EmployeeTaxData : Employee
+{
+    private string Name { get; }
+    private string Email { get; }
+
+    public EmployeeTaxData(string name, string email, string ssn, string salary)
+    {
+         // ...
+    }
+
+    // ...
+}
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class EmployeeTaxData
+{
+    public string Ssn { get; }
+    public string Salary { get; }
+
+    public EmployeeTaxData(string ssn, string salary)
+    {
+        Ssn = ssn;
+        Salary = salary;
+    }
+
+    // ...
+}
+
+class Employee
+{
+    public string Name { get; }
+    public string Email { get; }
+    public EmployeeTaxData TaxData { get; }
+
+    public Employee(string name, string email)
+    {
+        Name = name;
+        Email = email;
+    }
+
+    public void SetTax(string ssn, double salary)
+    {
+        TaxData = new EmployeeTaxData(ssn, salary);
+    }
+
+    // ...
+}
+</code></pre></div></div>
+
+<h2 id="solid-link">SOLID <a href="/nguyen-ly-solid-trong-c-sharp.html">link</a></h2>
+
+<h2 id="testing-sử-dụng-aaa-pattern">Testing (sử dụng AAA pattern)</h2>
+
+<p><em>Bad</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+public class MakeDotNetGreatAgainTests
+{
+    [Fact]
+    public void HandleDateBoundaries()
+    {
+        var date = new MyDateTime("1/1/2015");
+        date.AddDays(30);
+        Assert.Equal("1/31/2015", date);
+
+        date = new MyDateTime("2/1/2016");
+        date.AddDays(28);
+        Assert.Equal("02/29/2016", date);
+
+        date = new MyDateTime("2/1/2015");
+        date.AddDays(28);
+        Assert.Equal("03/01/2015", date);
+    }
+}
+
+</code></pre></div></div>
+
+<p><em>Good</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+public class MakeDotNetGreatAgainTests
+{
+    [Fact]
+    public void Handle30DayMonths()
+    {
+        // Arrange
+        var date = new MyDateTime("1/1/2015");
+
+        // Act
+        date.AddDays(30);
+
+        // Assert
+        Assert.Equal("1/31/2015", date);
+    }
+
+    [Fact]
+    public void HandleLeapYear()
+    {
+        // Arrange
+        var date = new MyDateTime("2/1/2016");
+
+        // Act
+        date.AddDays(28);
+
+        // Assert
+        Assert.Equal("02/29/2016", date);
+    }
+
+    [Fact]
+    public void HandleNonLeapYear()
+    {
+        // Arrange
+        var date = new MyDateTime("2/1/2015");
+
+        // Act
+        date.AddDays(28);
+
+        // Assert
+        Assert.Equal("03/01/2015", date);
+    }
+}
+
+</code></pre></div></div>
+
+<h2 id="concurrency">Concurrency</h2>
+
+<h3 id="use-asyncawait">Use Async/Await</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Exceptions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Avoid async void</td>
+      <td>Prefer async Task methods over async void methods</td>
+      <td>Event handlers</td>
+    </tr>
+    <tr>
+      <td>Async all the way</td>
+      <td>Don’t mix blocking and async code</td>
+      <td>Console main method (C# &lt;= 7.0)</td>
+    </tr>
+    <tr>
+      <td>Configure context</td>
+      <td>Use <code class="language-plaintext highlighter-rouge">ConfigureAwait(false)</code> when you can</td>
+      <td>Methods that require con­text</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>The Async Way of Doing Things</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>To Do This …</th>
+      <th>Instead of This …</th>
+      <th>Use This</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Retrieve the result of a background task</td>
+      <td><code class="language-plaintext highlighter-rouge">Task.Wait or Task.Result</code></td>
+      <td><code class="language-plaintext highlighter-rouge">await</code></td>
+    </tr>
+    <tr>
+      <td>Wait for any task to complete</td>
+      <td><code class="language-plaintext highlighter-rouge">Task.WaitAny</code></td>
+      <td><code class="language-plaintext highlighter-rouge">await Task.WhenAny</code></td>
+    </tr>
+    <tr>
+      <td>Retrieve the results of multiple tasks</td>
+      <td><code class="language-plaintext highlighter-rouge">Task.WaitAll</code></td>
+      <td><code class="language-plaintext highlighter-rouge">await Task.WhenAll</code></td>
+    </tr>
+    <tr>
+      <td>Wait a period of time</td>
+      <td><code class="language-plaintext highlighter-rouge">Thread.Sleep</code></td>
+      <td><code class="language-plaintext highlighter-rouge">await Task.Delay</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Best practice</strong></p>
+
+<p>The async/await is the best for IO bound tasks (networking communication, database communication, http request, etc.) but it is not good to apply on computational bound tasks (traverse on the huge list, render a hugge image, etc.). Because it will release the holding thread to the thread pool and CPU/cores available will not involve to process those tasks. Therefore, we should avoid using Async/Await for computional bound tasks.</p>
+
+<p>For dealing with computational bound tasks, prefer to use <code class="language-plaintext highlighter-rouge">Task.Factory.CreateNew</code> with <code class="language-plaintext highlighter-rouge">TaskCreationOptions</code> is <code class="language-plaintext highlighter-rouge">LongRunning</code>. It will start a new background thread to process a heavy computational bound task without release it back to the thread pool until the task being completed.</p>
+
+<p><strong>Know Your Tools</strong></p>
+
+<p>There’s a lot to learn about async and await, and it’s natural to get a little disoriented. Here’s a quick reference of solutions to common problems.</p>
+
+<p><strong>Solutions to Common Async Problems</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Problem</th>
+      <th>Solution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Create a task to execute code</td>
+      <td><code class="language-plaintext highlighter-rouge">Task.Run</code> or <code class="language-plaintext highlighter-rouge">TaskFactory.StartNew</code> (not the <code class="language-plaintext highlighter-rouge">Task</code> constructor or <code class="language-plaintext highlighter-rouge">Task.Start</code>)</td>
+    </tr>
+    <tr>
+      <td>Create a task wrapper for an operation or event</td>
+      <td><code class="language-plaintext highlighter-rouge">TaskFactory.FromAsync</code> or <code class="language-plaintext highlighter-rouge">TaskCompletionSource&lt;T&gt;</code></td>
+    </tr>
+    <tr>
+      <td>Support cancellation</td>
+      <td><code class="language-plaintext highlighter-rouge">CancellationTokenSource</code> and <code class="language-plaintext highlighter-rouge">CancellationToken</code></td>
+    </tr>
+    <tr>
+      <td>Report progress</td>
+      <td><code class="language-plaintext highlighter-rouge">IProgress&lt;T&gt;</code> and <code class="language-plaintext highlighter-rouge">Progress&lt;T&gt;</code></td>
+    </tr>
+    <tr>
+      <td>Handle streams of data</td>
+      <td>TPL Dataflow or Reactive Extensions</td>
+    </tr>
+    <tr>
+      <td>Synchronize access to a shared resource</td>
+      <td><code class="language-plaintext highlighter-rouge">SemaphoreSlim</code></td>
+    </tr>
+    <tr>
+      <td>Asynchronously initialize a resource</td>
+      <td><code class="language-plaintext highlighter-rouge">AsyncLazy&lt;T&gt;</code></td>
+    </tr>
+    <tr>
+      <td>Async-ready producer/consumer structures</td>
+      <td>TPL Dataflow or <code class="language-plaintext highlighter-rouge">AsyncCollection&lt;T&gt;</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Read the <a href="http://www.microsoft.com/download/en/details.aspx?id=19957">Task-based Asynchronous Pattern (TAP) document</a>.
+It is extremely well-written, and includes guidance on API design and the proper use of async/await (including cancellation and progress reporting).</p>
+
+<p>There are many new await-friendly techniques that should be used instead of the old blocking techniques. If you have any of these Old examples in your new async code, you’re Doing It Wrong(TM):</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Old</th>
+      <th>New</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">task.Wait</code></td>
+      <td><code class="language-plaintext highlighter-rouge">await task</code></td>
+      <td>Wait/await for a task to complete</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">task.Result</code></td>
+      <td><code class="language-plaintext highlighter-rouge">await task</code></td>
+      <td>Get the result of a completed task</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Task.WaitAny</code></td>
+      <td><code class="language-plaintext highlighter-rouge">await Task.WhenAny</code></td>
+      <td>Wait/await for one of a collection of tasks to complete</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Task.WaitAll</code></td>
+      <td><code class="language-plaintext highlighter-rouge">await Task.WhenAll</code></td>
+      <td>Wait/await for every one of a collection of tasks to complete</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Thread.Sleep</code></td>
+      <td><code class="language-plaintext highlighter-rouge">await Task.Delay</code></td>
+      <td>Wait/await for a period of time</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Task</code> constructor</td>
+      <td><code class="language-plaintext highlighter-rouge">Task.Run</code> or <code class="language-plaintext highlighter-rouge">TaskFactory.StartNew</code></td>
+      <td>Create a code-based task</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="error-handling">Error Handling</h2>
+
+<details>
+  <summary><b>Basic concept of error handling</b></summary>
+
+Thrown errors are a good thing! They mean the runtime has successfully identified when something in your program has gone wrong and it's letting you know by stopping function execution on the current stack, killing the process (in .NET/.NET Core), and notifying you in the console with a stack trace.
+
+</details>
+
+<details>
+  <summary><b>Don't use 'throw ex' in catch block</b></summary>
+
+If you need to re-throw an exception after catching it, use just 'throw'
+By using this, you will save the stack trace. But in the bad option below,
+you will lost the stack trace.
+
+_Bad_
+
+```
+try
+{
+    // Do something..
+}
+catch (Exception ex)
+{
+    // Any action something like roll-back or logging etc.
+    throw ex;
+}
+```
+
+_Good_
+
+```
+try
+{
+    // Do something..
+}
+catch (Exception ex)
+{
+    // Any action something like roll-back or logging etc.
+    throw;
+}
+```
+
+**[⬆ back to top](#table-of-contents)**
+
+</details>
+
+<details>
+  <summary><b>Don't ignore caught errors</b></summary>
+
+Doing nothing with a caught error doesn't give you the ability to ever fix or react to said error. Throwing the error isn't much better as often times it can get lost in a sea of things printed to the console. If you wrap any bit of code in a `try/catch` it means you think an error may occur there and therefore you should have a plan, or create a code path, for when it occurs.
+
+_Bad_
+
+```
+try
+{
+    FunctionThatMightThrow();
+}
+catch (Exception ex)
+{
+    // silent exception
+}
+```
+
+_Good_
+
+```
+try
+{
+    FunctionThatMightThrow();
+}
+catch (Exception error)
+{
+    NotifyUserOfError(error);
+
+    // Another option
+    ReportErrorToService(error);
+}
+```
+
+**[⬆ back to top](#table-of-contents)**
+
+</details>
+
+<details>
+  <summary><b>Use multiple catch block instead of if conditions.</b></summary>
+
+If you need to take action according to type of the exception,
+you better use multiple catch block for exception handling.
+
+_Bad_
+
+```
+try
+{
+    // Do something..
+}
+catch (Exception ex)
+{
+
+    if (ex is TaskCanceledException)
+    {
+        // Take action for TaskCanceledException
+    }
+    else if (ex is TaskSchedulerException)
+    {
+        // Take action for TaskSchedulerException
+    }
+}
+```
+
+_Good_
+
+```
+try
+{
+    // Do something..
+}
+catch (TaskCanceledException ex)
+{
+    // Take action for TaskCanceledException
+}
+catch (TaskSchedulerException ex)
+{
+    // Take action for TaskSchedulerException
+}
+```
+
+**[⬆ back to top](#table-of-contents)**
+
+</details>
+
+<details>
+  <summary><b>Keep exception stack trace when rethrowing exceptions</b></summary>
+
+C# allows the exception to be rethrown in a catch block using the `throw` keyword. It is a bad practice to throw a caught exception using `throw e;`. This statement resets the stack trace. Instead use `throw;`. This will keep the stack trace and provide a deeper insight about the exception.
+Another option is to use a custom exception. Simply instantiate a new exception and set its inner exception property to the caught exception with throw `new CustomException("some info", e);`. Adding information to an exception is a good practice as it will help with debugging. However, if the objective is to log an exception then use `throw;` to pass the buck to the caller.
+
+_Bad_
+
+```
+try
+{
+    FunctionThatMightThrow();
+}
+catch (Exception ex)
+{
+    logger.LogInfo(ex);
+    throw ex;
+}
+```
+
+_Good_
+
+```
+try
+{
+    FunctionThatMightThrow();
+}
+catch (Exception error)
+{
+    logger.LogInfo(error);
+    throw;
+}
+```
+
+_Good_
+
+```
+try
+{
+    FunctionThatMightThrow();
+}
+catch (Exception error)
+{
+    logger.LogInfo(error);
+    throw new CustomException(error);
+}
+```
+
+**[⬆ back to top](#table-of-contents)**
+
+</details>
+
+<h2 id="formatting">Formatting</h2>
+
+<details>
+  <summary><b>Uses <i>.editorconfig</i> file</b></summary>
+
+_Bad_
+
+Has many code formatting styles in the project. For example, indent style is `space` and `tab` mixed in the project.
+
+_Good_
+
+Define and maintain consistent code style in your codebase with the use of an `.editorconfig` file
+
+```
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# C# files
+[*.cs]
+indent_size = 4
+# New line preferences
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
+csharp_new_line_within_query_expression_clauses = true
+
+# Code files
+[*.{cs,csx,vb,vbx}]
+indent_size = 4
+
+# Indentation preferences
+csharp_indent_block_contents = true
+csharp_indent_braces = false
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_indent_labels = one_less_than_current
+
+# avoid this. unless absolutely necessary
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_event = false:suggestion
+
+# only use var when it's obvious what the variable type is
+# csharp_style_var_for_built_in_types = false:none
+# csharp_style_var_when_type_is_apparent = false:none
+# csharp_style_var_elsewhere = false:suggestion
+
+# use language keywords instead of BCL types
+dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
+dotnet_style_predefined_type_for_member_access = true:suggestion
+
+# name all constant fields using PascalCase
+dotnet_naming_rule.constant_fields_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.constant_fields_should_be_pascal_case.symbols  = constant_fields
+dotnet_naming_rule.constant_fields_should_be_pascal_case.style    = pascal_case_style
+
+dotnet_naming_symbols.constant_fields.applicable_kinds   = field
+dotnet_naming_symbols.constant_fields.required_modifiers = const
+
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+
+# static fields should have s_ prefix
+dotnet_naming_rule.static_fields_should_have_prefix.severity = suggestion
+dotnet_naming_rule.static_fields_should_have_prefix.symbols  = static_fields
+dotnet_naming_rule.static_fields_should_have_prefix.style    = static_prefix_style
+
+dotnet_naming_symbols.static_fields.applicable_kinds   = field
+dotnet_naming_symbols.static_fields.required_modifiers = static
+
+dotnet_naming_style.static_prefix_style.required_prefix = s_
+dotnet_naming_style.static_prefix_style.capitalization = camel_case
+
+# internal and private fields should be _camelCase
+dotnet_naming_rule.camel_case_for_private_internal_fields.severity = suggestion
+dotnet_naming_rule.camel_case_for_private_internal_fields.symbols  = private_internal_fields
+dotnet_naming_rule.camel_case_for_private_internal_fields.style    = camel_case_underscore_style
+
+dotnet_naming_symbols.private_internal_fields.applicable_kinds = field
+dotnet_naming_symbols.private_internal_fields.applicable_accessibilities = private, internal
+
+dotnet_naming_style.camel_case_underscore_style.required_prefix = _
+dotnet_naming_style.camel_case_underscore_style.capitalization = camel_case
+
+# Code style defaults
+dotnet_sort_system_directives_first = true
+csharp_preserve_single_line_blocks = true
+csharp_preserve_single_line_statements = false
+
+# Expression-level preferences
+dotnet_style_object_initializer = true:suggestion
+dotnet_style_collection_initializer = true:suggestion
+dotnet_style_explicit_tuple_names = true:suggestion
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+
+# Expression-bodied members
+csharp_style_expression_bodied_methods = false:none
+csharp_style_expression_bodied_constructors = false:none
+csharp_style_expression_bodied_operators = false:none
+csharp_style_expression_bodied_properties = true:none
+csharp_style_expression_bodied_indexers = true:none
+csharp_style_expression_bodied_accessors = true:none
+
+# Pattern matching
+csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
+csharp_style_inlined_variable_declaration = true:suggestion
+
+# Null checking preferences
+csharp_style_throw_expression = true:suggestion
+csharp_style_conditional_delegate_call = true:suggestion
+
+# Space preferences
+csharp_space_after_cast = false
+csharp_space_after_colon_in_inheritance_clause = true
+csharp_space_after_comma = true
+csharp_space_after_dot = false
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_after_semicolon_in_for_statement = true
+csharp_space_around_binary_operators = before_and_after
+csharp_space_around_declaration_statements = do_not_ignore
+csharp_space_before_colon_in_inheritance_clause = true
+csharp_space_before_comma = false
+csharp_space_before_dot = false
+csharp_space_before_open_square_brackets = false
+csharp_space_before_semicolon_in_for_statement = false
+csharp_space_between_empty_square_brackets = false
+csharp_space_between_method_call_empty_parameter_list_parentheses = false
+csharp_space_between_method_call_name_and_opening_parenthesis = false
+csharp_space_between_method_call_parameter_list_parentheses = false
+csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
+csharp_space_between_method_declaration_name_and_open_parenthesis = false
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_parentheses = false
+csharp_space_between_square_brackets = false
+
+[*.{asm,inc}]
+indent_size = 8
+
+# Xml project files
+[*.{csproj,vcxproj,vcxproj.filters,proj,nativeproj,locproj}]
+indent_size = 2
+
+# Xml config files
+[*.{props,targets,config,nuspec}]
+indent_size = 2
+
+[CMakeLists.txt]
+indent_size = 2
+
+[*.cmd]
+indent_size = 2
+
+```
+
+**[⬆ back to top](#table-of-contents)**
+
+</details>
+
+<h2 id="comments">Comments</h2>
+
+<details>
+  <summary><b>Avoid positional markers</b></summary>
+
+They usually just add noise. Let the functions and variable names along with the proper indentation and formatting give the visual structure to your code.
+
+_Bad_
+
+```
+////////////////////////////////////////////////////////////////////////////////
+// Scope Model Instantiation
+////////////////////////////////////////////////////////////////////////////////
+var model = new[]
+{
+    menu: 'foo',
+    nav: 'bar'
+};
+
+////////////////////////////////////////////////////////////////////////////////
+// Action setup
+////////////////////////////////////////////////////////////////////////////////
+void Actions()
+{
+    // ...
+};
+```
+
+_Bad_
+
+```
+
+#region Scope Model Instantiation
+
+var model = {
+    menu: 'foo',
+    nav: 'bar'
+};
+
+#endregion
+
+#region Action setup
+
+void Actions() {
+    // ...
+};
+
+#endregion
+```
+
+_Good_
+
+```
+var model = new[]
+{
+    menu: 'foo',
+    nav: 'bar'
+};
+
+void Actions()
+{
+    // ...
+};
+```
+
+**[⬆ back to top](#table-of-contents)**
+
+</details>
+
+<details>
+  <summary><b>Don't leave commented out code in your codebase</b></summary>
+
+Version control exists for a reason. Leave old code in your history.
+
+_Bad_
+
+```
+doStuff();
+// doOtherStuff();
+// doSomeMoreStuff();
+// doSoMuchStuff();
+```
+
+_Good_
+
+```
+doStuff();
+```
+
+**[⬆ back to top](#table-of-contents)**
+
+</details>
+
+<details>
+  <summary><b>Don't have journal comments</b></summary>
+
+Remember, use version control! There's no need for dead code, commented code, and especially journal comments. Use `git log` to get history!
+
+_Bad_
+
+```
+/**
+ * 2018-12-20: Removed monads, didn't understand them (RM)
+ * 2017-10-01: Improved using special monads (JP)
+ * 2016-02-03: Removed type-checking (LI)
+ * 2015-03-14: Added combine with type-checking (JR)
+ */
+public int Combine(int a,int b)
+{
+    return a + b;
+}
+```
+
+_Good_
+
+```
+public int Combine(int a,int b)
+{
+    return a + b;
+}
+```
+
+**[⬆ back to top](#table-of-contents)**
+
+</details>
+
+<details>
+  <summary><b>Only comment things that have business logic complexity</b></summary>
+
+Comments are an apology, not a requirement. Good code _mostly_ documents itself.
+
+_Bad_
+
+```
+public int HashIt(string data)
+{
+    // The hash
+    var hash = 0;
+
+    // Length of string
+    var length = data.length;
+
+    // Loop through every character in data
+    for (var i = 0; i &lt; length; i++)
+    {
+        // Get character code.
+        const char = data.charCodeAt(i);
+        // Make the hash
+        hash = ((hash &lt;&lt; 5) - hash) + char;
+        // Convert to 32-bit integer
+        hash &amp;= hash;
+    }
+}
+```
+
+**Better but still Bad:**
+
+```
+public int HashIt(string data)
+{
+    var hash = 0;
+    var length = data.length;
+    for (var i = 0; i &lt; length; i++)
+    {
+        const char = data.charCodeAt(i);
+        hash = ((hash &lt;&lt; 5) - hash) + char;
+
+        // Convert to 32-bit integer
+        hash &amp;= hash;
+    }
+}
+```
+
+If a comment explains WHAT the code is doing, it is probably a useless comment and can be implemented with a well named variable or function. The comment in the previous code could be replaced with a function named `ConvertTo32bitInt` so this comment is still useless.
+However it would be hard to express by code WHY the developer chose djb2 hash algorithm instead of sha-1 or another hash function. In that case a comment is acceptable.
+
+_Good_
+
+```
+public int Hash(string data)
+{
+    var hash = 0;
+    var length = data.length;
+
+    for (var i = 0; i &lt; length; i++)
+    {
+        var character = data[i];
+        // use of djb2 hash algorithm as it has a good compromise
+        // between speed and low collision with a very simple implementation
+        hash = ((hash &lt;&lt; 5) - hash) + character;
+
+        hash = ConvertTo32BitInt(hash);
+    }
+    return hash;
+}
+
+private int ConvertTo32BitInt(int value)
+{
+    return value &amp; value;
+}
+```
+
+**[⬆ back to top](#table-of-contents)**
+
+</details>
+
+<h2 id="tools">Tools</h2>
+
+<ul>
+  <li><a href="https://github.com/codecadwallader/codemaid">codemaid</a> - open source Visual Studio extension to cleanup and simplify our C#, C++, F#, VB, PHP, PowerShell, JSON, XAML, XML, ASP, HTML, CSS, LESS, SCSS, JavaScript and TypeScript coding</li>
+  <li><a href="https://github.com/sharpenrocks/Sharpen">Sharpen</a> - Visual Studio extension that intelligently introduces new C# features into your existing code base</li>
+</ul>
+
+<h2 id="cheatsheets">Cheatsheets</h2>
+
+<ul>
+  <li><a href="https://github.com/davidfowl/AspNetCoreDiagnosticScenarios">AspNetCoreDiagnosticScenarios</a> - Examples of broken patterns in ASP.NET Core applications</li>
+  <li><a href="cheatsheets/Clean-Code-V2.4.pdf">Clean Code</a> - The summary of <a href="https://www.amazon.com/dp/0132350882">Clean Code: A Handbook of Agile Software Craftsmanship</a> book</li>
+  <li><a href="cheatsheets/Clean-Architecture-V1.0.pdf">Clean Architecture</a> - The summary of <a href="https://www.amazon.com/dp/0134494164">Clean Architecture: A Craftsman’s Guide to Software Structure and Design</a> book</li>
+  <li><a href="https://github.com/Maoni0/mem-doc/blob/master/doc/.NETMemoryPerformanceAnalysis.md">.NET Memory Performance Analysis</a> - This document aims to help folks who develop applications in .NET with how to think about memory performance analysis and finding the right approaches to perform such analysis if they need to. In this context .NET includes .NET Framework and .NET Core. In order to get the latest memory improvements in both the garbage collector and the rest of the framework I strongly encourage you to be on .NET Core if you are not already, because that’s where the active development happens</li>
+  <li><a href="https://sourcemaking.com/design-patterns-and-tips">101 Design Patterns &amp; Tips for Developers</a></li>
+  <li><a href="https://github.com/luk4z7/go-concurrency-guide">Go Concurrency Guide</a></li>
+</ul>
+
+  </div><a class="u-url" href="/basic-knowledge/clean-code" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/basic-knowledge/design-pattern-trong-c-sharp" class="prev-post">← Design Pattern trong C#</a>
+      
+      
+        <a href="/basic-knowledge/system-design-for-beginner" class="next-post">System design for beginer →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Composite Pattern | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Composite Pattern" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Giới thiệu" />
+<meta property="og:description" content="Giới thiệu" />
+<link rel="canonical" href="http://localhost:4000/design-pattern/structural-patterns/composite" />
+<meta property="og:url" content="http://localhost:4000/design-pattern/structural-patterns/composite" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Composite Pattern" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"Giới thiệu","headline":"Composite Pattern","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/design-pattern/structural-patterns/composite"},"url":"http://localhost:4000/design-pattern/structural-patterns/composite"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Composite Pattern</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/design-pattern/structural-patterns">design-pattern/structural-patterns</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="giới-thiệu">Giới thiệu</h2>
+
+<h3 id="định-nghĩa-pattern">Định nghĩa Pattern</h3>
+<p>Composite Pattern là một mẫu thiết kế thuộc nhóm cấu trúc, được sử dụng để tổ chức các đối tượng vào một cấu trúc cây. Mẫu thiết kế này tạo ra một hệ thống phân cấp cho phép người dùng xử lý các đối tượng đơn lẻ và tổ hợp của chúng một cách thống nhất.</p>
+
+<h3 id="mục-đích">Mục đích</h3>
+<p>Mục đích chính của Composite Pattern là đơn giản hóa quá trình làm việc với các cấu trúc phức tạp bằng cách cho phép client tương tác với các đối tượng đơn lẻ và tổ hợp theo cùng một cách. Điều này giúp giảm thiểu sự phức tạp khi quản lý và tương tác với cấu trúc cây, làm cho mã nguồn dễ bảo trì và mở rộng hơn.</p>
+
+<h3 id="ý-tưởng-chính-của-pattern">Ý tưởng chính của Pattern</h3>
+<p>Ý tưởng cốt lõi của Composite Pattern nằm ở việc cung cấp một interface chung cho cả hai loại đối tượng: đơn lẻ và tổ hợp. Interface này cho phép client tương tác với mỗi đối tượng một cách riêng lẻ hoặc nhóm các đối tượng lại với nhau như một thể thống nhất mà không cần quan tâm đến đặc điểm nội tại của chúng. Kết quả là, client có thể thêm, xóa hoặc thay đổi các đối tượng trong cấu trúc cây một cách linh hoạt mà không cần viết lại code hoặc hiểu biết sâu sắc về cấu trúc nội bộ.</p>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p>Khi sử Composite Pattern bạn phải chắc chắn rằng mô hình ứng dụng của bạn có thể biểu hiện bằng sơ đồ cây.</p>
+
+<p>Ví dụ như sau: Trong việc lưu trữ trong máy tính có hai dạng chính: <code class="language-plaintext highlighter-rouge">Folder</code> và <code class="language-plaintext highlighter-rouge">File</code>. Một <code class="language-plaintext highlighter-rouge">Folder</code> thì có thể chứa nhiều <code class="language-plaintext highlighter-rouge">Folder</code> và <code class="language-plaintext highlighter-rouge">File</code>. Có thể một trong <code class="language-plaintext highlighter-rouge">Folder</code> chỉ chứa <code class="language-plaintext highlighter-rouge">File</code> và trong <code class="language-plaintext highlighter-rouge">File</code> thì chứa nội dụng.</p>
+
+<pre><code class="language-mermaid">graph TB
+    id1(Folder)
+    id2(Folder)
+    id3(Folder)
+    id4(File)
+    id5(File)
+    id6(File)
+    id7(File)
+    id1 --&gt; id2
+    id1 --&gt; id3
+    id1 --&gt; id4
+    id2 --&gt; id5
+    id3 --&gt; id6
+    id3 --&gt; id7
+
+    subgraph traditional_approach
+    id1 --&gt; id2
+    id2 --&gt; id5
+    id1 --&gt; id4
+    id1 --&gt; id3
+    id3 --&gt; id6
+    id3 --&gt; id7
+    end
+</code></pre>
+
+<p>Giờ giả sử ta cần tìm tất cả File trong một Folder. Thử cách tiếp cận thông thường là ta sẽ mở từng Folder con ra và đếm xem co bao nhiêu File vào Folder tiếp theo đếm tiếp. Nhưng trong lập trình nó không hề đơn giản như việc bạn chỉ cần chạy một dòng for. Bạn phải biết trước loại  File và Folder mà sẽ duyệt và mực đồ lòng vào nhau. Tất cả điều đó làm cho cách tiếp cận này trở nên khó khăn hơn.</p>
+
+<h2 id="giải-pháp">Giải pháp</h2>
+
+<p>Chúng ta sẽ sử chung Composite Pattern để thực hiện công việc với Folder và File bằng cách tạo một interrface chung với một phương thức count(Đếm)</p>
+
+<pre><code class="language-mermaid">classDiagram
+    class Component {
+        +count() int
+    }
+
+    class File {
+        +count() int
+    }
+
+    class Folder {
+        +List~Component~ children
+        +count() int
+        +add(component Component) void
+        +remove(component Component) void
+    }
+
+    Component &lt;|-- File: is a
+    Component &lt;|-- Folder: is a
+    Folder "1" *-- "*" Component: contains
+</code></pre>
+
+<p>Cái này hoạt động như sau. Đối với File thì chỉ trả về cộng một, Đối với Folder thì nó sẽ duyệt từng item trong Folder đó, bắt từng item đếm sau cùng tới lượt nó tổng hợp lại và trả về tổng số của Folder. Nếu một các item là Folder thì sao? Thì nó sẽ bắt Folder con đó đi đếm các thành item nằm trong Folder con và trả về tổng số.</p>
+
+<p>Nói đến đây các bạn sẽ nói, ô đây là “Rùa Em” (Đệ Quy). Nhưng với Composite nó sẽ có hiệu quả gì ? Nó sẽ giúp bạn làm việc với các thành phần một cách dể dàng, chỉ cần thông qua interface mà không phải xử lý rác rối sâu đến bên trong. Nhưng lời kêu gọi của bạn sẽ được xử lý chạy dần xuống theo cấu trúc cây.</p>
+
+<h2 id="cấu-trúc">Cấu Trúc</h2>
+
+<pre><code class="language-mermaid">classDiagram
+  class Component {
+    +operation()
+  }
+
+  class Leaf {
+    +operation()
+  }
+
+  class Composite {
+    -children List
+    +operation()
+    +add(Component)
+    +remove(Component)
+    +getChild(int)
+  }
+
+  Component &lt;|-- Leaf : Is a
+  Component &lt;|-- Composite : Is a
+  Composite "1" *-- "many" Component : Contains
+
+  class Component {
+      &lt;&lt;interface&gt;&gt;
+      +operation()
+  }
+</code></pre>
+
+<ul>
+  <li><strong>Component</strong>: interface chung, mô ta các phương thức chung của thành phần trong cây.</li>
+  <li><strong>Leaf</strong>:  Đây là thành phần cơ bản của cây, nó không có các node con.</li>
+  <li><strong>Composite</strong>: lưu trữ tập hợp các Leaf và cài đặt các phương thức của Component.</li>
+</ul>
+
+<h2 id="cách-triển-khai">Cách triển khai</h2>
+
+<h3 id="bước-1-xây-dựng-component"><strong>Bước 1: Xây dựng Component</strong></h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Component</span> <span class="o">{</span>
+    <span class="kd">protected</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+    
+    <span class="kd">public</span> <span class="nf">Component</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+    
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="nc">Component</span> <span class="n">component</span><span class="o">);</span>
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">(</span><span class="nc">Component</span> <span class="n">component</span><span class="o">);</span>
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">display</span><span class="o">(</span><span class="kt">int</span> <span class="n">depth</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="bước-2-xây-dựng-leaf"><strong>Bước 2: Xây dựng Leaf</strong></h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Leaf</span> <span class="kd">extends</span> <span class="nc">Component</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">Leaf</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="nc">Component</span> <span class="n">component</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Không thực hiện bất cứ điều gì</span>
+    <span class="o">}</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">(</span><span class="nc">Component</span> <span class="n">component</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Không thực hiện bất cứ điều gì</span>
+    <span class="o">}</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">display</span><span class="o">(</span><span class="kt">int</span> <span class="n">depth</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"-"</span><span class="o">.</span><span class="na">repeat</span><span class="o">(</span><span class="n">depth</span><span class="o">)</span> <span class="o">+</span> <span class="n">name</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="bước-3-xây-dựng-composite"><strong>Bước 3: Xây dựng Composite</strong></h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Composite</span> <span class="kd">extends</span> <span class="nc">Component</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Component</span><span class="o">&gt;</span> <span class="n">children</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+
+    <span class="kd">public</span> <span class="nf">Composite</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="nc">Component</span> <span class="n">component</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">children</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">component</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">(</span><span class="nc">Component</span> <span class="n">component</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">children</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">component</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">display</span><span class="o">(</span><span class="kt">int</span> <span class="n">depth</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"-"</span><span class="o">.</span><span class="na">repeat</span><span class="o">(</span><span class="n">depth</span><span class="o">)</span> <span class="o">+</span> <span class="n">name</span><span class="o">);</span>
+        <span class="k">for</span> <span class="o">(</span><span class="nc">Component</span> <span class="n">component</span> <span class="o">:</span> <span class="n">children</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">component</span><span class="o">.</span><span class="na">display</span><span class="o">(</span><span class="n">depth</span> <span class="o">+</span> <span class="mi">2</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="bước-4-sử-dụng-mẫu-composite"><strong>Bước 4: Sử dụng mẫu Composite</strong></h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Composite</span> <span class="n">root</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Composite</span><span class="o">(</span><span class="s">"root"</span><span class="o">);</span>
+        <span class="n">root</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Leaf</span><span class="o">(</span><span class="s">"Leaf A"</span><span class="o">));</span>
+        <span class="n">root</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Leaf</span><span class="o">(</span><span class="s">"Leaf B"</span><span class="o">));</span>
+        
+        <span class="nc">Composite</span> <span class="n">comp</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Composite</span><span class="o">(</span><span class="s">"Composite X"</span><span class="o">);</span>
+        <span class="n">comp</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Leaf</span><span class="o">(</span><span class="s">"Leaf XA"</span><span class="o">));</span>
+        <span class="n">comp</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Leaf</span><span class="o">(</span><span class="s">"Leaf XB"</span><span class="o">));</span>
+        
+        <span class="n">root</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">comp</span><span class="o">);</span>
+        
+        <span class="n">root</span><span class="o">.</span><span class="na">display</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Kết quả:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-root
+--Leaf A
+--Leaf B
+--Composite X
+---Leaf XA
+---Leaf XB
+</code></pre></div></div>
+
+<h2 id="ví-dụ-áp-dụng-composite-pattern">Ví dụ áp dụng Composite Pattern</h2>
+
+<p>Chúng ta làm ví dụ ở trên nhưng thay đối một ít là ta sẽ xem tổng folder có size bao nhiêu</p>
+
+<p>FileComponent.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">interface</span> <span class="nc">FileComponent</span> <span class="p">{</span>
+    <span class="k">fun</span> <span class="nf">showProperty</span><span class="p">()</span>
+    <span class="k">fun</span> <span class="nf">size</span><span class="p">()</span> <span class="p">:</span> <span class="nc">Long</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>FileLeaf.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">FileLeaf</span> <span class="p">:</span> <span class="nc">FileComponent</span> <span class="p">{</span>
+
+    <span class="k">private</span> <span class="kd">var</span> <span class="py">name</span><span class="p">:</span><span class="nc">String</span>
+    <span class="k">private</span> <span class="kd">var</span> <span class="py">size</span><span class="p">:</span><span class="nc">Long</span>
+
+    <span class="k">constructor</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nc">String</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nc">Long</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">name</span> <span class="p">=</span> <span class="n">name</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">size</span> <span class="p">=</span> <span class="n">size</span>
+    <span class="p">}</span>
+
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">showProperty</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nc">System</span><span class="p">.</span><span class="k">out</span><span class="p">.</span><span class="nf">println</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">size</span><span class="p">():</span> <span class="nc">Long</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">size</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>FolderComposite.kt</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">FolderComposite</span> <span class="p">:</span> <span class="nc">FileComponent</span><span class="p">{</span>
+
+    <span class="k">private</span> <span class="kd">var</span> <span class="py">files</span><span class="p">:</span> <span class="nc">List</span><span class="p">&lt;</span><span class="nc">FileComponent</span><span class="p">&gt;</span>
+
+    <span class="k">constructor</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="nc">List</span><span class="p">&lt;</span><span class="nc">FileComponent</span><span class="p">&gt;)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">files</span> <span class="p">=</span> <span class="n">files</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">showProperty</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">file</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="n">files</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">file</span><span class="p">.</span><span class="nf">showProperty</span><span class="p">()</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">size</span><span class="p">():</span> <span class="nc">Long</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="py">total</span> <span class="p">:</span> <span class="nc">Long</span> <span class="p">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">file</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="n">files</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">total</span> <span class="p">+=</span> <span class="n">file</span><span class="p">.</span><span class="nf">size</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">total</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Kết quả</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>file 1
+file 2
+file 3
+Total Size: 27
+</code></pre></div></div>
+
+<h2 id="so-sánh-composite-pattern">So sánh Composite Pattern</h2>
+
+<h3 id="1-composite-vs-adapter">1. Composite vs Adapter:</h3>
+
+<ul>
+  <li><strong>Composite</strong>: Được sử dụng để biểu diễn và quản lý một nhóm đối tượng như một đối tượng đơn lẻ.</li>
+  <li><strong>Adapter</strong>: Được sử dụng để cho phép hai interfaces không tương thích có thể làm việc cùng nhau mà không cần phải sửa đổi bất kỳ lớp nào.</li>
+</ul>
+
+<h3 id="2-composite-vs-decorator">2. Composite vs Decorator:</h3>
+
+<ul>
+  <li><strong>Composite</strong>: Tập trung vào việc tạo ra cấu trúc dạng cây, nơi một nhóm đối tượng và đối tượng đơn lẻ có thể được xử lý theo cùng một cách.</li>
+  <li><strong>Decorator</strong>: Mục tiêu là mở rộng chức năng của một đối tượng mà không cần sửa đổi chúng.</li>
+</ul>
+
+<h3 id="3-composite-vs-facade">3. Composite vs Facade:</h3>
+
+<ul>
+  <li><strong>Composite</strong>: Xây dựng một cấu trúc dạng cây và làm việc với một nhóm đối tượng giống như một đối tượng duy nhất.</li>
+  <li><strong>Facade</strong>: Cung cấp một giao diện đơn giản hoá cho một hệ thống phức tạp, giúp giảm sự phức tạp của việc gọi đến các API hoặc hệ thống phức tạp.</li>
+</ul>
+
+<h3 id="4-composite-vs-proxy">4. Composite vs Proxy:</h3>
+
+<ul>
+  <li><strong>Composite</strong>: Biểu diễn và quản lý một nhóm đối tượng dưới dạng cấu trúc cây.</li>
+  <li><strong>Proxy</strong>: Đại diện cho một đối tượng khác và kiểm soát việc truy cập đến đối tượng đó, thường được sử dụng để điều khiển quyền truy cập hoặc tối ưu hóa việc tạo đối tượng.</li>
+</ul>
+
+<h3 id="kết-luận">Kết luận</h3>
+
+<p>Composite Pattern là một mẫu thiết kế hữu ích để xây dựng và quản lý cấu trúc phân cấp dưới dạng cây của các đối tượng. Nó cho phép chúng ta làm việc với một nhóm đối tượng như một đối tượng đơn lẻ, mang lại khả năng tổ chức và quản lý phân cấp một cách linh hoạt và thuận tiện.</p>
+
+<h4 id="ưu-điểm">Ưu điểm:</h4>
+<ul>
+  <li><strong>Tích hợp Mạnh</strong>: Composite Pattern giúp tích hợp các đối tượng vào một cấu trúc dạng cây một cách dễ dàng.</li>
+  <li><strong>Linh Hoạt</strong>: Cho phép bạn thêm, xóa hoặc sửa đổi các đối tượng trong cấu trúc một cách linh hoạt mà không làm ảnh hưởng đến toàn bộ cấu trúc.</li>
+  <li><strong>Tính Nhất quán</strong>: Cấu trúc được xây dựng dưới dạng cây giúp việc làm việc với đối tượng đơn lẻ và nhóm đối tượng trở nên nhất quán.</li>
+</ul>
+
+<h4 id="nhược-điểm">Nhược điểm:</h4>
+<ul>
+  <li><strong>Quá mức Tổng quát</strong>: Có thể tạo ra quá nhiều lớp và đối tượng nếu mẫu được sử dụng không cẩn thận.</li>
+</ul>
+
+<h4 id="hướng-dẫn-sử-dụng">Hướng dẫn sử dụng:</h4>
+<ul>
+  <li><strong>Nên sử dụng khi</strong>:
+    <ul>
+      <li>Bạn muốn biểu diễn và quản lý một nhóm đối tượng dưới dạng cấu trúc cây.</li>
+      <li>Cần làm việc với các đối tượng và nhóm đối tượng theo cùng một cách.</li>
+      <li>Muốn cung cấp một giao diện chung cho cả đối tượng đơn lẻ và nhóm đối tượng.</li>
+    </ul>
+  </li>
+  <li><strong>Không nên sử dụng khi</strong>:
+    <ul>
+      <li>Không có nhu cầu xây dựng cấu trúc dạng cây hoặc quản lý các đối tượng dưới dạng phân cấp.</li>
+      <li>Cấu trúc dạng cây có thể trở nên quá phức tạp và không cần thiết cho ứng dụng của bạn.</li>
+    </ul>
+  </li>
+</ul>
+
+
+  </div><a class="u-url" href="/design-pattern/structural-patterns/composite" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/design-pattern/structural-patterns/bridge" class="prev-post">← Bridge Pattern</a>
+      
+      
+        <a href="/design-pattern/structural-patterns/decorator" class="next-post">Decorator Pattern →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

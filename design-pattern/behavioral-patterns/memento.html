@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Memento Pattern | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Memento Pattern" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Giới thiệu" />
+<meta property="og:description" content="Giới thiệu" />
+<link rel="canonical" href="http://localhost:4000/design-pattern/behavioral-patterns/memento" />
+<meta property="og:url" content="http://localhost:4000/design-pattern/behavioral-patterns/memento" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Memento Pattern" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"Giới thiệu","headline":"Memento Pattern","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/design-pattern/behavioral-patterns/memento"},"url":"http://localhost:4000/design-pattern/behavioral-patterns/memento"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Memento Pattern</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/design-pattern/behavioral-patterns">design-pattern/behavioral-patterns</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="giới-thiệu">Giới thiệu</h2>
+
+<p>Memento Pattern cung cấp khả năng lưu và khôi phục trạng thái trước đó của một đối tượng mà không vi phạm encapsulation.</p>
+
+<h2 id="định-nghĩa">Định nghĩa</h2>
+
+<p>Memento Pattern lưu trữ trạng thái nội bộ của một đối tượng vào một đối tượng riêng biệt được gọi là Memento. Đối tượng ban đầu có thể khôi phục lại trạng thái từ Memento.</p>
+
+<h2 id="mục-đích">Mục đích</h2>
+
+<ul>
+  <li>
+    <p>Lưu lại và khôi phục trạng thái của một đối tượng mà không vi phạm encapsulation.</p>
+  </li>
+  <li>
+    <p>Cung cấp khả năng hoàn tác (undo/rollback) trong quá trình thao tác với đối tượng.</p>
+  </li>
+</ul>
+
+<h2 id="đặt-vấn-đề">Đặt vấn đề</h2>
+
+<p>Giả sử bạn đang phát triển một trò chơi có đối tượng Player đại diện cho người chơi. Trong quá trình chơi, trạng thái của Player (vị trí, máu, điểm,..) liên tục thay đổi.</p>
+
+<p>Để người chơi có thể quay lại trạng thái trước đó khi cần thiết, chúng ta cần lưu lại các trạng thái đó một cách hiệu quả. Đồng thời, không làm ảnh hưởng tới encapsulation của lớp Player.</p>
+
+<h2 id="giải-quyết">Giải quyết</h2>
+
+<p>Memento Pattern giải quyết bài toán trên bằng cách:</p>
+
+<ul>
+  <li>
+    <p>Tạo ra một lớp Memento để lưu trữ trạng thái của đối tượng. Memento chỉ lưu trữ dữ liệu, không có hành vi.</p>
+  </li>
+  <li>
+    <p>Lớp Player tạo ra đối tượng Memento chứa trạng thái của nó, và có thể khôi phục lại trạng thái từ Memento.</p>
+  </li>
+  <li>
+    <p>Originator không truy cập trực tiếp vào Memento, mà thông qua Caretaker.</p>
+  </li>
+</ul>
+
+<p><img src="https://refactoring.guru/images/patterns/diagrams/memento/structure.png" alt="" /></p>
+
+<h2 id="cấu-trúc">Cấu trúc</h2>
+
+<p>Các thành phần trong Memento Pattern:</p>
+
+<ul>
+  <li>
+    <p>Originator: đối tượng cần lưu trữ trạng thái.</p>
+  </li>
+  <li>
+    <p>Memento: đối tượng lưu trữ trạng thái của Originator.</p>
+  </li>
+  <li>
+    <p>Caretaker: quản lý các đối tượng Memento.</p>
+  </li>
+</ul>
+
+<h2 id="cách-triển-khai">Cách triển khai</h2>
+
+<p>Để triển khai Memento Pattern trong Java, chúng ta có thể:</p>
+
+<ul>
+  <li>
+    <p>Tạo lớp Memento với các trường dữ liệu cần lưu trữ.</p>
+  </li>
+  <li>
+    <p>Lớp Originator sẽ tạo ra đối tượng Memento và lưu/khôi phục trạng thái từ nó.</p>
+  </li>
+  <li>
+    <p>Caretaker sẽ quản lý các Memento.</p>
+  </li>
+</ul>
+
+<h2 id="ví-dụ">Ví dụ</h2>
+
+<p>// Ví dụ triển khai Memento Pattern để lưu trạng thái đối tượng Player trong game.</p>
+
+<h2 id="so-sánh-với-các-pattern-khác">So sánh với các Pattern khác</h2>
+
+<p>So với Iterator, Memento tập trung vào việc lưu trữ trạng thái nội bộ của một đối tượng, còn Iterator tập trung vào việc truy cập tuần tự các phần tử trong bộ sưu tập.</p>
+
+<h2 id="kết-luận">Kết luận</h2>
+
+<p>Memento Pattern rất hữu ích khi muốn lưu lại và khôi phục trạng thái của đối tượng mà không vi phạm encapsulation. Tuy nhiên cũng cần xem xét chi phí về bộ nhớ khi lưu trữ nhiều snapshot.</p>
+
+  </div><a class="u-url" href="/design-pattern/behavioral-patterns/memento" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/design-pattern/behavioral-patterns/mediator" class="prev-post">← Mediator Pattern</a>
+      
+      
+        <a href="/design-pattern/behavioral-patterns/observer" class="next-post">Observer Pattern →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

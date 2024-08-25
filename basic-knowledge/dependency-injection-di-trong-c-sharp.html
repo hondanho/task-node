@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Dependency injection (DI) trong C# với ServiceCollection | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Dependency injection (DI) trong C# với ServiceCollection" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Nguyên lý cuối cùng của SOLID Dependency Inversion:" />
+<meta property="og:description" content="Nguyên lý cuối cùng của SOLID Dependency Inversion:" />
+<link rel="canonical" href="http://localhost:4000/basic-knowledge/dependency-injection-di-trong-c-sharp" />
+<meta property="og:url" content="http://localhost:4000/basic-knowledge/dependency-injection-di-trong-c-sharp" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-03-07T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Dependency injection (DI) trong C# với ServiceCollection" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-03-07T00:00:00+07:00","datePublished":"2024-03-07T00:00:00+07:00","description":"Nguyên lý cuối cùng của SOLID Dependency Inversion:","headline":"Dependency injection (DI) trong C# với ServiceCollection","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/basic-knowledge/dependency-injection-di-trong-c-sharp"},"url":"http://localhost:4000/basic-knowledge/dependency-injection-di-trong-c-sharp"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Dependency injection (DI) trong C# với ServiceCollection</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-03-07T00:00:00+07:00" itemprop="datePublished">Mar 7, 2024
+      </time>• posted on  <a class="category-name" href="/category/basic-knowledge">basic-knowledge</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h3 id="nguyên-lý-cuối-cùng-của-solid-dependency-inversion">Nguyên lý cuối cùng của SOLID Dependency Inversion:</h3>
+
+<ul>
+  <li>Các module cấp cao không nên phụ thuộc vào các modules cấp thấp. Cả 2 nên phụ thuộc vào abstraction.</li>
+  <li>Interface (abstraction) không nên phụ thuộc vào chi tiết, mà ngược lại. ( Các class giao tiếp với nhau thông qua interface, không phải thông qua implementation.)</li>
+</ul>
+
+<p><em>dependency : Giả sử bạn có một lớp classA, lớp này có sử dụng một chức năng từ đối tượng lớp classB (classA hoạt động dựa vào classB). Lúc đó classB gọi là phụ thuộc (dependency) (của classA)</em></p>
+
+<h3 id="inversion-of-control">Inversion of Control</h3>
+<p>là 1design pattern được tạo ra để code có thể tuân thủ nguyên lý Dependency Inversion. Có nhiều cách hiện thực pattern này: ServiceLocator, Event, Delegate, … Dependency Injection là một trong các cách đó.</p>
+
+<h3 id="dependency-injection">Dependency Injection</h3>
+<p>Đây là một cách để hiện thực Inversion of Control Pattern, Các module phụ thuộc (dependency) sẽ được inject vào module cấp cao. Nó giúp chúng ta đáp ứng tính chất lỏng lẻo (loosely couple), dễ đọc và bảo trì code</p>
+
+<p>Có 3 dạng Dependency Injection(DI):</p>
+<ul>
+  <li>Constructor Injection: Các dependency sẽ được container truyền vào (inject vào) 1 class thông qua constructor của class đó. Đây là cách thông dụng nhất.</li>
+  <li>Setter Injection: Các dependency sẽ được truyền vào 1 class thông qua các hàm Setter.</li>
+  <li>Interface Injection: Class cần inject sẽ implement 1 interface. Interface này chứa 1 hàm tên Inject. Container sẽ injection dependency vào 1 class thông qua việc gọi hàm Inject của interface đó. Đây là cách rườm rà và ít được sử dụng nhất.</li>
+</ul>
+
+<script src="https://gist.github.com/hondanho/243e38a68aa768e45bf03e9c8e89edb8.js"></script>
+
+<p>Có nhiều framework như Autofac, Unity…bạn có thể sử dụng trong ASP.NET Core.
+Class DI Container sẽ có các đặc tính sau:</p>
+
+<ul>
+  <li>
+    <p>Lưu trữ các Interface, Module tương ứng vào một Dictionary có Key là Interface, Value là Module. Để lấy một Module từ Container, ta cần đưa vào Interface của Module đó.</p>
+  </li>
+  <li>
+    <p>Khi cài đặt một module, container sẽ tìm Constructor đầu tiên của module đó.</p>
+  </li>
+  <li>
+    <p>Nếu contructor không có tham số (Module không có dependency), container sẽ gọi constructor này để khởi tạo module.</p>
+  </li>
+  <li>
+    <p>Nếu constructor này có tham số (Có dependency), container sẽ khởi tạo các tham số này, gán chúng vào constructor của module. Đây là quá trình injection.</p>
+  </li>
+</ul>
+
+<p>Tổng quan lại 1 chút về DI nhé:</p>
+
+<ul>
+  <li>
+    <p>Các module không giao tiếp trực tiếp với nhau, mà thông qua interface. Module cấp thấp sẽ implement interface, module cấp cao sẽ gọi module cấp thấp thông qua interface. Ví dụ: Để giao tiếp với database, ta có interface IDatabase, các module cấp thấp là XMLDatabase, SQLDatabase. Module cấp cao là CustomerBusiness sẽ chỉ sử dụng interface IDatabase.</p>
+  </li>
+  <li>
+    <p>Việc khởi tạo các module cấp thấp sẽ do DI Container thực hiện. Ví dụ: Trong module CustomerBusiness, ta sẽ không khởi tạo IDatabase db = new XMLDatabase(), việc này sẽ do DI Container thực hiện. Module CustomerBusiness sẽ không biết gì về module XMLDatabase hay SQLDatabase.</p>
+  </li>
+  <li>
+    <p>Việc Module nào gắn với interface nào sẽ được config trong code hoặc trong file XML.+</p>
+  </li>
+  <li>
+    <p>DI được dùng để làm giảm sự phụ thuộc giữa các module, dễ dàng hơn trong việc thay đổi module, bảo trì code và testing.</p>
+  </li>
+</ul>
+
+  </div><a class="u-url" href="/basic-knowledge/dependency-injection-di-trong-c-sharp" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/basic-knowledge/bieu-thuc-chinh-quy-regexp" class="prev-post">← Biểu thức chính quy RegExp</a>
+      
+      
+        <a href="/basic-knowledge/asynchronous-thread-task-trong-c-sharp" class="next-post">Asynchronous, Thread, Task, Multi Thread, Thread Pool trong C# →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

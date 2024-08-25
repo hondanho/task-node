@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Builder Pattern | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Builder Pattern" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Giới thiệu" />
+<meta property="og:description" content="Giới thiệu" />
+<link rel="canonical" href="http://localhost:4000/design-pattern/creational-patterns/builder" />
+<meta property="og:url" content="http://localhost:4000/design-pattern/creational-patterns/builder" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-23T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Builder Pattern" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2024-08-23T00:00:00+07:00","datePublished":"2024-08-23T00:00:00+07:00","description":"Giới thiệu","headline":"Builder Pattern","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/design-pattern/creational-patterns/builder"},"url":"http://localhost:4000/design-pattern/creational-patterns/builder"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Builder Pattern</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-08-23T00:00:00+07:00" itemprop="datePublished">Aug 23, 2024
+      </time>• posted on  <a class="category-name" href="/category/design-pattern/creational-patterns">design-pattern/creational-patterns</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="giới-thiệu">Giới thiệu</h2>
+
+<p>Builder Pattern là một Creational Design Pattern cho phép xây dựng đối tượng phức tạp bằng cách sử dụng các đối tượng riêng biệt đại diện cho từng bộ phận cấu thành.</p>
+
+<p>Builder Pattern tách rời quá trình khởi tạo đối tượng phức tạp khỏi các đại diện của nó. Điều này cho phép cùng một quá trình xây dựng có thể tạo ra nhiều biểu diễn khác nhau của đối tượng.</p>
+
+<p>Mục đích: Builder Pattern được sử dụng để tách rời quá trình khởi tạo đối tượng phức tạp khỏi các đại diện của nó, giúp đạt được những lợi ích sau:</p>
+
+<ul>
+  <li>Tăng tính linh hoạt trong khởi tạo đối tượng phức tạp</li>
+  <li>Dễ dàng thay đổi cách khởi tạo đối tượng.</li>
+  <li>Hỗ trợ tạo nhiều biểu diễn khác nhau của đối tượng.</li>
+  <li>Đơn giản hóa việc test và debug.</li>
+</ul>
+
+<p>Builder Pattern tách rời quá trình xây dựng đối tượng phức tạp thành nhiều bước riêng biệt. Mỗi bước tập trung vào một khía cạnh của đối tượng.</p>
+
+<p>Các đại diện chỉ đơn giản lưu trữ kết quả, không cần quan tâm đến quá trình tạo ra chúng.</p>
+
+<h3 id="đặt-vấn-đề">Đặt vấn đề</h3>
+
+<p>Trong phát triển phần mềm, ta thường gặp các đối tượng phức tạp với nhiều thuộc tính và thành phần. Ví dụ một đối tượng House có thể bao gồm các thành phần như phòng khách, phòng ngủ, nhà bếp, cửa ra vào, cửa sổ, hệ thống điện, nước, và nhiều thành phần khác.</p>
+
+<pre><code class="language-mermaid">classDiagram
+
+  House "1" *-- "n" Room
+  Room : -name
+  Room : -size
+
+  House "1" *-- "n" Door
+  Door : -width
+  Door : -height
+  Door : -material
+
+  House "1" *-- "1" Kitchen
+  Kitchen : -layout
+
+  House "1" *-- "n" Window
+  Window : -size
+  Window : -position
+
+  House "1" *-- "1" ElectricalSystem
+  ElectricalSystem : -wiring
+
+  House "1" *-- "1" PlumbingSystem
+  PlumbingSystem : -pipes
+
+  class House{
+    +House(rooms, doors, windows, kitchen, electrical, plumbing)
+  }
+</code></pre>
+
+<ul>
+  <li>Quá trình khởi tạo phức tạp, dễ gây nhầm lẫn với nhiều tham số truyền vào</li>
+  <li>Các thành phần của <code class="language-plaintext highlighter-rouge">House</code> bị phụ thuộc lẫn nhau, khó thay đổi một phần mà không ảnh hưởng các thành phần khác.</li>
+  <li>Khó tạo các biến thể khác nhau của <code class="language-plaintext highlighter-rouge">House</code> một cách linh hoạt.</li>
+</ul>
+
+<p>Như vậy, việc xây dựng các đối tượng phức tạp cần được thiết kế cẩn thận để tránh các vấn đề trên.</p>
+
+<h3 id="giải-quyết-vấn-đề">Giải quyết Vấn Đề</h3>
+
+<p>Builder Pattern giúp giải quyết vấn đề của việc tạo ra đối tượng phức tạp, như ví dụ sau về việc xây dựng một ngôi nhà. Thay vì tạo ngôi nhà một cách trực tiếp từng phần, chúng ta chia quá trình này thành nhiều bước riêng biệt. Mỗi bước tập trung vào việc xây dựng một khía cạnh cụ thể của ngôi nhà, chẳng hạn như cửa, cửa sổ và nhà bếp.</p>
+
+<h4 id="cách-hoạt-động">Cách hoạt động</h4>
+
+<ol>
+  <li>
+    <p><strong>Director (Quản lý)</strong>: Đầu tiên, chúng ta có một người quản lý, được gọi là Director. Quản lý này có nhiệm vụ chỉ đạo quá trình xây dựng ngôi nhà.</p>
+  </li>
+  <li>
+    <p><strong>Các Concrete Builder (Xây dựng cụ thể)</strong>: Sau đó, chúng ta có các xây dựng cụ thể, ví dụ: Xây dựng Cửa, Xây dựng Cửa sổ và Xây dựng Nhà bếp. Mỗi Concrete Builder chịu trách nhiệm cho việc xây dựng một phần cụ thể của ngôi nhà.</p>
+  </li>
+  <li>
+    <p><strong>Tạo ngôi nhà</strong>: Chúng ta kết hợp các phần đã xây dựng từ các Concrete Builder để tạo ra ngôi nhà hoàn chỉnh.</p>
+  </li>
+</ol>
+
+<h4 id="ví-dụ-minh-hoạ">Ví dụ minh hoạ</h4>
+
+<p>Để hiểu rõ hơn, hãy xem ví dụ sau:</p>
+
+<pre><code class="language-mermaid">graph LR
+  A[Director] --&gt; B[Concrete Builder]
+  B --&gt; C[Build Door]
+  B --&gt; D[Build Window]
+  B --&gt; E[Build Kitchen]
+  C --&gt; F[House]
+  D --&gt; F
+  E --&gt; F
+</code></pre>
+
+<ul>
+  <li>
+    <p>Director (Quản lý) gọi Concrete Builder (Xây dựng cụ thể) để bắt đầu xây dựng ngôi nhà.</p>
+  </li>
+  <li>
+    <p>Concrete Builder (Xây dựng cụ thể) thực hiện công việc của mình, ví dụ: xây dựng cửa, cửa sổ và nhà bếp.</p>
+  </li>
+  <li>
+    <p>Các phần này được kết hợp lại để tạo thành ngôi nhà hoàn chỉnh.</p>
+  </li>
+</ul>
+
+<p>Kết quả là, người dùng ngôi nhà không cần quan tâm đến chi tiết cụ thể của quá trình xây dựng, mà chỉ cần sử dụng ngôi nhà đã hoàn thành một cách dễ dàng.</p>
+
+<h3 id="cấu-trúc">Cấu trúc</h3>
+
+<p>Builder Pattern có cấu trúc đơn giản, bao gồm các thành phần sau:</p>
+
+<pre><code class="language-mermaid">classDiagram
+Direction TB
+
+Builder &lt;|-- ConcreteBuilder
+Director o-- Builder
+Product o-- Director
+
+class Director {
++Construct()
+}
+
+class Builder {
++BuildPartA()
++BuildPartB() 
+}
+
+class ConcreteBuilder {
++BuildPartA()
++BuildPartB()
+}
+
+class Product {
+-PartA
+-PartB
+}
+
+</code></pre>
+
+<ul>
+  <li><strong>Builder</strong>: Định nghĩa phương thức xây dựng chung.</li>
+  <li><strong>ConcreteBuilder</strong>: Triển khai chi tiết các bước xây dựng cụ thể.</li>
+  <li><strong>Director</strong>: Sử dụng Builder để xây dựng sản phẩm.</li>
+  <li><strong>Product</strong>: Là sản phẩm được tạo ra, chứa các phần do Builder tạo.</li>
+</ul>
+
+<p>Như vậy Builder tách rời quá trình xây dựng phức tạp thành nhiều bước đơn giản, từng bước tập trung vào một khía cạnh riêng lẻ.</p>
+
+<h2 id="cách-triển-khai">Cách triển khai</h2>
+
+<p>Builder Pattern có thể được triển khai theo nhiều cách khác nhau. Trong Java, có một số cách triển khai phổ biến như sau:</p>
+
+<p><strong>Định nghĩa Product</strong>: Chúng ta bắt đầu bằng việc định nghĩa lớp <code class="language-plaintext highlighter-rouge">Product</code> để lưu trữ thông tin đối tượng cuối cùng:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">Product</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">partA</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">partB</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setPartA</span><span class="o">(</span><span class="nc">String</span> <span class="n">partA</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">partA</span> <span class="o">=</span> <span class="n">partA</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setPartB</span><span class="o">(</span><span class="nc">String</span> <span class="n">partB</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">partB</span> <span class="o">=</span> <span class="n">partB</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">show</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Product Parts: "</span> <span class="o">+</span> <span class="n">partA</span> <span class="o">+</span> <span class="s">" and "</span> <span class="o">+</span> <span class="n">partB</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p><strong>Định nghĩa Builder</strong> : Sau đó, chúng ta định nghĩa lớp <code class="language-plaintext highlighter-rouge">Builder</code> với các phương thức xây dựng, nhưng với Builder, mỗi phương thức xây dựng trả về chính builder, cho phép chúng ta gọi tiếp theo một cách liền mạch:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">Builder</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">Product</span> <span class="n">product</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Product</span><span class="o">();</span>
+
+    <span class="kd">public</span> <span class="nc">Builder</span> <span class="nf">buildPartA</span><span class="o">(</span><span class="nc">String</span> <span class="n">partA</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">product</span><span class="o">.</span><span class="na">setPartA</span><span class="o">(</span><span class="n">partA</span><span class="o">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nc">Builder</span> <span class="nf">buildPartB</span><span class="o">(</span><span class="nc">String</span> <span class="n">partB</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">product</span><span class="o">.</span><span class="na">setPartB</span><span class="o">(</span><span class="n">partB</span><span class="o">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nc">Product</span> <span class="nf">getResult</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">product</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Bây giờ, chúng ta có thể sử dụng Builder để xây dựng sản phẩm một cách dễ đọc và gần gũi:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Sử dụng Builder để xây dựng sản phẩm</span>
+        <span class="nc">Product</span> <span class="n">product</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Builder</span><span class="o">()</span>
+            <span class="o">.</span><span class="na">buildPartA</span><span class="o">(</span><span class="s">"Part A"</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">buildPartB</span><span class="o">(</span><span class="s">"Part B"</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">getResult</span><span class="o">();</span>
+        
+        <span class="c1">// Hiển thị sản phẩm</span>
+        <span class="n">product</span><span class="o">.</span><span class="na">show</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Giải thích</p>
+
+<ul>
+  <li>Chúng ta đã tạo một lớp <code class="language-plaintext highlighter-rouge">Builder</code> với các phương thức xây dựng trả về chính builder. Điều này cho phép chúng ta gọi tiếp các phương thức một cách liền mạch, tạo một chuỗi dễ đọc để xây dựng sản phẩm.</li>
+  <li>Khi sử dụng Builder, các phương thức xây dựng có thể được gọi nối tiếp trên một đối tượng builder duy nhất, giúp giảm bớt sự phức tạp trong mã nguồn và làm cho mã trở nên rõ ràng hơn.</li>
+  <li>Cuối cùng, chúng ta gọi <code class="language-plaintext highlighter-rouge">getResult()</code> để lấy đối tượng Product đã được xây dựng và hiển thị nó.</li>
+</ul>
+
+<h2 id="ví-dụ-minh-họa">Ví dụ minh họa</h2>
+
+<p>Dưới đây là một ví dụ minh họa về Builder Pattern trong Java:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Đối tượng Product: Nhà</span>
+<span class="kd">class</span> <span class="nc">House</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="nc">String</span> <span class="n">foundation</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="nc">String</span> <span class="n">walls</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="nc">String</span> <span class="n">roof</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="nc">String</span> <span class="n">interior</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setFoundation</span><span class="o">(</span><span class="nc">String</span> <span class="n">foundation</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">foundation</span> <span class="o">=</span> <span class="n">foundation</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setWalls</span><span class="o">(</span><span class="nc">String</span> <span class="n">walls</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">walls</span> <span class="o">=</span> <span class="n">walls</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setRoof</span><span class="o">(</span><span class="nc">String</span> <span class="n">roof</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">roof</span> <span class="o">=</span> <span class="n">roof</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setInterior</span><span class="o">(</span><span class="nc">String</span> <span class="n">interior</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">interior</span> <span class="o">=</span> <span class="n">interior</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">showHouseDetails</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"House Details:"</span><span class="o">);</span>
+    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Foundation: "</span> <span class="o">+</span> <span class="n">foundation</span><span class="o">);</span>
+    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Walls: "</span> <span class="o">+</span> <span class="n">walls</span><span class="o">);</span>
+    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Roof: "</span> <span class="o">+</span> <span class="n">roof</span><span class="o">);</span>
+    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Interior: "</span> <span class="o">+</span> <span class="n">interior</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Builder Interface: Builder</span>
+<span class="kd">interface</span> <span class="nc">HouseBuilder</span> <span class="o">{</span>
+  <span class="kt">void</span> <span class="nf">buildFoundation</span><span class="o">();</span>
+  <span class="kt">void</span> <span class="nf">buildWalls</span><span class="o">();</span>
+  <span class="kt">void</span> <span class="nf">buildRoof</span><span class="o">();</span>
+  <span class="kt">void</span> <span class="nf">buildInterior</span><span class="o">();</span>
+  <span class="nc">House</span> <span class="nf">getResult</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="c1">// Concrete Builder: ConcreteHouseBuilder</span>
+<span class="kd">class</span> <span class="nc">ConcreteHouseBuilder</span> <span class="kd">implements</span> <span class="nc">HouseBuilder</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="nc">House</span> <span class="n">house</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">House</span><span class="o">();</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">buildFoundation</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">house</span><span class="o">.</span><span class="na">setFoundation</span><span class="o">(</span><span class="s">"Concrete Foundation"</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">buildWalls</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">house</span><span class="o">.</span><span class="na">setWalls</span><span class="o">(</span><span class="s">"Concrete Walls"</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">buildRoof</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">house</span><span class="o">.</span><span class="na">setRoof</span><span class="o">(</span><span class="s">"Concrete Roof"</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">buildInterior</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">house</span><span class="o">.</span><span class="na">setInterior</span><span class="o">(</span><span class="s">"Modern Interior"</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="nc">House</span> <span class="nf">getResult</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">house</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Director: HouseDirector</span>
+<span class="kd">class</span> <span class="nc">HouseDirector</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="nc">HouseBuilder</span> <span class="n">builder</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="nf">HouseDirector</span><span class="o">(</span><span class="nc">HouseBuilder</span> <span class="n">builder</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">builder</span> <span class="o">=</span> <span class="n">builder</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">constructHouse</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">builder</span><span class="o">.</span><span class="na">buildFoundation</span><span class="o">();</span>
+    <span class="n">builder</span><span class="o">.</span><span class="na">buildWalls</span><span class="o">();</span>
+    <span class="n">builder</span><span class="o">.</span><span class="na">buildRoof</span><span class="o">();</span>
+    <span class="n">builder</span><span class="o">.</span><span class="na">buildInterior</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Main class</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// Tạo một đối tượng ConcreteHouseBuilder</span>
+    <span class="nc">HouseBuilder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ConcreteHouseBuilder</span><span class="o">();</span>
+
+    <span class="c1">// Tạo một đối tượng HouseDirector và kết nối với builder</span>
+    <span class="nc">HouseDirector</span> <span class="n">director</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HouseDirector</span><span class="o">(</span><span class="n">builder</span><span class="o">);</span>
+
+    <span class="c1">// Xây dựng nhà</span>
+    <span class="n">director</span><span class="o">.</span><span class="na">constructHouse</span><span class="o">();</span>
+
+    <span class="c1">// Lấy kết quả</span>
+    <span class="nc">House</span> <span class="n">house</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="na">getResult</span><span class="o">();</span>
+
+    <span class="c1">// Hiển thị thông tin về nhà</span>
+    <span class="n">house</span><span class="o">.</span><span class="na">showHouseDetails</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Trong ví dụ này, chúng ta sử dụng phương pháp Builder để xây dựng một đối tượng <code class="language-plaintext highlighter-rouge">House</code>, đại diện cho một ngôi nhà. Ví dụ này tách rời quá trình xây dựng ngôi nhà thành nhiều bước riêng biệt, và mỗi bước tập trung vào xây dựng một phần cụ thể của ngôi nhà.</p>
+
+<ol>
+  <li><strong>Đối tượng Product: Nhà (House)</strong>:
+    <ul>
+      <li>Trong ví dụ này, <code class="language-plaintext highlighter-rouge">House</code> là đối tượng mà chúng ta muốn xây dựng.</li>
+      <li><code class="language-plaintext highlighter-rouge">House</code> có các thuộc tính như <code class="language-plaintext highlighter-rouge">foundation</code>, <code class="language-plaintext highlighter-rouge">walls</code>, <code class="language-plaintext highlighter-rouge">roof</code>, và <code class="language-plaintext highlighter-rouge">interior</code>, đại diện cho các phần cấu trúc và nội thất của ngôi nhà.</li>
+      <li>Chúng ta định nghĩa các phương thức <code class="language-plaintext highlighter-rouge">setPart</code> để thiết lập các phần của ngôi nhà và <code class="language-plaintext highlighter-rouge">showHouseDetails</code> để hiển thị thông tin chi tiết của ngôi nhà.</li>
+    </ul>
+  </li>
+  <li><strong>Builder Interface: Builder</strong>:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">HouseBuilder</code> là một giao diện định nghĩa các phương thức để xây dựng một đối tượng <code class="language-plaintext highlighter-rouge">House</code>.</li>
+      <li>Các phương thức trong <code class="language-plaintext highlighter-rouge">HouseBuilder</code> bao gồm <code class="language-plaintext highlighter-rouge">buildFoundation</code>, <code class="language-plaintext highlighter-rouge">buildWalls</code>, <code class="language-plaintext highlighter-rouge">buildRoof</code>, và <code class="language-plaintext highlighter-rouge">buildInterior</code>, mỗi phương thức tương ứng với việc xây dựng một phần cụ thể của ngôi nhà.</li>
+      <li><code class="language-plaintext highlighter-rouge">getResult</code> để lấy đối tượng <code class="language-plaintext highlighter-rouge">House</code> đã hoàn thành.</li>
+    </ul>
+  </li>
+  <li><strong>Concrete Builder: ConcreteHouseBuilder</strong>:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">ConcreteHouseBuilder</code> là lớp cụ thể triển khai <code class="language-plaintext highlighter-rouge">HouseBuilder</code>.</li>
+      <li>Các phương thức của <code class="language-plaintext highlighter-rouge">ConcreteHouseBuilder</code> được triển khai để xây dựng các phần của ngôi nhà. Ví dụ, <code class="language-plaintext highlighter-rouge">buildFoundation</code> thiết lập phần nền móng của ngôi nhà là “Concrete Foundation”.</li>
+      <li>Mỗi phương thức trả về chính đối tượng <code class="language-plaintext highlighter-rouge">ConcreteHouseBuilder</code> để cho phép chuỗi gọi phương thức (method chaining).</li>
+    </ul>
+  </li>
+  <li><strong>Director: HouseDirector</strong>:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">HouseDirector</code> là lớp chịu trách nhiệm hướng dẫn quá trình xây dựng ngôi nhà.</li>
+      <li>Nó chấp nhận một đối tượng <code class="language-plaintext highlighter-rouge">HouseBuilder</code> (ở đây là <code class="language-plaintext highlighter-rouge">ConcreteHouseBuilder</code>) thông qua hàm tạo và sẽ sử dụng nó để xây dựng ngôi nhà.</li>
+      <li><code class="language-plaintext highlighter-rouge">constructHouse</code> phương thức của <code class="language-plaintext highlighter-rouge">HouseDirector</code> gọi các phương thức xây dựng trên builder để xây dựng các phần khác nhau của ngôi nhà theo đúng thứ tự.</li>
+    </ul>
+  </li>
+  <li><strong>Main class</strong>:
+    <ul>
+      <li>Trong hàm <code class="language-plaintext highlighter-rouge">main</code>, chúng ta bắt đầu bằng việc tạo một đối tượng <code class="language-plaintext highlighter-rouge">ConcreteHouseBuilder</code>.</li>
+      <li>Sau đó, chúng ta tạo một đối tượng <code class="language-plaintext highlighter-rouge">HouseDirector</code> và kết nối nó với <code class="language-plaintext highlighter-rouge">ConcreteHouseBuilder</code>.</li>
+      <li>Gọi <code class="language-plaintext highlighter-rouge">constructHouse</code> để bắt đầu quá trình xây dựng ngôi nhà.</li>
+      <li>Cuối cùng, sử dụng <code class="language-plaintext highlighter-rouge">getResult</code> để nhận đối tượng <code class="language-plaintext highlighter-rouge">House</code> đã hoàn thành và gọi <code class="language-plaintext highlighter-rouge">showHouseDetails</code> để hiển thị thông tin chi tiết về ngôi nhà.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>Kết quả là, chúng ta đã xây dựng một đối tượng ngôi nhà một cách dễ dàng và linh hoạt, trong đó mỗi phần của ngôi nhà được xây dựng bằng cách sử dụng Builder Pattern. Điều này giúp giảm sự phức tạp và làm cho mã nguồn trở nên rõ ràng hơn.</p>
+
+<h2 id="so-sánh">So sánh</h2>
+
+<p>Builder Pattern có thể được so sánh với một số Design Pattern tương tự, bao gồm:</p>
+
+<ul>
+  <li><strong>Factory Pattern</strong>: Builder Pattern tập trung vào xây dựng một đối tượng phức tạp bằng cách tạo và cấu hình từng phần, trong khi Factory Pattern tập trung vào việc tạo đối tượng duy nhất và trả về nó.</li>
+  <li><strong>Abstract Factory Pattern</strong>: Cả Builder Pattern và Abstract Factory Pattern đều giúp trong việc tạo đối tượng phức tạp, nhưng Abstract Factory tạo ra một tập hợp các đối tượng có liên quan và cung cấp một giao diện chung để tạo chúng, trong khi Builder tập trung vào việc xây dựng một đối tượng duy nhất.</li>
+  <li><strong>Singleton Pattern</strong>: Singleton Pattern chỉ đảm bảo rằng một lớp chỉ có một đối tượng duy nhất và cung cấp một điểm truy cập đến nó. Builder Pattern không liên quan đến việc tạo đối tượng duy nhất mà tập trung vào việc xây dựng đối tượng phức tạp.</li>
+</ul>
+
+<h2 id="kết-luận">Kết luận</h2>
+
+<p>Builder Pattern là một Design Pattern hữu ích trong những trường hợp cần xây dựng các đối tượng phức tạp. Builder Pattern giúp việc xây dựng các đối tượng phức tạp trở nên dễ dàng hơn và ít xảy ra lỗi hơn.</p>
+
+<ul>
+  <li>Nên sử dụng Builder Pattern khi:
+    <ul>
+      <li>Đối tượng phức tạp có nhiều thuộc tính hoặc thành phần.</li>
+      <li>Cần xây dựng nhiều phiên bản khác nhau của đối tượng phức tạp.</li>
+      <li>Cần dễ dàng kiểm tra đối tượng phức tạp.</li>
+    </ul>
+  </li>
+  <li>Không nên sử dụng Builder Pattern khi:
+    <ul>
+      <li>Đối tượng phức tạp không có nhiều thuộc tính hoặc thành phần.</li>
+      <li>Chỉ cần xây dựng một phiên bản duy nhất của đối tượng phức tạp.</li>
+      <li>Không cần dễ dàng kiểm tra đối tượng phức tạp.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Tôi hy vọng bài viết này đã giúp bạn hiểu rõ về Builder Pattern.</p>
+
+  </div><a class="u-url" href="/design-pattern/creational-patterns/builder" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+        <a href="/design-pattern/creational-patterns/abstract-factory" class="prev-post">← Abstract Factory</a>
+      
+      
+        <a href="/design-pattern/creational-patterns/factory-method" class="next-post">Factory Method →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>

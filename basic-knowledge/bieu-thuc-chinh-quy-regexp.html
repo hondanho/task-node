@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Biểu thức chính quy RegExp | I’m here</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Biểu thức chính quy RegExp" />
+<meta name="author" content="hondanho" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Biểu thức chính quy là một nhóm các ký tự, ký hiệu viết ra theo quy luật tạo thành mẫu (pattern), nó được sử dụng để tìm kiếm văn bản (text)." />
+<meta property="og:description" content="Biểu thức chính quy là một nhóm các ký tự, ký hiệu viết ra theo quy luật tạo thành mẫu (pattern), nó được sử dụng để tìm kiếm văn bản (text)." />
+<link rel="canonical" href="http://localhost:4000/basic-knowledge/bieu-thuc-chinh-quy-regexp" />
+<meta property="og:url" content="http://localhost:4000/basic-knowledge/bieu-thuc-chinh-quy-regexp" />
+<meta property="og:site_name" content="I’m here" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2016-05-20T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Biểu thức chính quy RegExp" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"hondanho"},"dateModified":"2016-05-20T00:00:00+07:00","datePublished":"2016-05-20T00:00:00+07:00","description":"Biểu thức chính quy là một nhóm các ký tự, ký hiệu viết ra theo quy luật tạo thành mẫu (pattern), nó được sử dụng để tìm kiếm văn bản (text).","headline":"Biểu thức chính quy RegExp","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/basic-knowledge/bieu-thuc-chinh-quy-regexp"},"url":"http://localhost:4000/basic-knowledge/bieu-thuc-chinh-quy-regexp"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="I'm here" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a href="/" title="">
+      Archive
+    </a>
+    <a href="/category.html">
+      Categories
+    </a>
+    <p>The latest tips and news from the hondanho blog</p></div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", function () {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Biểu thức chính quy RegExp</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2016-05-20T00:00:00+07:00" itemprop="datePublished">May 20, 2016
+      </time>• posted on  <a class="category-name" href="/category/basic-knowledge">basic-knowledge</a></p>
+        
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Biểu thức chính quy là một nhóm các ký tự, ký hiệu viết ra theo quy luật tạo thành mẫu (pattern), nó được sử dụng để tìm kiếm văn bản (text).</p>
+
+<h3 id="search-pattern">Search pattern</h3>
+<p>| Syntax | Description |
+| ———– | ———– |
+| . | Ký hiệu chấm Biểu diễn bất kỳ ký tự nào ngoài trừ ký tự xuống dòng |
+| [ ] | Mô tả một tập hợp các ký tự, các mẫu. |
+| [^ ] | Tập hợp ký tự phủ định. Phù hợp nếu không có ký tự nào trong [^ ] |
+| * | Lặp lại 0 đến nhiều lần. |
+| + | Lặp lại 1 hoặc nhiều lần |
+| ? | Tùy chọn có hay không cho mẫu phía trước |
+| {n,m} | Độ dài tối thiểu là n tối đa là m |
+| (xyz) | Biểu diễn một nhóm ký tự (có xét đến thứ tự của các ký tự). |
+| | | Biểu diễn thay thế, (phép toán or, hoặc) |
+| \ | Dùng để biểu diễn ký tự đặc biệt [ ] ( ) { } . * + ? ^ $ \ | |
+| ^ | Điểm bắt đầu của dòng. |
+| $ | Điểm kết thúc của dòng |</p>
+
+<h3 id="collection-symbol">Collection symbol</h3>
+<p>| Syntax | Description |
+| ———– | ———– |
+| . | Bất kỳ ký tự nào ngoại trừ xuống dòng |
+| \w | Chữ,sô, và <em>, tương đương với: [a-zA-Z0-9</em>] |
+| \W | Ngoài bảng chữ cái, tương đương với: [^\w] |
+| \d | Các số: [0-9] |
+| \D | Không phải số: [^\d] |
+| \s | Là ký tự trắng, tương đương với: [\t\n\f\r\p{Z}] |
+| \S | Không phải ký tự trắng: [^\s] |</p>
+
+<h3 id="expression">Expression</h3>
+<p>lookahead (?=…)</p>
+<ul>
+  <li>toi di code dao ne di ne choi day</li>
+  <li>(d|k)i(?=\sne) đứng trước từ nè là di hoặc ki</li>
+</ul>
+
+<p>phủ định lookahead (?!…)</p>
+<ul>
+  <li>toi di code dao ne di ne choi day</li>
+  <li>(d|k)i(?=\sne) đứng trước từ nè là di hoặc ki</li>
+</ul>
+
+<p>lookbehind (?&lt;=…)</p>
+<ul>
+  <li>toi di code dao ne di ne choi day</li>
+  <li>(?&lt;=(D|d)i\s)(code|choi) lấy ra từ code hoặc chơi nhưng đứng trước nó phải là di hoặc Di</li>
+</ul>
+
+<p>phủ định Lookbehind (?&lt;!…)</p>
+<ul>
+  <li>toi di code dao ne di ne choi day</li>
+  <li>(!&lt;=(D|d)i\s)(code|choi) lấy ra từ code hoặc chơi nhưng đứng trước nó không có di hoặc Di</li>
+</ul>
+
+<h3 id="flag">Flag</h3>
+<p>| Syntax | Description |
+| ———– | ———– |
+| i | Thiết lập không phân biệt chữ hoa chữ thường |
+| g | Tìm toàn bộ kết quả (không dừng lại khi thấy kết quả đầu tiên). |
+| m | Xử lý nhiều dòng (khi chuỗi input nhiều dòng, mỗi dòng được mang ra khớp mẫu). |</p>
+
+  </div><a class="u-url" href="/basic-knowledge/bieu-thuc-chinh-quy-regexp" hidden></a>
+
+  <footer class="post-footer">
+    <nav class="post-navigation">
+      
+      
+        <a href="/basic-knowledge/dependency-injection-di-trong-c-sharp" class="next-post">Dependency injection (DI) trong C# với ServiceCollection →</a>
+      
+    </nav>
+  </footer>
+  
+</article>
+
+      </div>
+    </main>
+
+    <!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/hondanho" title="hondanho"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+-->
+
+    <a href="#" id="back-to-top">
+      Back To Top &uarr;
+    </a>
+  </body>
+
+</html>
